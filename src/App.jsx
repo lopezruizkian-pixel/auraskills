@@ -51,7 +51,7 @@ function App() {
               <Route 
                 path="/mentores" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="alumno">
                     <Mentores />
                   </ProtectedRoute>
                 } 
@@ -60,7 +60,7 @@ function App() {
               <Route 
                 path="/historial" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="alumno">
                     <HistorialSalasAprendiz />
                   </ProtectedRoute>
                 } 
@@ -69,7 +69,7 @@ function App() {
               <Route 
                 path="/salas-activas" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="mentor">
                     <SalasActivas />
                   </ProtectedRoute>
                 } 
