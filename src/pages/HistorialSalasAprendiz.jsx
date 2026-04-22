@@ -49,6 +49,7 @@ function HistorialSalasAprendiz() {
           backendHistory = [];
         }
 
+        const localData = storage.get("historialSalas");
         const localHistory = localData || [];
 
         // Unifica por id, priorizando backend
