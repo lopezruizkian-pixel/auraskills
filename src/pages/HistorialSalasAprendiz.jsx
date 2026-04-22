@@ -6,6 +6,7 @@ import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
 import { Search, User, History, RefreshCw } from "lucide-react";
 import { getUserRoomHistory } from "../services/roomService";
+import { fetchMySkills } from "../services/skillService";
 import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/HistorialSalasAprendiz.css";
@@ -36,6 +37,7 @@ function HistorialSalasAprendiz() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSkill, setFilterSkill] = useState("Todas");
   const [sortOrder, setSortOrder] = useState("Recientes");
+  const [mySkills, setMySkills] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,6 +65,16 @@ function HistorialSalasAprendiz() {
         merged.sort((a, b) => new Date(b.startedAt || b.fecha || 0) - new Date(a.startedAt || a.fecha || 0));
 
         setHistory(merged);
+
+        // Cargar habilidades del mentor si aplica
+        if (rol === "mentor") {
+          try {
+            const skills = await fetchMySkills();
+            setMySkills(skills);
+          } catch (err) {
+            console.error("Error cargando habilidades del mentor:", err);
+          }
+        }
       } catch {
         setHistory([]);
       } finally {
@@ -73,9 +85,11 @@ function HistorialSalasAprendiz() {
   }, []);
 
   const uniqueSkills = useMemo(() => {
-    const skills = history.map(item => item.habilidad || item.room_name || item.nombreSala).filter(Boolean);
-    return ["Todas", ...new Set(skills)];
-  }, [history]);
+    const historySkills = history.map(item => item.habilidad || item.room_name || item.nombreSala).filter(Boolean);
+    const mentorSkills = mySkills.map(s => s.nombre).filter(Boolean);
+    
+    return ["Todas", ...new Set([...historySkills, ...mentorSkills])];
+  }, [history, mySkills]);
 
   const filteredHistory = useMemo(() => {
     let result = history.filter((item) => {
