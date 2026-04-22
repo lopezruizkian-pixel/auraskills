@@ -1,63 +1,84 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ShieldAlert, ArrowLeft, Home } from "lucide-react";
-import "../Styles/Home.css"; // Reusing some base styles
+import Sidebar from "../components/Sidebar";
+import GlobalHeader from "../components/GlobalHeader";
+import { storage } from "../services/storage";
+import "../Styles/Home.css";
 
 function Unauthorized() {
   const navigate = useNavigate();
+  const rol = storage.get("userRole") || "alumno";
 
   return (
-    <div className="login-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <div className="neon-card" style={{ 
-        maxWidth: '500px', 
-        padding: '3rem', 
-        textAlign: 'center',
-        border: '1px solid var(--neon-pink)',
-        boxShadow: '0 0 20px rgba(255, 0, 255, 0.2)'
-      }}>
-        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-          <ShieldAlert size={80} color="var(--neon-pink)" style={{ filter: 'drop-shadow(0 0 10px rgba(255, 0, 255, 0.5))' }} />
-        </div>
-        
-        <h1 style={{ 
-          fontSize: '2.5rem', 
-          marginBottom: '1rem', 
-          color: '#fff',
-          textTransform: 'uppercase',
-          letterSpacing: '2px'
-        }}>
-          Acceso Denegado
-        </h1>
-        
-        <p style={{ 
-          color: 'rgba(255,255,255,0.7)', 
-          fontSize: '1.1rem', 
-          lineHeight: '1.6',
-          marginBottom: '2rem'
-        }}>
-          Lo sentimos, no tienes los permisos necesarios para acceder a este módulo. 
-          Esta sección está reservada para otro rol de usuario.
-        </p>
-
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          <button 
-            className="secondary-btn-s" 
-            onClick={() => navigate(-1)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <ArrowLeft size={18} />
-            Volver
-          </button>
+    <div className="home-container">
+      <div className="home-main-layout">
+        <Sidebar rol={rol} />
+        <main className="home-content">
+          <GlobalHeader />
           
-          <button 
-            className="primary-btn-s" 
-            onClick={() => navigate("/home")}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <Home size={18} />
-            Ir al Inicio
-          </button>
-        </div>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            minHeight: '70vh',
+            padding: '2rem'
+          }}>
+            <div className="neon-card" style={{ 
+              maxWidth: '550px', 
+              padding: '3rem', 
+              textAlign: 'center',
+              border: '1px solid var(--neon-pink)',
+              boxShadow: '0 0 30px rgba(255, 0, 255, 0.15)',
+              background: 'rgba(10, 10, 15, 0.9)'
+            }}>
+              <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+                <ShieldAlert size={70} color="var(--neon-pink)" style={{ filter: 'drop-shadow(0 0 10px rgba(255, 0, 255, 0.5))' }} />
+              </div>
+              
+              <h1 style={{ 
+                fontSize: '2.2rem', 
+                marginBottom: '1rem', 
+                color: '#fff',
+                fontWeight: '800',
+                letterSpacing: '1px'
+              }}>
+                Módulo Restringido
+              </h1>
+              
+              <p style={{ 
+                color: 'rgba(255,255,255,0.7)', 
+                fontSize: '1.1rem', 
+                lineHeight: '1.6',
+                marginBottom: '2.5rem'
+              }}>
+                No tienes permisos para acceder a esta sección. 
+                Tu rol actual de <strong>{rol.toUpperCase()}</strong> no permite la entrada a este módulo específico.
+              </p>
+
+              <div style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center' }}>
+                <button 
+                  className="secondary-btn-s" 
+                  onClick={() => navigate(-1)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.8rem 1.5rem' }}
+                >
+                  <ArrowLeft size={18} />
+                  Regresar
+                </button>
+                
+                <button 
+                  className="primary-btn-s" 
+                  onClick={() => navigate("/home")}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.8rem 1.5rem' }}
+                >
+                  <Home size={18} />
+                  Mi Dashboard
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
