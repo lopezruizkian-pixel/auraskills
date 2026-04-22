@@ -12,6 +12,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 import "../Styles/Sidebar.css";
 
 function Sidebar({ rol }) {
@@ -28,10 +29,10 @@ function Sidebar({ rol }) {
     navigate(path);
   };
 
+  const { logout } = useAuth();
+
   const handleLogout = () => {
-    localStorage.removeItem("userRole");
-    setIsOpen(false);
-    navigate("/login");
+    logout();
   };
 
   const isActive = (path) => location.pathname === path;

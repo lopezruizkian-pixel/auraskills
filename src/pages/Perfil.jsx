@@ -9,6 +9,7 @@ import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, S
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills } from "../services/skillService";
+import { logoutUser } from "../services/authService";
 import "../Styles/Home.css";
 import "../Styles/Perfil.css";
 import "../Styles/Configuracion.css";
@@ -99,7 +100,7 @@ function Perfil() {
     setDeleteLoading(true);
     try {
       await httpClient.delete("/auth/delete-account", { body: JSON.stringify({ password: deletePassword }), headers: { "Content-Type": "application/json" } });
-      localStorage.removeItem('userRole'); // from logout
+      logoutUser();
       alert("Cuenta eliminada"); 
       navigate("/login");
     } catch (err) { alert(err.message || "Error al eliminar cuenta"); }
