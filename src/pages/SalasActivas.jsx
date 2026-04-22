@@ -21,7 +21,7 @@ function SalasActivas() {
   const params = new URLSearchParams(location.search);
   const habilidadFiltro = params.get("habilidad");
 
-  const [activeRoom, setActiveRoom] = useState(
+  const [salaActiva, setSalaActiva] = useState(
     storage.get("salaActiva") || null
   );
   const [salasFiltered, setSalasFiltered] = useState([]);

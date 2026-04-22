@@ -37,7 +37,7 @@ export const useAuth = () => {
       storage.set('userName', userData.userName);
     }
     if (userData.userRole) {
-      storage.set('userRole', userData.userRole);
+      storage.set('userRole', userData.userRole.toLowerCase());
     }
   }, []);
 

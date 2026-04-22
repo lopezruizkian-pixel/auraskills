@@ -37,6 +37,8 @@ function Sidebar({ rol }) {
 
   const isActive = (path) => location.pathname === path;
 
+  const userRole = rol?.toLowerCase() || "alumno";
+
   return (
     <>
       <button
@@ -82,7 +84,7 @@ function Sidebar({ rol }) {
             Dashboard
           </button>
 
-          {rol === "mentor" ? (
+          {userRole === "mentor" ? (
             <>
               <button
                 className={`nav-item ${isActive("/buscar-habilidades") ? "active" : ""}`}
