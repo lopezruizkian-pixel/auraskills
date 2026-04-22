@@ -5,6 +5,7 @@ import PerfilStatCard from "./PerfilStatCard";
 import { fetchActiveRooms, getUserRoomHistory } from "../services/roomService";
 import { getDashboardSocket } from "../services/socketConfig";
 import GlobalHeader from "../components/GlobalHeader";
+import { storage } from "../services/storage";
 import "../Styles/Mentores.css";
 
 function HomeMentor() {
@@ -13,7 +14,7 @@ function HomeMentor() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ salasCreadas: 0, alumnosAyudados: 0, horasMentoreando: 0 });
 
-  const userId = localStorage.getItem("userId");
+  const userId = storage.get("userId");
 
   useEffect(() => {
     loadRooms();
@@ -71,7 +72,7 @@ function HomeMentor() {
       inscritos: room.sessionInfo?.participantCount || 0,
       capacidad: room.capacidad_maxima || 10,
     };
-    localStorage.setItem("salaActiva", JSON.stringify(infoSala));
+    storage.set("salaActiva", infoSala);
     
     navigate(`/sala/${room.id}`);
   };

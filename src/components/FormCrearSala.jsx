@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { storage } from '../services/storage';
 import {
   Type,
   Wrench,
@@ -75,7 +76,7 @@ function FormCrearSala({ onCancel }) {
 
     setIsCreatingSkill(true);
     try {
-      const mentorId = localStorage.getItem('userId');
+      const mentorId = storage.get('userId');
       const payload = { ...newSkillData, mentor_id: mentorId };
       const created = await createSkill(payload);
       showSuccess('Habilidad creada con exito');
@@ -116,17 +117,14 @@ function FormCrearSala({ onCancel }) {
       };
 
       const createdRoom = await createRoom(roomData);
-      localStorage.setItem(
-        'salaActiva',
-        JSON.stringify({
-          id: createdRoom.id || createdRoom._id,
-          titulo: createdRoom.nombre || roomData.nombre,
-          habilidad: createdRoom.habilidad || roomData.habilidad,
-          mood: createdRoom.mood || roomData.mood,
-          inscritos: createdRoom.sessionInfo?.participantCount || 0,
-          capacidad: createdRoom.capacidad_maxima || roomData.capacidad_maxima,
-        })
-      );
+      storage.set('salaActiva', {
+        id: createdRoom.id || createdRoom._id,
+        titulo: createdRoom.nombre || roomData.nombre,
+        habilidad: createdRoom.habilidad || roomData.habilidad,
+        mood: createdRoom.mood || roomData.mood,
+        inscritos: createdRoom.sessionInfo?.participantCount || 0,
+        capacidad: createdRoom.capacidad_maxima || roomData.capacidad_maxima,
+      });
       showSuccess('Sala creada con exito');
       navigate('/salas-activas');
     } catch (err) {

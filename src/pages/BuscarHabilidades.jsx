@@ -16,8 +16,10 @@ const iconByCategory = {
 
 const defaultForm = { nombre: "", descripcion: "", categoria: "", nivel: "basico" };
 
+import { storage } from "../services/storage";
+
 function BuscarHabilidades() {
-  const [rol] = useState(localStorage.getItem("userRole") || "alumno");
+  const [rol] = useState(storage.get("userRole") || "alumno");
   const isMentor = rol === "mentor";
   const [searchTerm, setSearchTerm] = useState("");
   const [skills, setSkills] = useState([]);

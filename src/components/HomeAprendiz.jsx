@@ -5,6 +5,7 @@ import PerfilStatCard from "./PerfilStatCard";
 import { fetchActiveRooms, joinRoom, fetchRoom, getUserRoomHistory } from "../services/roomService";
 import { getDashboardSocket } from "../services/socketConfig";
 import GlobalHeader from "../components/GlobalHeader";
+import { storage } from "../services/storage";
 
 function HomeAprendiz() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function HomeAprendiz() {
 
     socket.on("roomsUpdated", handleUpdate);
 
-    const historialGuardado = JSON.parse(localStorage.getItem("historialSalas")) || [];
+    const historialGuardado = storage.get("historialSalas") || [];
     setSalasVisitadas(historialGuardado);
 
     return () => {
@@ -61,7 +62,7 @@ function HomeAprendiz() {
       // Cargar estadísticas desde el historial
       const history = await getUserRoomHistory();
       // Filtrar sesiones donde el usuario fue participante (no mentor)
-      const userId = localStorage.getItem("userId");
+      const userId = storage.get("userId");
       const myStudySessions = history.filter(s => s.mentor_id !== userId);
 
       const totalSeconds = myStudySessions.reduce((acc, s) => acc + (s.duration_seconds || 0), 0);
@@ -116,9 +117,9 @@ function HomeAprendiz() {
         mentor: room.mentor_nombre || "Sin mentor",
       };
 
-      const visitadas = JSON.parse(localStorage.getItem("historialSalas")) || [];
+      const visitadas = storage.get("historialSalas") || [];
       if (!visitadas.some((s) => s.id === room.id)) {
-        localStorage.setItem("historialSalas", JSON.stringify([infoSala, ...visitadas]));
+        storage.set("historialSalas", [infoSala, ...visitadas]);
       }
 
       navigate(`/sala/${room.id}`);

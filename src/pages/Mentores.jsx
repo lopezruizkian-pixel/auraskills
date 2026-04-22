@@ -9,8 +9,10 @@ import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
 import { getDashboardSocket } from "../services/socketConfig";
 import "../Styles/Mentores.css";
 
+import { storage } from "../services/storage";
+
 function Mentores() {
-  const [rol] = useState(localStorage.getItem("userRole") || "alumno");
+  const [rol] = useState(storage.get("userRole") || "alumno");
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -93,9 +95,9 @@ function Mentores() {
 
       console.log(`[DEBUG] Guardando historial y navegando a /sala/${room.id}`);
       const infoSala = { id: room.id, nombre: room.nombre, habilidad: room.habilidad, mood: room.mood, mentor: room.mentor_nombre || "Sin mentor" };
-      const visitadas = JSON.parse(localStorage.getItem("historialSalas")) || [];
+      const visitadas = storage.get("historialSalas") || [];
       if (!visitadas.some((s) => s.id === room.id)) {
-        localStorage.setItem("historialSalas", JSON.stringify([infoSala, ...visitadas]));
+        storage.set("historialSalas", [infoSala, ...visitadas]);
       }
 
       navigate(`/sala/${room.id}`);

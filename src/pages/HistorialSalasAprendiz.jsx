@@ -27,8 +27,10 @@ const formatDuration = (seconds = 0) => {
   return `${sec}s`;
 };
 
+import { storage } from "../services/storage";
+
 function HistorialSalasAprendiz() {
-  const [rol] = useState(localStorage.getItem("userRole") || "alumno");
+  const [rol] = useState(storage.get("userRole") || "alumno");
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,8 +49,7 @@ function HistorialSalasAprendiz() {
           backendHistory = [];
         }
 
-        const localRaw = localStorage.getItem("historialSalas");
-        const localHistory = localRaw ? JSON.parse(localRaw) : [];
+        const localHistory = localData || [];
 
         // Unifica por id, priorizando backend
         const backendIds = new Set(backendHistory.map((s) => s.id));
