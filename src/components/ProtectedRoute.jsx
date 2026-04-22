@@ -15,7 +15,7 @@ export function ProtectedRoute({ children, requiredRole = null }) {
   if (requiredRole) {
     const { userRole } = getUser();
     if (userRole !== requiredRole) {
-      return <Navigate to="/home" replace />;
+      return <Navigate to="/unauthorized" replace />;
     }
   }
 

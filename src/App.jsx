@@ -15,6 +15,7 @@ import SalasActivas from './pages/SalasActivas';
 import RoomPage from './pages/RoomPage';
 import Configuracion from './pages/Configuracion';
 import Perfil from './pages/Perfil';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
@@ -97,6 +98,8 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+
+              <Route path="/unauthorized" element={<Unauthorized />} />
 
               {/* Ruta por defecto para rutas no encontradas */}
               <Route path="*" element={<Navigate to="/" replace />} />
