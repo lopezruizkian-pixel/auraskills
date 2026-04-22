@@ -61,7 +61,7 @@ function App() {
               <Route 
                 path="/historial" 
                 element={
-                  <ProtectedRoute requiredRole="alumno">
+                  <ProtectedRoute>
                     <HistorialSalasAprendiz />
                   </ProtectedRoute>
                 } 

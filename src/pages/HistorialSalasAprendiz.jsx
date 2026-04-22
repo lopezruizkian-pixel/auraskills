@@ -156,7 +156,11 @@ function HistorialSalasAprendiz() {
               <div className="empty-state-centered">
                 <History size={100} className="empty-icon" style={{ marginBottom: "2rem", opacity: 0.15 }} />
                 <h3 style={{ color: "#fff", fontSize: "2rem", marginBottom: "0.8rem", fontWeight: "700" }}>Tu historial está vacío</h3>
-                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", maxWidth: "450px", margin: "0 auto" }}>Aún no has asistido a ninguna sesión. ¡Explora las habilidades y únete a una sala!</p>
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", maxWidth: "450px", margin: "0 auto" }}>
+                  {rol === "mentor" 
+                    ? "Aún no has impartido ninguna sesión. ¡Crea una sala para comenzar!" 
+                    : "Aún no has asistido a ninguna sesión. ¡Explora las habilidades y únete a una sala!"}
+                </p>
               </div>
             ) : filteredHistory.length === 0 ? (
               <div className="empty-state-centered">
@@ -169,7 +173,7 @@ function HistorialSalasAprendiz() {
                 <div className="historial-table-header">
                   <div className="header-item-neon">Fecha</div>
                   <div className="header-item-neon">Habilidad</div>
-                  <div className="header-item-neon">Mentor</div>
+                  <div className="header-item-neon">{rol === "mentor" ? "Tipo" : "Mentor"}</div>
                   <div className="header-item-neon">Duración</div>
                 </div>
                 <div className="historial-list">
