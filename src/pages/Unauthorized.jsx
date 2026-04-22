@@ -51,31 +51,20 @@ function Unauthorized() {
                 color: 'rgba(255,255,255,0.7)', 
                 fontSize: '1.1rem', 
                 lineHeight: '1.6',
-                marginBottom: '2.5rem'
+                marginBottom: '1rem'
               }}>
                 No tienes permisos para acceder a esta sección. 
                 Tu rol actual de <strong>{rol.toUpperCase()}</strong> no permite la entrada a este módulo específico.
               </p>
-
-              <div style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center' }}>
-                <button 
-                  className="secondary-btn-s" 
-                  onClick={() => navigate(-1)}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.8rem 1.5rem' }}
-                >
-                  <ArrowLeft size={18} />
-                  Regresar
-                </button>
-                
-                <button 
-                  className="primary-btn-s" 
-                  onClick={() => navigate("/home")}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.8rem 1.5rem' }}
-                >
-                  <Home size={18} />
-                  Mi Dashboard
-                </button>
-              </div>
+              
+              <p style={{ 
+                color: 'var(--neon-blue)', 
+                fontSize: '0.9rem',
+                fontStyle: 'italic',
+                marginTop: '2rem'
+              }}>
+                Utiliza el menú lateral para navegar a las secciones permitidas.
+              </p>
             </div>
           </div>
         </main>
