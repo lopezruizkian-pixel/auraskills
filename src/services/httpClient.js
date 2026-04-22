@@ -1,4 +1,5 @@
 import { API_URL } from './api';
+import { storage } from './storage';
 
 /**
  * HTTP Client Centralizado con Interceptor
@@ -17,7 +18,7 @@ class HttpClient {
    * Obtiene el token de forma dinámica del almacenamiento
    */
   getAuthHeader() {
-    const token = localStorage.getItem('token');
+    const token = storage.get('token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   }
 
@@ -40,10 +41,7 @@ class HttpClient {
 
     // Si el token expiró (401)
     if (response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userRole');
+      storage.clear();
       window.location.href = '/login';
       throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
     }

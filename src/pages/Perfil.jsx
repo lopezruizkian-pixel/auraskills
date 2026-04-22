@@ -10,13 +10,14 @@ import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills } from "../services/skillService";
 import { logoutUser } from "../services/authService";
+import { storage } from "../services/storage";
 import "../Styles/Home.css";
 import "../Styles/Perfil.css";
 import "../Styles/Configuracion.css";
 import "../Styles/Configuracion.css";
 
 function Perfil() {
-  const [rol] = useState(localStorage.getItem("userRole") || "alumno");
+  const [rol] = useState(storage.get("userRole") || "alumno");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -70,7 +71,7 @@ function Perfil() {
         intereses: editData.intereses.split(",").map(i => i.trim()).filter(Boolean),
       });
       setUserData(updated);
-      localStorage.setItem("userName", updated.nombre);
+      storage.set("userName", updated.nombre);
       setShowEditModal(false);
       alert("Perfil actualizado correctamente");
     } catch (err) {

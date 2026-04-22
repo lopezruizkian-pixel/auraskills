@@ -8,6 +8,7 @@ import RoomHeader from '../components/RoomHeader';
 import ChatRoom from '../components/ChatRoom';
 import ParticipantsList from '../components/ParticipantsList';
 import ReactionsContainer from '../components/ReactionsContainer';
+import { storage } from "../services/storage";
 import '../Styles/RoomPage.css';
 
 const formatSessionDuration = (sessionInfo, currentTime) => {
@@ -86,9 +87,9 @@ function RoomPage() {
   const [now, setNow] = useState(Date.now());
   const [isLeaving, setIsLeaving] = useState(false);
 
-  const userId = localStorage.getItem('userId') || `user-${Date.now()}`;
-  const userName = localStorage.getItem('userName') || 'Usuario Anonimo';
-  const userRole = localStorage.getItem('userRole') || 'alumno';
+  const userId = storage.get('userId') || `user-${Date.now()}`;
+  const userName = storage.get('userName') || 'Usuario Anonimo';
+  const userRole = storage.get('userRole') || 'alumno';
   const userAvatar = '👨‍💼';
   const isMentor = userRole === 'mentor';
 
@@ -161,7 +162,7 @@ function RoomPage() {
 
     setIsLeaving(true);
     leaveCurrentRoom();
-    localStorage.removeItem('salaActiva');
+    storage.remove('salaActiva');
     navigate('/home', { replace: true });
   };
 

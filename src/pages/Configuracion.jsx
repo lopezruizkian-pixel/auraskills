@@ -7,12 +7,13 @@ import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff } from "lucide-r
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { logoutUser } from "../services/authService";
+import { storage } from "../services/storage";
 import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/Configuracion.css";
 
 function Configuracion() {
-  const [rol] = useState(localStorage.getItem("userRole") || "alumno");
+  const [rol] = useState(storage.get("userRole") || "alumno");
   const { theme, setTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [showPasswordModal, setShowPasswordModal] = useState(false);

@@ -5,11 +5,13 @@ import mascotaImg from "../assets/mascota.png";
 import "../Styles/Login.css";
 import { loginUser } from "../services/authService";
 import { useToast } from "../hooks/useToast";
+import { useAuth } from "../hooks/useAuth";
 import { validateEmail } from "../services/validation";
 
 function Login() {
   const navigate = useNavigate();
   const { error: showError, success: showSuccess } = useToast();
+  const { setAuthUser } = useAuth();
 
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
@@ -47,21 +49,14 @@ function Login() {
     try {
       const data = await loginUser(correo, password);
 
-      // Guardar datos del usuario
+      // Guardar datos del usuario usando el hook
       if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-
-      if (data.user?.id) {
-        localStorage.setItem("userId", data.user.id);
-      }
-
-      if (data.user?.nombre) {
-        localStorage.setItem("userName", data.user.nombre);
-      }
-
-      if (data.user?.rol) {
-        localStorage.setItem("userRole", data.user.rol);
+        setAuthUser({
+          token: data.token,
+          userId: data.user?.id,
+          userName: data.user?.nombre,
+          userRole: data.user?.rol
+        });
       }
 
       showSuccess("¡Sesión iniciada correctamente!");

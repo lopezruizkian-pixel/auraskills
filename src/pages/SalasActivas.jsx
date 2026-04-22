@@ -10,8 +10,10 @@ import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/SalasActivas.css";
 
+import { storage } from "../services/storage";
+
 function SalasActivas() {
-  const [rol] = useState(localStorage.getItem("userRole") || "mentor");
+  const [rol] = useState(storage.get("userRole") || "mentor");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,8 +21,8 @@ function SalasActivas() {
   const params = new URLSearchParams(location.search);
   const habilidadFiltro = params.get("habilidad");
 
-  const [salaActiva] = useState(
-    localStorage.getItem("salaActiva") ? JSON.parse(localStorage.getItem("salaActiva")) : null
+  const [activeRoom, setActiveRoom] = useState(
+    storage.get("salaActiva") || null
   );
   const [salasFiltered, setSalasFiltered] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -55,10 +57,10 @@ function SalasActivas() {
       try { await joinRoom(room.id); } catch (err) {
         if (!err.message?.includes("Ya estás en esta sala")) throw err;
       }
-      localStorage.setItem("salaActiva", JSON.stringify({
-        id: room.id, titulo: room.nombre, habilidad: room.habilidad,
-        mood: room.mood, inscritos: 0, capacidad: room.capacidad_maxima || 10,
-      }));
+      storage.set("salaActiva", {
+        ...room,
+        isCreator: false
+      });
       navigate(`/sala/${room.id}`);
     } catch (err) {
       alert(err.message || "Error al unirse");
@@ -72,7 +74,7 @@ function SalasActivas() {
   };
 
   const handleCloseRoom = () => {
-    localStorage.removeItem("salaActiva");
+    storage.remove("salaActiva");
     window.location.reload();
   };
 

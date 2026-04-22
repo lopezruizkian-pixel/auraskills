@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { storage } from '../services/storage';
 
 /**
  * Hook para gestionar autenticación
@@ -8,38 +9,35 @@ export const useAuth = () => {
   const navigate = useNavigate();
 
   const isAuthenticated = useCallback(() => {
-    return !!localStorage.getItem('token');
+    return !!storage.get('token');
   }, []);
 
   const getUser = useCallback(() => {
     return {
-      userId: localStorage.getItem('userId'),
-      userName: localStorage.getItem('userName'),
-      userRole: localStorage.getItem('userRole'),
-      token: localStorage.getItem('token'),
+      userId: storage.get('userId'),
+      userName: storage.get('userName'),
+      userRole: storage.get('userRole'),
+      token: storage.get('token'),
     };
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRole');
+    storage.clear();
     navigate('/login');
   }, [navigate]);
 
   const setAuthUser = useCallback((userData) => {
     if (userData.token) {
-      localStorage.setItem('token', userData.token);
+      storage.set('token', userData.token);
     }
     if (userData.userId) {
-      localStorage.setItem('userId', userData.userId);
+      storage.set('userId', userData.userId);
     }
     if (userData.userName) {
-      localStorage.setItem('userName', userData.userName);
+      storage.set('userName', userData.userName);
     }
     if (userData.userRole) {
-      localStorage.setItem('userRole', userData.userRole);
+      storage.set('userRole', userData.userRole);
     }
   }, []);
 

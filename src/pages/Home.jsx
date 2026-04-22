@@ -5,8 +5,10 @@ import HomeAprendiz from "../components/HomeAprendiz";
 import Notificaciones from "../components/Notificaciones";
 import "../Styles/Home.css";
 
+import { storage } from "../services/storage";
+
 function Home() {
-  const [rol] = useState(localStorage.getItem("userRole") || "alumno");
+  const [rol] = useState(storage.get("userRole") || "alumno");
   return (
     <div className="home-container">
       <div className="home-main-layout">

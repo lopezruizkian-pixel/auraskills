@@ -1,6 +1,8 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
+import { useToast } from "../hooks/useToast";
+import { storage } from "../services/storage";
 import Notificaciones from "./Notificaciones";
 import "../Styles/GlobalHeader.css";
 
@@ -27,7 +29,7 @@ function GlobalHeader() {
     return titles[location.pathname] || "AuraSkill";
   };
 
-  const rol = localStorage.getItem("userRole");
+  const rol = storage.get("userRole");
 
   return (
     <header className="global-header">

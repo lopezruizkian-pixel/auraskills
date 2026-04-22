@@ -1,6 +1,7 @@
 import { useEffect, useContext } from 'react';
 import { RoomContext } from '../context/RoomContext';
 import { fetchRoom } from '../services/roomService';
+import { storage } from '../services/storage';
 
 // Hook para cargar datos de la sala
 export const useRoom = (roomId) => {
@@ -31,7 +32,7 @@ export const useRoom = (roomId) => {
         setSessionInfo(null);
       }
       
-      const role = localStorage.getItem("userRole") || "alumno";
+      const role = storage.get("userRole") || "alumno";
       if (role === "alumno" && roomDataToSave) {
         const nuevaSalaHistorial = {
           id: roomDataToSave.id || roomId,
@@ -41,9 +42,9 @@ export const useRoom = (roomId) => {
           mentor: roomDataToSave.mentor_nombre || roomDataToSave.mentor?.nombre || roomDataToSave.mentor || 'Mentor Anonimo',
           duracion: 0
         };
-        const historialGuardado = JSON.parse(localStorage.getItem("historialSalas")) || [];
+        const historialGuardado = storage.get("historialSalas") || [];
         const filteredHistory = historialGuardado.filter(s => s.id !== nuevaSalaHistorial.id);
-        localStorage.setItem("historialSalas", JSON.stringify([nuevaSalaHistorial, ...filteredHistory]));
+        storage.set("historialSalas", [nuevaSalaHistorial, ...filteredHistory]);
       }
     };
 

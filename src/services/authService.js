@@ -1,5 +1,6 @@
 import { httpClient } from './httpClient';
 import { validateEmail, validatePassword } from './validation';
+import { storage } from './storage';
 
 export const loginUser = async (correo, password) => {
   if (!validateEmail(correo)) throw new Error('Email inválido');
@@ -40,8 +41,5 @@ export const validateToken = async () => {
 };
 
 export const logoutUser = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('userName');
-  localStorage.removeItem('userRole');
+  storage.clear();
 };
