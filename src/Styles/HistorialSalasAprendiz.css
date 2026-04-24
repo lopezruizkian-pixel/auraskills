@@ -54,7 +54,7 @@
 .historial-table-header {
   display: grid;
   grid-template-columns: 1.2fr 2fr 1.5fr 1.5fr 1fr;
-  gap: 10px;
+  gap: 25px; /* Aumentado de 10px para mayor separación */
   padding: 10px 20px;
   border-bottom: 1px solid rgba(0, 255, 255, 0.1);
   margin-bottom: 10px;
@@ -78,6 +78,7 @@
 .historial-row-neon {
   display: grid;
   grid-template-columns: 1.2fr 2fr 1.5fr 1.5fr 1fr;
+  gap: 25px; /* Sincronizado con el header */
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.03);
   border-radius: 15px;
@@ -95,9 +96,14 @@
 
 .historial-cell {
   color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
+  display: block;
   font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  line-height: 1.5;
+  padding-right: 15px; /* Añadido padding para evitar que el texto toque el siguiente */
 }
 
 /* Responsividad */

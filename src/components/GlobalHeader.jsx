@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { User } from "lucide-react";
+import { User, ArrowLeft } from "lucide-react";
 import { useToast } from "../hooks/useToast";
 import { storage } from "../services/storage";
 import Notificaciones from "./Notificaciones";
@@ -31,9 +31,22 @@ function GlobalHeader() {
 
   const rol = storage.get("userRole");
 
+  const showBack = location.pathname !== "/home" && location.pathname !== "/";
+
   return (
     <header className="global-header">
-      <h1 className="page-title">{getTitle()}</h1>
+      <div className="header-left-group">
+        {showBack && (
+          <button 
+            className="header-back-btn" 
+            onClick={() => navigate(-1)}
+            title="Volver"
+          >
+            <ArrowLeft size={20} />
+          </button>
+        )}
+        <h1 className="page-title">{getTitle()}</h1>
+      </div>
       <div className="header-actions-right">
         {rol !== "mentor" && <Notificaciones />}
         <div
