@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Users, Video, Clock, User } from "lucide-react";
+import { BookOpen, Users, Video, Clock, User, ChevronRight } from "lucide-react";
 import PerfilStatCard from "./PerfilStatCard";
 import { fetchActiveRooms, getUserRoomHistory } from "../services/roomService";
 import { getDashboardSocket } from "../services/socketConfig";
@@ -105,42 +105,53 @@ function HomeMentor() {
           <p>No tienes salas activas aún. Crea una para comenzar a ser mentor.</p>
         </div>
       ) : (
-        <div className="mentores-grid" style={{ alignItems: "stretch" }}>
-          {rooms.map((room) => (
-            <article key={room.id} className="neon-card mentor-list-card dashboard-room-card">
-              <div className="dashboard-room-card-top">
-                <div className="dashboard-room-icon">
-                  <Video size={30} strokeWidth={1.7} />
-                </div>
-                <div className="dashboard-room-badges">
-                  <span className="dashboard-room-badge">Sala activa</span>
-                  <span className="dashboard-room-badge subtle">
-                    {room.sessionInfo?.participantCount || 0} / {room.capacidad_maxima || 10}
-                  </span>
-                </div>
-              </div>
+        <div className="active-room-container">
+          {rooms.map((room) => {
+            const participantCount = room.sessionInfo?.participantCount || 0;
+            const maxCapacity = room.capacidad_maxima || 10;
+            const progress = (participantCount / maxCapacity) * 100;
 
-              <div className="dashboard-room-content">
-                <h3 className="dashboard-room-title">{room.nombre}</h3>
-                <div className="dashboard-room-meta">
-                  <p>
-                    <BookOpen size={15} />
-                    <span>{room.habilidad || "Habilidad no definida"}</span>
-                  </p>
-                  <p>
-                    <Users size={15} />
-                    <span>{room.sessionInfo?.participantCount || 0} participante(s) conectados</span>
-                  </p>
+            return (
+              <article key={room.id} className="premium-room-card">
+                <div className="room-card-glow"></div>
+                
+                <div className="room-header">
+                  <div className="live-badge">
+                    <span className="live-dot"></span>
+                    EN VIVO
+                  </div>
+                  <div className="room-id">ID: {room.id}</div>
                 </div>
-              </div>
 
-              <div className="dashboard-room-actions">
-                <button className="primary-btn-s dashboard-room-btn" onClick={() => handleEnterRoom(room)}>
-                  Entrar a mi sala
-                </button>
-              </div>
-            </article>
-          ))}
+                <div className="room-main-info">
+                  <h3 className="room-title-premium">{room.nombre}</h3>
+                  <div className="room-skill-badge">
+                    <BookOpen size={14} />
+                    {room.habilidad || "Habilidad general"}
+                  </div>
+                </div>
+
+                <div className="room-stats-premium">
+                  <div className="stat-item">
+                    <div className="stat-info">
+                      <Users size={18} className="icon-cyan" />
+                      <span>{participantCount} / {maxCapacity} Alumnos</span>
+                    </div>
+                    <div className="progress-bar-container">
+                      <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="room-actions-premium">
+                  <button className="enter-room-btn" onClick={() => handleEnterRoom(room)}>
+                    Entrar a mi sala
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
     </section>
