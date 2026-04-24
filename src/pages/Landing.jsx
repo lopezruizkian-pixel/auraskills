@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Users, Zap, Shield, ChevronRight } from "lucide-react";
+import mascotaImg from "../assets/mascota.png";
 import "../Styles/Landing.css";
 
 function Landing() {
@@ -38,6 +39,7 @@ function Landing() {
         </div>
         
         <div className="hero-visual-element">
+          <img src={mascotaImg} alt="Mascota Aura" className="landing-mascota" />
           <div className="aura-core"></div>
           <div className="aura-ring"></div>
         </div>
