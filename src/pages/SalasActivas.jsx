@@ -9,6 +9,7 @@ import { fetchActiveRooms, joinRoom } from "../services/roomService";
 import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/SalasActivas.css";
+import "../Styles/Mentores.css";
 
 import { storage } from "../services/storage";
 
