@@ -34,7 +34,7 @@ const getMentorName = (roomData, sessionInfo, participants) => {
   return 'Mentor pendiente';
 };
 
-function RoomHeader({ isMentor = false, onLeaveSession, onJustLeave, isLeaving = false }) {
+function RoomHeader({ roomId, isMentor = false, onLeaveSession, onJustLeave, isLeaving = false }) {
   const { roomData, participants, connectionStatus, sessionInfo } = useContext(RoomContext);
   const [now, setNow] = useState(Date.now());
 
@@ -58,12 +58,23 @@ function RoomHeader({ isMentor = false, onLeaveSession, onJustLeave, isLeaving =
     }
 
     if (sessionInfo.isActive && sessionInfo.startedAt) {
-      const startedAtMs = new Date(sessionInfo.startedAt).getTime();
+      // LÓGICA DEL GUARDIÁN DEL TIEMPO:
+      // Recuperar el inicio original de la sesión desde el localStorage si existe.
+      const id = roomId || sessionInfo.roomId || sessionInfo.id;
+      const storageKey = `room_start_${id}`;
+      const savedStart = localStorage.getItem(storageKey);
+      
+      // Si no hay nada guardado, lo guardamos ahora
+      if (!savedStart && id) {
+        localStorage.setItem(storageKey, sessionInfo.startedAt);
+      }
+
+      const startedAtMs = new Date(savedStart || sessionInfo.startedAt).getTime();
       return Math.max(0, Math.floor((now - startedAtMs) / 1000));
     }
 
     return sessionInfo.durationSeconds || 0;
-  }, [now, sessionInfo]);
+  }, [now, sessionInfo, roomId]);
 
   const mentorName = useMemo(
     () => getMentorName(roomData, sessionInfo, participants),

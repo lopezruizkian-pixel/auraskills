@@ -225,6 +225,7 @@ function RoomPage() {
   return (
     <div className="room-page">
       <RoomHeader
+        roomId={roomId}
         isMentor={isMentor}
         onLeaveSession={handleLeaveSession}
         onJustLeave={handleJustLeave}
