@@ -5,7 +5,7 @@ import PerfilStatCard from "../components/PerfilStatCard";
 import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Mail } from "lucide-react";
+import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Mail, FileText } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
@@ -53,8 +53,7 @@ function Perfil() {
       setEditData({
         nombre: data.nombre || "",
         usuario: data.usuario || "",
-        habilidades: (data.habilidades || []).join(", "),
-        intereses: (data.intereses || []).join(", "),
+        bio: data.bio || (data.intereses?.[0] || ""),
       });
 
       // Si es Aprendiz, calculamos sus habilidades por historial
@@ -114,8 +113,7 @@ function Perfil() {
       const updated = await httpClient.put("/auth/update-profile", {
         nombre: editData.nombre.trim(),
         usuario: editData.usuario.trim(),
-        habilidades: editData.habilidades.split(",").map(h => h.trim()).filter(Boolean),
-        intereses: editData.intereses.split(",").map(i => i.trim()).filter(Boolean),
+        bio: editData.bio.trim(),
       });
       setUserData(updated);
       storage.set("userName", updated.nombre);
@@ -221,7 +219,7 @@ function Perfil() {
                   <span className={`perfil-rol-badge ${rol}`}>{rol === "mentor" ? "Mentor" : "Aprendiz"}</span>
                 </div>
                 <h3 className="perfil-usuario">@{userData.usuario}</h3>
-                <p className="perfil-bio">{userData.correo}</p>
+                <p className="perfil-bio" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", marginTop: "4px" }}>{userData.correo}</p>
               </div>
               <div className="perfil-actions">
                 <button className="primary-btn-neon-s edit-btn" onClick={() => setShowEditModal(true)}>
@@ -347,11 +345,14 @@ function Perfil() {
               </>
             )}
 
-            {userData.intereses && userData.intereses.length > 0 && (
+            {/* Sección Sobre mí */}
+            {(userData.intereses?.[0] || userData.bio) && (
               <>
-                <h2 className="section-subtitle-neon">Intereses</h2>
-                <div className="neon-card perfil-skills-card">
-                  {userData.intereses.map((int, i) => <SkillTag key={i} nombre={int} color="#ff00ff" />)}
+                <h2 className="section-subtitle-neon">Sobre mí</h2>
+                <div className="neon-card perfil-skills-card" style={{ padding: "1.5rem" }}>
+                  <p style={{ color: "rgba(255,255,255,0.85)", lineHeight: "1.8", margin: 0, fontSize: "1rem", whiteSpace: "pre-wrap" }}>
+                    {userData.bio || userData.intereses?.[0] || "No hay una descripción disponible aún."}
+                  </p>
                 </div>
               </>
             )}
@@ -464,16 +465,16 @@ function Perfil() {
 
               <div className="mini-input-group">
                 <label style={{ color: "#00ffff", fontSize: "0.75rem", textTransform: "uppercase", fontWeight: "800", letterSpacing: "1.5px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <BookOpen size={14} /> Intereses y Habilidades
+                  <FileText size={14} /> Sobre mí (Descripción)
                 </label>
                 <textarea 
                   className="neon-input-s" 
-                  style={{ minHeight: "100px", resize: "none", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", lineHeight: "1.6" }}
-                  value={editData.intereses} 
-                  onChange={(e) => setEditData({ ...editData, intereses: e.target.value })}
-                  placeholder="React, Diseño, Node.js, etc."
+                  style={{ minHeight: "120px", resize: "none", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", lineHeight: "1.6" }}
+                  value={editData.bio} 
+                  onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+                  placeholder="Cuéntanos un poco sobre ti, tus metas o qué estás aprendiendo..."
                 />
-                <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", marginTop: "6px" }}>Sépáralos por comas para generar etiquetas automáticamente.</span>
+                <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", marginTop: "6px" }}>Esta descripción aparecerá en tu perfil público.</span>
               </div>
             </div>
 
