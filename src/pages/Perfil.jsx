@@ -107,7 +107,11 @@ function Perfil() {
   };
 
   const handleSave = async () => {
-    if (!editData.nombre || !editData.usuario) { alert("Nombre y usuario son obligatorios"); return; }
+    if (!editData.nombre?.trim() || !editData.usuario?.trim()) {
+      alert("El nombre y el nombre de usuario son campos de identidad obligatorios.");
+      return;
+    }
+    
     setSaving(true);
     try {
       const updated = await httpClient.put("/auth/update-profile", {
@@ -118,39 +122,72 @@ function Perfil() {
       setUserData(updated);
       storage.set("userName", updated.nombre);
       setShowEditModal(false);
-      alert("Perfil actualizado correctamente");
+      alert("¡Perfil actualizado con éxito en la red!");
     } catch (err) {
-      alert(err.message || "Error al actualizar perfil");
+      alert(err.message || "Error de red al actualizar el perfil.");
     } finally {
       setSaving(false);
     }
   };
 
-  // Config handlers from Configuracion
   const handleChangePassword = async () => {
-    if (!passwordData.passwordActual || !passwordData.passwordNueva || !passwordData.confirmar) { alert("Completa todos los campos"); return; }
-    if (passwordData.passwordNueva !== passwordData.confirmar) { alert("Las contraseñas nuevas no coinciden"); return; }
+    const { passwordActual, passwordNueva, confirmar } = passwordData;
+    
+    if (!passwordActual || !passwordNueva || !confirmar) {
+      alert("Todos los campos de seguridad son obligatorios.");
+      return;
+    }
+    
+    if (passwordNueva.length < 6) {
+      alert("La nueva contraseña debe tener al menos 6 caracteres por seguridad.");
+      return;
+    }
+
+    if (passwordNueva !== confirmar) {
+      alert("La confirmación no coincide con la nueva contraseña.");
+      return;
+    }
+
     setPasswordLoading(true);
     try {
-      await httpClient.put("/auth/change-password", { passwordActual: passwordData.passwordActual, passwordNueva: passwordData.passwordNueva });
-      alert("Contraseña actualizada correctamente");
+      await httpClient.put("/auth/change-password", { 
+        passwordActual: passwordActual, 
+        passwordNueva: passwordNueva 
+      });
+      alert("Contraseña actualizada. Tu protocolo de seguridad está al día.");
       setShowPasswordModal(false);
       setPasswordData({ passwordActual: "", passwordNueva: "", confirmar: "" });
-    } catch (err) { alert(err.message || "Error al cambiar contraseña"); }
-    finally { setPasswordLoading(false); }
+    } catch (err) { 
+      alert(err.message || "La contraseña actual es incorrecta o hubo un error en el servidor."); 
+    } finally { 
+      setPasswordLoading(false); 
+    }
   };
 
   const handleDeleteAccount = async () => {
-    if (!deletePassword) { alert("Ingresa tu contraseña para confirmar"); return; }
-    if (!window.confirm("¿Estás seguro? Esta acción es irreversible.")) return;
+    if (!deletePassword) {
+      alert("Debes ingresar tu contraseña actual para confirmar la baja definitiva.");
+      return;
+    }
+    
+    if (!window.confirm("¡ATENCIÓN! ¿Estás completamente seguro de que deseas eliminar tu cuenta? Esta acción borrará todos tus datos permanentemente.")) {
+      return;
+    }
+
     setDeleteLoading(true);
     try {
-      await httpClient.delete("/auth/delete-account", { body: JSON.stringify({ password: deletePassword }), headers: { "Content-Type": "application/json" } });
+      await httpClient.delete("/auth/delete-account", { 
+        body: JSON.stringify({ password: deletePassword }), 
+        headers: { "Content-Type": "application/json" } 
+      });
+      alert("Cuenta eliminada correctamente. Esperamos verte de nuevo en el futuro.");
       logoutUser();
-      alert("Cuenta eliminada"); 
       navigate("/login");
-    } catch (err) { alert(err.message || "Error al eliminar cuenta"); }
-    finally { setDeleteLoading(false); }
+    } catch (err) { 
+      alert(err.message || "Contraseña incorrecta. No se pudo validar la eliminación."); 
+    } finally { 
+      setDeleteLoading(false); 
+    }
   };
 
   const handleToggleSkill = async (skillId) => {
