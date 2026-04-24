@@ -144,6 +144,11 @@ function Perfil() {
       return;
     }
 
+    if (passwordActual === passwordNueva) {
+      alert("La nueva contraseña no puede ser igual a la actual. Elige una llave de acceso distinta.");
+      return;
+    }
+
     if (passwordNueva !== confirmar) {
       alert("La confirmación no coincide con la nueva contraseña.");
       return;
