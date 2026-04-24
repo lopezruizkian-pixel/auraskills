@@ -145,9 +145,16 @@ function SalasActivas() {
   // Vista normal — sala activa del mentor
   return (
     <div className="home-container">
+      {/* Elementos Decorativos de Fondo */}
+      <div className="cyber-background">
+        <div className="orb orb-cyan"></div>
+        <div className="orb orb-magenta"></div>
+        <div className="cyber-grid"></div>
+      </div>
+
       <div className="home-main-layout">
         <Sidebar rol={rol} />
-        <main className="home-content" style={{ display: "flex", flexDirection: "column" }}>
+        <main className="home-content">
           <GlobalHeader />
 
           {/* Estado eliminado por redundancia */}

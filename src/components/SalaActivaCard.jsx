@@ -1,5 +1,5 @@
 import React from "react";
-import { Users, Radio, Wrench, LogIn, Power } from "lucide-react";
+import { Users, Radio, Wrench, LogIn, Power, ShieldCheck, ChevronRight } from "lucide-react";
 
 function SalaActivaCard({ id, titulo, habilidad, inscritos, capacidad, onClose, onEnter }) {
   const handleClose = () => {
@@ -7,44 +7,57 @@ function SalaActivaCard({ id, titulo, habilidad, inscritos, capacidad, onClose, 
       onClose();
     }
   };
-  return (
-    <div className="neon-card sala-activa-card single-card">
-      <div className="sala-card-header">
-        <div className="title-group">
-          <h3 className="sala-titulo">{titulo}</h3>
-          <div className="live-badge" title="Sala en vivo">
-            <Radio size={14} className="live-icon" /> 
-            <span>En vivo</span>
-          </div>
-        </div>
-      </div>
-      <div className="sala-card-body">
-        <div className="info-grid">
-          <div className="info-item">
-            <Wrench size={18} className="sala-info-icon" title="Habilidad" />
-            <div>
-              <label>Habilidad</label>
-              <p>{habilidad}</p>
-            </div>
-          </div>
 
-          <div className="info-item">
-            <Users size={18} className="sala-info-icon" title="Participantes" />
-            <div>
-              <label>Participantes</label>
-              <p>{inscritos} / {capacidad}</p>
+  const progress = (inscritos / capacidad) * 100;
+
+  return (
+    <div className="premium-active-card">
+      <div className="card-energy-core"></div>
+      
+      <div className="card-top-header">
+        <div className="live-status-indicator">
+          <div className="pulse-dot"></div>
+          <span>TRANSMISIÓN ACTIVA</span>
+        </div>
+        <div className="card-id-tag">#{id?.toString().slice(-4)}</div>
+      </div>
+
+      <div className="card-main-body">
+        <h2 className="card-title-neon">{titulo}</h2>
+        
+        <div className="tech-info-row">
+          <div className="tech-badge">
+            <Wrench size={16} />
+            <span>{habilidad}</span>
+          </div>
+          <div className="tech-badge magenta">
+            <ShieldCheck size={16} />
+            <span>Segura</span>
+          </div>
+        </div>
+
+        <div className="capacity-visualizer">
+          <div className="capacity-header">
+            <div className="label-with-icon">
+              <Users size={18} />
+              <span>Capacidad de Alumnos</span>
             </div>
+            <span className="capacity-count">{inscritos} / {capacidad}</span>
+          </div>
+          <div className="tech-progress-bg">
+            <div className="tech-progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
       </div>
-      <div className="sala-card-actions full-width-actions">
-        <button className="danger-btn-neon" onClick={handleClose} title="Finalizar sesión">
+
+      <div className="card-footer-actions">
+        <button className="btn-abort-session" onClick={handleClose}>
           <Power size={18} />
-          Finalizar sesión
+          Finalizar
         </button>
-        <button className="primary-btn-neon" onClick={onEnter} title="Entrar a la sala">
-          <LogIn size={18} />
-          Entrar a la sala
+        <button className="btn-enter-session" onClick={onEnter}>
+          Entrar a la Sala
+          <ChevronRight size={20} />
         </button>
       </div>
     </div>

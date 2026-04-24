@@ -1,4 +1,4 @@
-/* --- CONTENEDOR DE ACCIONES --- */
+﻿/* --- CONTENEDOR DE ACCIONES --- */
 .full-width-actions {
   display: flex;
   gap: 20px;
@@ -22,7 +22,7 @@
   letter-spacing: 0.5px;
 }
 
-/* --- BOTÓN FINALIZAR (ESTILO NEÓN PELIGRO) --- */
+/* --- BOTÃ“N FINALIZAR (ESTILO NEÃ“N PELIGRO) --- */
 .danger-btn-neon {
   all: unset;
   background: rgba(255, 0, 85, 0.05);
@@ -42,7 +42,7 @@
   transform: translateY(0);
 }
 
-/* --- BOTÓN ENTRAR (ESTILO NEÓN PRIMARIO) --- */
+/* --- BOTÃ“N ENTRAR (ESTILO NEÃ“N PRIMARIO) --- */
 .primary-btn-neon {
   all: unset;
   background: rgba(0, 255, 255, 0.1);
@@ -77,4 +77,255 @@
 .empty-icon {
   color: #ff00ff;
   filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.4));
+}
+/* ═════════════════════════════════════════════════════════════════════ */
+/* CYBER BACKGROUND & ORBS */
+/* ═════════════════════════════════════════════════════════════════════ */
+
+.cyber-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.4;
+  animation: orbit 20s infinite linear;
+}
+
+.orb-cyan {
+  width: 400px;
+  height: 400px;
+  background: #00ffff;
+  top: -10%;
+  left: -10%;
+}
+
+.orb-magenta {
+  width: 500px;
+  height: 500px;
+  background: #ff00ff;
+  bottom: -15%;
+  right: -10%;
+  animation-duration: 25s;
+  animation-direction: reverse;
+}
+
+.cyber-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle, black, transparent 80%);
+}
+
+@keyframes orbit {
+  from { transform: translate(0, 0) rotate(0deg); }
+  to { transform: translate(100px, 50px) rotate(360deg); }
+}
+
+/* ═════════════════════════════════════════════════════════════════════ */
+/* PREMIUM ACTIVE CARD */
+/* ═════════════════════════════════════════════════════════════════════ */
+
+.premium-active-card {
+  position: relative;
+  width: min(100%, 580px);
+  background: rgba(13, 2, 28, 0.85);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  border-radius: 32px;
+  padding: 40px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 255, 255, 0.1);
+  overflow: hidden;
+  animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-energy-core {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 80%; height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  box-shadow: 0 0 20px #00ffff;
+}
+
+.card-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.live-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 0, 85, 0.12);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  color: #ff3366;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #ff3366;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ff3366;
+  animation: pulseDot 1.5s infinite;
+}
+
+.card-id-tag {
+  color: rgba(255, 255, 255, 0.2);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.card-title-neon {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.tech-info-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.tech-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 255, 255, 0.08);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 10px;
+  color: #00ffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tech-badge.magenta {
+  color: #ff00ff;
+  background: rgba(255, 0, 255, 0.08);
+  border-color: rgba(255, 0, 255, 0.2);
+}
+
+.capacity-visualizer {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 40px;
+}
+
+.capacity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.label-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+}
+
+.capacity-count {
+  font-weight: 800;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.tech-progress-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tech-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ffff, #ff00ff);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  transition: width 1s ease;
+}
+
+.card-footer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 15px;
+}
+
+.btn-abort-session {
+  all: unset;
+  background: rgba(255, 0, 85, 0.1);
+  border: 1px solid rgba(255, 0, 85, 0.4);
+  color: #ff3366;
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-abort-session:hover {
+  background: #ff3366;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(255, 51, 102, 0.3);
+}
+
+.btn-enter-session {
+  all: unset;
+  background: linear-gradient(135deg, #00ffff, #0088ff);
+  color: #0a0014;
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+}
+
+.btn-enter-session:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 255, 255, 0.4);
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
