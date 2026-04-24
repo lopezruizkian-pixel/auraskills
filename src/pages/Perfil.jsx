@@ -502,31 +502,52 @@ function Perfil() {
 
       {/* Password Modal */}
       {showPasswordModal && (
-        <div style={{ position:"fixed", top:0, left:0, width:"100vw", height:"100vh", background:"rgba(0,0,0,0.7)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:1000 }}>
-          <div style={{ background:"#0d0d1a", border:"1px solid #00ffff", borderRadius:"12px", padding:"2rem", minWidth:"340px", display:"flex", flexDirection:"column", gap:"0.75rem" }}>
-            <h3 style={{ color:"#00ffff", margin:0 }}>...</h3>
-            <input type="password" placeholder="Contraseña actual" value={passwordData.passwordActual}
-              onChange={(e) => setPasswordData({ ...passwordData, passwordActual: e.target.value })}
-              style={inputStyle} />
-            <div style={{ position:"relative" }}>
-              <input type={showNueva ? "text" : "password"} placeholder="Nueva contraseña" value={passwordData.passwordNueva}
-                onChange={(e) => setPasswordData({ ...passwordData, passwordNueva: e.target.value })} style={inputStyle} />
-              <span onClick={() => setShowNueva(!showNueva)} style={{ position:"absolute", right:"0.75rem", top:"50%", transform:"translateY(-50%)", cursor:"pointer", color:"#aaa" }}>
-                {showNueva ? <EyeOff size={18} /> : <Eye size={18} />}
-              </span>
+        <div className="modal-overlay-neon" style={{ position:"fixed", top:0, left:0, width:"100vw", height:"100vh", background:"rgba(0,0,0,0.85)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:1000, backdropFilter: "blur(8px)" }}>
+          <div className="neon-card" style={{ padding:"2.5rem", width:"100%", maxWidth:"420px", display:"flex", flexDirection:"column", gap:"1.5rem", animation: "fadeInDown 0.3s ease-out" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ background: "rgba(0,255,255,0.1)", width: "60px", height: "60px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", border: "1px solid #00ffff" }}>
+                <ShieldCheck size={32} color="#00ffff" />
+              </div>
+              <h3 style={{ color:"#00ffff", margin:"0 0 0.5rem 0", fontSize: "1.5rem", fontWeight: "800" }}>Seguridad de Acceso</h3>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Actualiza tu llave de acceso para mantener tu cuenta blindada.</p>
             </div>
-            <div style={{ position:"relative" }}>
-              <input type={showConfirmar ? "text" : "password"} placeholder="Confirmar nueva contraseña" value={passwordData.confirmar}
-                onChange={(e) => setPasswordData({ ...passwordData, confirmar: e.target.value })} style={inputStyle} />
-              <span onClick={() => setShowConfirmar(!showConfirmar)} style={{ position:"absolute", right:"0.75rem", top:"50%", transform:"translateY(-50%)", cursor:"pointer", color:"#aaa" }}>
-                {showConfirmar ? <EyeOff size={18} /> : <Eye size={18} />}
-              </span>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
+              <div className="mini-input-group">
+                <label style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", display: "block" }}>Contraseña Actual</label>
+                <input type="password" placeholder="Ingresa tu clave actual" value={passwordData.passwordActual}
+                  onChange={(e) => setPasswordData({ ...passwordData, passwordActual: e.target.value })}
+                  className="neon-input-s" style={{ background: "rgba(255,255,255,0.03)" }} />
+              </div>
+
+              <div className="mini-input-group">
+                <label style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", display: "block" }}>Nueva Contraseña</label>
+                <div style={{ position:"relative" }}>
+                  <input type={showNueva ? "text" : "password"} placeholder="Mínimo 8 caracteres" value={passwordData.passwordNueva}
+                    onChange={(e) => setPasswordData({ ...passwordData, passwordNueva: e.target.value })} className="neon-input-s" style={{ background: "rgba(255,255,255,0.03)" }} />
+                  <span onClick={() => setShowNueva(!showNueva)} style={{ position:"absolute", right:"1rem", top:"50%", transform:"translateY(-50%)", cursor:"pointer", color:"#aaa" }}>
+                    {showNueva ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mini-input-group">
+                <label style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", display: "block" }}>Confirmar Nueva Clave</label>
+                <div style={{ position:"relative" }}>
+                  <input type={showConfirmar ? "text" : "password"} placeholder="Repite tu nueva clave" value={passwordData.confirmar}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmar: e.target.value })} className="neon-input-s" style={{ background: "rgba(255,255,255,0.03)" }} />
+                  <span onClick={() => setShowConfirmar(!showConfirmar)} style={{ position:"absolute", right:"1rem", top:"50%", transform:"translateY(-50%)", cursor:"pointer", color:"#aaa" }}>
+                    {showConfirmar ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div style={{ display:"flex", gap:"1rem", marginTop:"0.5rem" }}>
-              <button className="primary-btn-neon-s" onClick={handleChangePassword} disabled={passwordLoading}>
-                {passwordLoading ? "Guardando..." : "Guardar"}
+
+            <div style={{ display:"flex", gap:"1rem", marginTop:"1rem" }}>
+              <button className="primary-btn-neon-s" style={{ flex: 1, height: "48px" }} onClick={handleChangePassword} disabled={passwordLoading}>
+                {passwordLoading ? <div className="aura-spinner-mini"></div> : "Actualizar Clave"}
               </button>
-              <button className="danger-btn-neon-s" onClick={() => setShowPasswordModal(false)}>Cancelar</button>
+              <button className="danger-btn-neon-s" style={{ flex: 1, height: "48px", background: "transparent", border: "1px solid rgba(255,0,255,0.3)" }} onClick={() => setShowPasswordModal(false)}>Cancelar</button>
             </div>
           </div>
         </div>
@@ -534,18 +555,34 @@ function Perfil() {
 
       {/* Delete Modal */}
       {showDeleteModal && (
-        <div style={{ position:"fixed", top:0, left:0, width:"100vw", height:"100vh", background:"rgba(0,0,0,0.7)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:1000 }}>
-          <div style={{ background:"#0d0d1a", border:"1px solid #ff00ff", borderRadius:"12px", padding:"2rem", minWidth:"340px", display:"flex", flexDirection:"column", gap:"0.75rem" }}>
-            <h3 style={{ color:"#ff00ff", margin:0 }}>...</h3>
-            <p style={{ color:"#ccc", margin:0 }}>...</p>
-            <input type="password" placeholder="Tu contraseña" value={deletePassword}
-              onChange={(e) => setDeletePassword(e.target.value)}
-              style={inputStyle} />
+        <div className="modal-overlay-neon" style={{ position:"fixed", top:0, left:0, width:"100vw", height:"100vh", background:"rgba(20,0,0,0.85)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:1000, backdropFilter: "blur(10px)" }}>
+          <div className="neon-card" style={{ padding:"2.5rem", width:"100%", maxWidth:"420px", display:"flex", flexDirection:"column", gap:"1.5rem", border: "1px solid #ff0055", animation: "fadeInDown 0.3s ease-out" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ background: "rgba(255,0,85,0.1)", width: "60px", height: "60px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", border: "1px solid #ff0055" }}>
+                <AlertTriangle size={32} color="#ff0055" />
+              </div>
+              <h3 style={{ color:"#ff0055", margin:"0 0 0.5rem 0", fontSize: "1.5rem", fontWeight: "800" }}>Zona de Peligro</h3>
+              <p style={{ color: "#ff80a4", fontSize: "0.9rem", margin: 0, fontWeight: "600" }}>¿Estás absolutamente seguro?</p>
+            </div>
+
+            <div style={{ background: "rgba(255,0,85,0.05)", padding: "1rem", borderRadius: "10px", borderLeft: "4px solid #ff0055" }}>
+              <p style={{ color:"rgba(255,255,255,0.8)", margin:0, fontSize: "0.85rem", lineHeight: "1.5" }}>
+                Esta acción es <strong>irreversible</strong>. Se eliminarán permanentemente tus logros, conexiones y todo el historial de tu cuenta en AuraSkill.
+              </p>
+            </div>
+
+            <div className="mini-input-group">
+              <label style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", display: "block" }}>Ingresa tu contraseña para confirmar</label>
+              <input type="password" placeholder="Tu clave de acceso" value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                className="neon-input-s" style={{ border: "1px solid rgba(255,0,85,0.3)", background: "rgba(255,0,85,0.03)" }} />
+            </div>
+
             <div style={{ display:"flex", gap:"1rem", marginTop:"0.5rem" }}>
-              <button className="danger-btn-neon-s" onClick={handleDeleteAccount} disabled={deleteLoading}>
-                {deleteLoading ? "Eliminando..." : "Confirmar eliminación"}
+              <button className="danger-btn-neon-s" style={{ flex: 1, height: "48px" }} onClick={handleDeleteAccount} disabled={deleteLoading}>
+                {deleteLoading ? "Procesando..." : "Eliminar Permanentemente"}
               </button>
-              <button className="primary-btn-neon-s" onClick={() => setShowDeleteModal(false)}>Cancelar</button>
+              <button className="primary-btn-neon-s" style={{ flex: 1, height: "48px", background: "transparent", border: "1px solid rgba(0,255,255,0.3)" }} onClick={() => setShowDeleteModal(false)}>Cancelar</button>
             </div>
           </div>
         </div>
