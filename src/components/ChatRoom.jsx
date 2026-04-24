@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { RoomContext } from '../context/RoomContext';
+import { storage } from '../services/storage';
 import { Send, Smile } from 'lucide-react';
 import ReactionsMenu from './ReactionsMenu';
 import '../Styles/RoomComponents.css';
