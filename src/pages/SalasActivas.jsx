@@ -33,8 +33,38 @@ function SalasActivas() {
   useEffect(() => {
     if (habilidadFiltro) {
       loadSalasPorHabilidad();
+    } else {
+      syncActiveRoom();
     }
   }, [habilidadFiltro]);
+
+  const syncActiveRoom = async () => {
+    // Si ya hay una sala en storage, no hacemos nada (por ahora)
+    if (salaActiva) return;
+
+    setLoading(true);
+    try {
+      const userId = storage.get("userId");
+      const rooms = await fetchActiveRooms();
+      const myActiveRoom = rooms.find(r => r.mentor_id === userId);
+      
+      if (myActiveRoom) {
+        const info = {
+          id: myActiveRoom.id,
+          titulo: myActiveRoom.nombre,
+          habilidad: myActiveRoom.habilidad,
+          inscritos: myActiveRoom.sessionInfo?.participantCount || 0,
+          capacidad: myActiveRoom.capacidad_maxima || 10
+        };
+        storage.set("salaActiva", info);
+        setSalaActiva(info);
+      }
+    } catch (err) {
+      console.error("Error sincronizando sala activa:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadSalasPorHabilidad = async () => {
     setLoading(true);
@@ -97,7 +127,7 @@ function SalasActivas() {
       <div className="home-container">
         <div className="home-main-layout">
           <Sidebar rol={rol} />
-          <main className="home-content">
+          <main className="home-content" style={{ display: "flex", flexDirection: "column" }}>
             <GlobalHeader />
 
             <section className="salas-activas-section">
