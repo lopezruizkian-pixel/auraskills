@@ -1,4 +1,4 @@
-﻿/* --- CONTENEDOR DE ACCIONES --- */
+/* --- CONTENEDOR DE ACCIONES --- */
 .full-width-actions {
   display: flex;
   gap: 20px;
@@ -78,59 +78,6 @@
   color: #ff00ff;
   filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.4));
 }
-/* ═════════════════════════════════════════════════════════════════════ */
-/* CYBER BACKGROUND & ORBS */
-/* ═════════════════════════════════════════════════════════════════════ */
-
-.cyber-background {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.4;
-  animation: orbit 20s infinite linear;
-}
-
-.orb-cyan {
-  width: 400px;
-  height: 400px;
-  background: #00ffff;
-  top: -10%;
-  left: -10%;
-}
-
-.orb-magenta {
-  width: 500px;
-  height: 500px;
-  background: #ff00ff;
-  bottom: -15%;
-  right: -10%;
-  animation-duration: 25s;
-  animation-direction: reverse;
-}
-
-.cyber-grid {
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: radial-gradient(circle, black, transparent 80%);
-}
-
-@keyframes orbit {
-  from { transform: translate(0, 0) rotate(0deg); }
-  to { transform: translate(100px, 50px) rotate(360deg); }
-}
-
 /* ═════════════════════════════════════════════════════════════════════ */
 /* PREMIUM ACTIVE CARD */
 /* ═════════════════════════════════════════════════════════════════════ */
