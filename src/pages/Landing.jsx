@@ -12,27 +12,27 @@ function Landing() {
         </div>
         <div className="nav-actions">
           <Link to="/login" className="nav-link">Iniciar Sesión</Link>
-          <Link to="/registro" className="primary-btn-neon-s">Unirse a la Red</Link>
+          <Link to="/registro" className="nav-cta-btn">Regístrate Gratis</Link>
         </div>
       </nav>
 
       {/* Hero Section */}
       <main className="hero-section">
         <div className="hero-content-wrapper">
-          <div className="hero-badge">Beta v2.0 • Cyber-Luxury Edition</div>
+          <div className="hero-badge">Aprende • Enseña • Conecta</div>
           <h1 className="hero-main-title">
-            Domina el Futuro del <span className="text-gradient">Conocimiento</span>
+            Tu camino al éxito con <span className="text-gradient">Mentoría en Vivo</span>
           </h1>
           <p className="hero-main-subtitle">
-            Conecta con mentores de élite en tiempo real. Una red neuronal de aprendizaje diseñada para la nueva era digital.
+            Conecta con expertos de todo el mundo en salas interactivas. Aprende habilidades reales en tiempo real con la mejor comunidad.
           </p>
           <div className="hero-cta-group">
             <Link to="/registro" className="cta-primary">
-              Comenzar Protocolo <ChevronRight size={20} />
+              ¡Quiero empezar ya! <ChevronRight size={20} />
             </Link>
             <div className="hero-stats-mini">
               <div className="mini-stat"><strong>+500</strong> Mentores</div>
-              <div className="mini-stat"><strong>24/7</strong> Soporte</div>
+              <div className="mini-stat"><strong>24/7</strong> Online</div>
             </div>
           </div>
         </div>
@@ -47,26 +47,26 @@ function Landing() {
       <section className="features-section">
         <div className="feature-card">
           <div className="feature-icon-box"><Zap size={24} /></div>
-          <h3>Salas Dinámicas</h3>
-          <p>Interacción instantánea con video y chat de baja latencia para un aprendizaje sin barreras.</p>
+          <h3>Clases en Vivo</h3>
+          <p>Únete a salas interactivas con video y chat fluido. Aprende haciendo, no solo mirando.</p>
         </div>
 
         <div className="feature-card">
           <div className="feature-icon-box"><Users size={24} /></div>
-          <h3>Mentores de Élite</h3>
-          <p>Acceso directo a profesionales activos en la industria tecnológica y creativa mundial.</p>
+          <h3>Mentores Expertos</h3>
+          <p>Encuentra profesionales dispuestos a compartir su experiencia y guiarte en tu carrera.</p>
         </div>
 
         <div className="feature-card">
           <div className="feature-icon-box"><Shield size={24} /></div>
-          <h3>Protocolo Seguro</h3>
-          <p>Tu privacidad y progreso son nuestra prioridad. Datos cifrados y entorno de confianza.</p>
+          <h3>Seguridad Total</h3>
+          <p>Tu privacidad es lo primero. Entorno seguro y moderado para una mejor experiencia.</p>
         </div>
       </section>
 
       {/* Footer Minimalista */}
       <footer className="landing-footer">
-        <p>© 2024 AuraSkill Network. Todos los sistemas operativos.</p>
+        <p>© 2024 AuraSkill. La plataforma de aprendizaje del futuro.</p>
       </footer>
     </div>
   );
