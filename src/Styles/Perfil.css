@@ -1,295 +1,159 @@
-.perfil-section {
+﻿.perfil-section {
   width: 100%;
-  max-width: 950px;
+  max-width: 1100px;
   margin-top: 10px;
   animation: fadeInDown 0.4s ease-out;
 }
 
-/* --- HEADER DEL PERFIL --- */
 .perfil-header-card {
   display: flex;
   align-items: center;
   gap: 30px;
-  padding: 40px;
-  margin-bottom: 40px;
+  padding: 30px 40px;
+  margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
   border-color: rgba(0, 255, 255, 0.4);
 }
 
-/* Fondo decorativo sutil en la tarjeta del perfil */
-.perfil-header-card::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(255,0,255,0.1) 0%, rgba(20,0,34,0) 70%);
-  z-index: 0;
-}
-
-.perfil-avatar-container {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-}
-
 .perfil-avatar {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   border: 3px solid #00ffff;
   background-color: #140022;
   object-fit: cover;
-  position: relative;
-  z-index: 2;
 }
 
-.avatar-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: rgba(0, 255, 255, 0.2);
-  filter: blur(15px);
-  z-index: 1;
-  animation: float 4s infinite ease-in-out;
+/* --- LAYOUT DE DOS COLUMNAS --- */
+.perfil-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  align-items: start;
 }
 
-.perfil-info {
-  flex: 1;
-  z-index: 1;
-}
-
-.perfil-title-row {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 5px;
-}
-
-.perfil-nombre {
-  font-size: 2rem;
-  color: white;
-  margin: 0;
-  letter-spacing: 1px;
-}
-
-.perfil-rol-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.perfil-rol-badge.mentor {
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid #00ffff;
-  color: #00ffff;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-}
-
-.perfil-rol-badge.alumno {
-  background: rgba(255, 0, 255, 0.1);
-  border: 1px solid #ff00ff;
-  color: #ff00ff;
-  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
-}
-
-.perfil-usuario {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1rem;
-  margin: 0 0 15px 0;
-  font-weight: 400;
-}
-
-.perfil-bio {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 0;
-  max-width: 600px;
-}
-
-.perfil-actions {
-  z-index: 1;
+.perfil-main-col, .perfil-side-col {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-self: flex-start;
+  gap: 1.5rem;
 }
 
-.edit-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+.perfil-side-col {
+  position: relative;
 }
 
-/* --- TÍTULOS DE SECCIÓN --- */
 .section-subtitle-neon {
   color: white;
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-}
-
-/* --- ESTADÍSTICAS (GRID) --- */
-.perfil-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.stat-card {
+  font-size: 1.15rem;
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 20px;
-  border-top: 2px solid var(--accent-color);
-  background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(20,0,34,0.8) 100%);
+  gap: 12px;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
 }
 
-.stat-icon-wrapper {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 12px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* --- TARJETA DE IDENTIDAD UNIFICADA --- */
+.perfil-identity-card {
+  padding: 0 !important; /* El padding lo manejan las secciones internas */
+  overflow: hidden;
 }
 
-.stat-info {
+.card-inner-section {
+  padding: 2rem;
+}
+
+.card-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.08) 20%, 
+    rgba(255, 255, 255, 0.08) 80%, 
+    transparent 100%
+  );
+  margin: 0 1rem;
+}
+
+/* --- FILAS COMPACTAS --- */
+.config-list-container {
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
 }
 
-.stat-titulo {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  margin: 0 0 5px 0;
-  letter-spacing: 0.5px;
+.pref-card { z-index: 10; position: relative; overflow: visible !important; }
+.sec-card { z-index: 5; position: relative; }
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
 }
 
-.stat-valor {
-  font-size: 1.6rem;
-  margin: 0;
-  font-weight: bold;
+.settings-label {
+  color: rgba(255,255,255,0.9);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 /* --- HABILIDADES --- */
-.perfil-skills-card {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 25px;
-}
-
 .skill-tag {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 8px 16px;
-  border-radius: 25px;
-  transition: transform 0.2s ease;
-  cursor: default;
+  background: rgba(20, 0, 34, 0.6);
+  padding: 8px 18px;
+  border-radius: 30px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .skill-tag:hover {
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.02);
   background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 .skill-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
 }
 
 .skill-nombre {
   color: white;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.95rem;
+  letter-spacing: 0.5px;
 }
 
 .skill-nivel {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  margin-left: 5px;
-}
-
-/* Responsividad para móviles */
-@media (max-width: 768px) {
-  .perfil-header-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 30px 20px;
-  }
-  
-  .perfil-title-row {
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .perfil-actions {
-    align-self: center;
-    margin-top: 20px;
-  }
-}
-/* --- BADGES DE NIVEL --- */
-.skill-level-container {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.3s ease;
-}
-
-.skill-level-container:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(0, 255, 255, 0.2);
-  transform: translateY(-4px);
-}
-
-.skill-level-badge {
-  font-size: 0.65rem;
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 2px 8px;
-  border-radius: 6px;
+  letter-spacing: 1.5px;
+  opacity: 0.9;
 }
 
-.skill-level-badge.b�sico {
-  background: rgba(0, 255, 255, 0.1);
-  color: #00ffff;
-  border: 1px solid rgba(0, 255, 255, 0.3);
+.danger-zone {
+  border-top: 1px solid rgba(255, 0, 0, 0.1);
+  padding-top: 1.5rem !important;
+  margin-top: 0.5rem;
+  background: transparent !important;
 }
 
-.skill-level-badge.intermedio {
-  background: rgba(255, 255, 0, 0.1);
-  color: #ffff00;
-  border: 1px solid rgba(255, 255, 0, 0.3);
+.bio-text {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  font-size: 1rem;
 }
 
-.skill-level-badge.avanzado {
-  background: rgba(255, 0, 255, 0.1);
-  color: #ff00ff;
-  border: 1px solid rgba(255, 0, 255, 0.3);
-  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+@media (max-width: 1024px) {
+  .perfil-grid-layout { grid-template-columns: 1fr; }
 }

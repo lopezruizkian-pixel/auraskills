@@ -20,7 +20,7 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
   const displayValue = selectedOption ? (selectedOption.label || selectedOption) : placeholder;
 
   return (
-    <div className="aura-select-wrapper" ref={dropdownRef} style={{ display: "flex", flexDirection: "column", gap: "8px", minWidth: "220px", position: "relative" }}>
+    <div className="aura-select-wrapper" ref={dropdownRef} style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%", position: "relative" }}>
       {label && <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", marginLeft: "4px", textTransform: "uppercase", letterSpacing: "1px" }}>{label}</span>}
       
       <div 

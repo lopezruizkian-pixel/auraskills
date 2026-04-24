@@ -53,7 +53,7 @@ function Perfil() {
       setEditData({
         nombre: data.nombre || "",
         usuario: data.usuario || "",
-        bio: data.bio || (data.intereses?.[0] || ""),
+        bio: data.intereses?.[0] || "",
       });
 
       // Si es Aprendiz, calculamos sus habilidades por historial
@@ -113,7 +113,7 @@ function Perfil() {
       const updated = await httpClient.put("/auth/update-profile", {
         nombre: editData.nombre.trim(),
         usuario: editData.usuario.trim(),
-        bio: editData.bio.trim(),
+        intereses: [editData.bio.trim()],
       });
       setUserData(updated);
       storage.set("userName", updated.nombre);
@@ -228,177 +228,175 @@ function Perfil() {
               </div>
             </div>
 
-            {/* Skills: Solo para Aprendices */}
-            {rol !== "mentor" && (
-              <>
-                <h2 className="section-subtitle-neon">Habilidades que estás aprendiendo</h2>
-                <div className="neon-card perfil-skills-card">
-                  {aprendizSkills.length > 0 ? (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-                      {aprendizSkills.map((hab, i) => (
-                        <SkillTag 
-                          key={i} 
-                          nombre={hab.nombre} 
-                          nivel={hab.nivel} 
-                          color={hab.nivel === "Avanzado" ? "#ff00ff" : hab.nivel === "Intermedio" ? "#ffff00" : "#00ffff"} 
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <p style={{ color: "rgba(255,255,255,0.5)", margin: 0 }}>
-                      No tienes habilidades registradas aún. ¡Entra a una sala en vivo para empezar a aprender!
+            <div className="perfil-grid-layout">
+              {/* COLUMNA IZQUIERDA: Contenido Principal */}
+              <div className="perfil-main-col">
+                <div className="neon-card perfil-identity-card">
+                  {/* Sección Sobre mí */}
+                  <div className="card-inner-section">
+                    <h2 className="section-subtitle-neon">
+                      <FileText size={20} className="section-icon" /> Sobre mí
+                    </h2>
+                    <p className={`bio-text ${!(userData.bio || userData.intereses?.[0]) ? 'bio-placeholder' : ''}`}>
+                      {userData.bio || userData.intereses?.[0] || "Aún no has escrito una descripción. ¡Haz clic en Editar Perfil para contarnos un poco sobre ti y tus metas!"}
                     </p>
-                  )}
-                </div>
-              </>
-            )}
+                  </div>
 
-            {/* Habilidades: Solo para Mentores (Catálogo Global) */}
-            {rol === "mentor" && (
-              <>
-                <div className="perfil-skills-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                  <h2 className="section-subtitle-neon" style={{ margin: 0 }}>Gestión de Especialidades</h2>
-                  <div className="skills-tab-switcher" style={{ display: "flex", gap: "10px", background: "#0d0d1a", padding: "4px", borderRadius: "10px", border: "1px solid #333" }}>
-                    <button 
-                      className={`tab-btn ${activeTab === "mis-skills" ? "active" : ""}`} 
-                      onClick={() => setActiveTab("mis-skills")}
-                      style={{
-                        padding: "0.5rem 1rem",
-                        borderRadius: "8px",
-                        border: "none",
-                        background: activeTab === "mis-skills" ? "#ff00ff" : "transparent",
-                        color: activeTab === "mis-skills" ? "#fff" : "#aaa",
-                        cursor: "pointer",
-                        fontSize: "0.85rem",
-                        transition: "all 0.3s",
-                        boxShadow: activeTab === "mis-skills" ? "0 0 10px rgba(255, 0, 255, 0.5)" : "none"
-                      }}
-                    >
-                      Mis Especialidades
-                    </button>
-                    <button 
-                      className={`tab-btn ${activeTab === "catalogo" ? "active" : ""}`} 
-                      onClick={() => setActiveTab("catalogo")}
-                      style={{
-                        padding: "0.5rem 1rem",
-                        borderRadius: "8px",
-                        border: "none",
-                        background: activeTab === "catalogo" ? "#00ffff" : "transparent",
-                        color: activeTab === "catalogo" ? "#fff" : "#aaa",
-                        cursor: "pointer",
-                        fontSize: "0.85rem",
-                        transition: "all 0.3s",
-                        boxShadow: activeTab === "catalogo" ? "0 0 10px rgba(0, 255, 255, 0.5)" : "none"
-                      }}
-                    >
-                      Catálogo Global
-                    </button>
+                  <div className="card-divider" />
+
+                  {/* Sección Habilidades / Especialidades */}
+                  <div className="card-inner-section">
+                    {rol !== "mentor" ? (
+                      <>
+                        <h2 className="section-subtitle-neon">
+                          <Award size={20} className="section-icon" /> Habilidades en progreso
+                        </h2>
+                        {aprendizSkills.length > 0 ? (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                            {aprendizSkills.map((hab, i) => (
+                              <SkillTag 
+                                key={i} 
+                                nombre={hab.nombre} 
+                                nivel={hab.nivel} 
+                                color={hab.nivel === "Avanzado" ? "#ff00ff" : hab.nivel === "Intermedio" ? "#ffff00" : "#00ffff"} 
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <p style={{ color: "rgba(255,255,255,0.4)", margin: 0, fontStyle: "italic" }}>
+                            No tienes habilidades registradas aún. ¡Entra a una sala en vivo para empezar a aprender!
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <div className="perfil-skills-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                          <h2 className="section-subtitle-neon" style={{ margin: 0 }}>
+                            <BookOpen size={20} className="section-icon" /> Gestión de Especialidades
+                          </h2>
+                          <div className="skills-tab-switcher" style={{ display: "flex", gap: "10px", background: "#0d0d1a", padding: "4px", borderRadius: "10px", border: "1px solid #333" }}>
+                            <button 
+                              className={`tab-btn ${activeTab === "mis-skills" ? "active" : ""}`}
+                              onClick={() => setActiveTab("mis-skills")}
+                              style={{ all: "unset", padding: "6px 12px", borderRadius: "8px", fontSize: "0.8rem", cursor: "pointer", transition: "0.3s", background: activeTab === "mis-skills" ? "rgba(0,255,255,0.1)" : "transparent", color: activeTab === "mis-skills" ? "#00ffff" : "#aaa" }}
+                            >
+                              Mis Skills
+                            </button>
+                            <button 
+                              className={`tab-btn ${activeTab === "catalogo" ? "active" : ""}`}
+                              onClick={() => setActiveTab("catalogo")}
+                              style={{ all: "unset", padding: "6px 12px", borderRadius: "8px", fontSize: "0.8rem", cursor: "pointer", transition: "0.3s", background: activeTab === "catalogo" ? "rgba(0,255,255,0.1)" : "transparent", color: activeTab === "catalogo" ? "#00ffff" : "#aaa" }}
+                            >
+                              Catálogo
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="skills-tab-content">
+                          {activeTab === "mis-skills" ? (
+                            <div style={{ width: "100%" }}>
+                              {createdSkills.length > 0 ? (
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                                  {createdSkills.map((skill, i) => (
+                                    <SkillTag key={i} nombre={skill.nombre} color="#ff00ff" />
+                                  ))}
+                                </div>
+                              ) : (
+                                <p style={{ color: "rgba(255,255,255,0.4)", fontStyle: "italic" }}>No tienes especialidades asignadas. Ve al catálogo para elegir las tuyas.</p>
+                              )}
+                            </div>
+                          ) : (
+                            <div style={{ width: "100%" }}>
+                              <p style={{ fontSize: "0.85rem", color: "#aaa", marginBottom: "1rem" }}>Selecciona las habilidades que dominas para enseñar:</p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                                {allSkills.map((skill) => {
+                                  const isSelected = selectedSkills.includes(skill.id || skill._id);
+                                  return (
+                                    <div 
+                                      key={skill.id || skill._id} 
+                                      onClick={() => handleToggleSkill(skill.id || skill._id)}
+                                      style={{
+                                        padding: "0.5rem 1rem",
+                                        borderRadius: "20px",
+                                        border: isSelected ? "1px solid #ff00ff" : "1px solid #333",
+                                        background: isSelected ? "rgba(255, 0, 255, 0.1)" : "transparent",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s",
+                                        color: isSelected ? "#ff00ff" : "#ccc",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                        boxShadow: isSelected ? "0 0 10px rgba(255, 0, 255, 0.3)" : "none"
+                                      }}
+                                    >
+                                      {skill.nombre}
+                                      {isSelected && <Check size={14} />}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
+              </div>
 
-                <div className="neon-card perfil-skills-card" style={{ minHeight: "150px" }}>
-                  {activeTab === "mis-skills" ? (
-                    <div style={{ width: "100%" }}>
-                      {createdSkills.length > 0 ? (
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                          {createdSkills.map((skill, i) => (
-                            <SkillTag key={i} nombre={skill.nombre} color="#ff00ff" />
-                          ))}
-                        </div>
-                      ) : (
-                        <p>No tienes especialidades asignadas. Ve al catálogo para elegir las tuyas.</p>
-                      )}
-                    </div>
-                  ) : (
-                    <div style={{ width: "100%" }}>
-                      <p style={{ fontSize: "0.85rem", color: "#aaa", marginBottom: "1rem" }}>Selecciona las habilidades que dominas para poder crear salas sobre ellas:</p>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "1.5rem" }}>
-                        {allSkills.map((skill) => {
-                          const isSelected = selectedSkills.includes(skill.id || skill._id);
-                          return (
-                            <div 
-                              key={skill.id || skill._id} 
-                              onClick={() => handleToggleSkill(skill.id || skill._id)}
-                              style={{
-                                padding: "0.5rem 1rem",
-                                borderRadius: "20px",
-                                border: isSelected ? "1px solid #ff00ff" : "1px solid #333",
-                                background: isSelected ? "rgba(255, 0, 255, 0.1)" : "transparent",
-                                cursor: "pointer",
-                                transition: "all 0.2s",
-                                color: isSelected ? "#ff00ff" : "#ccc",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "8px",
-                                boxShadow: isSelected ? "0 0 10px rgba(255, 0, 255, 0.3)" : "none"
-                              }}
-                            >
-                              {skill.nombre}
-                              {isSelected && <Check size={14} />}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
-            {/* Sección Sobre mí */}
-            <h2 className="section-subtitle-neon">Sobre mí</h2>
-            <div className="neon-card perfil-skills-card" style={{ padding: "1.5rem", marginBottom: "2rem" }}>
-              <p style={{ 
-                color: (userData.bio || userData.intereses?.[0]) ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.4)", 
-                lineHeight: "1.8", 
-                margin: 0, 
-                fontSize: "1rem", 
-                whiteSpace: "pre-wrap",
-                fontStyle: (userData.bio || userData.intereses?.[0]) ? "normal" : "italic" 
-              }}>
-                {userData.bio || userData.intereses?.[0] || "Aún no has escrito una descripción. ¡Haz clic en Editar Perfil para contarnos un poco sobre ti y tus metas!"}
-              </p>
-            </div>
-
-            {/* Config Sections from Configuracion */}
-            <section className="configuracion-section">
-              <div className="config-list-section" style={{ marginTop: "1rem" }}>
-                <h3 className="section-subtitle"><Settings size={20} className="section-icon" /> Preferencias de la aplicación</h3>
-                <div className="neon-card config-list-container">
-                  <div className="config-list-item">
-                    <span>Modo de visualización</span>
-                    <div style={{ width: "200px" }}>
+              {/* COLUMNA DERECHA: Configuración y Seguridad */}
+              <div className="perfil-side-col">
+                
+                {/* Preferencias */}
+                <div className="neon-card config-list-container pref-card">
+                  <h3 className="section-subtitle-neon" style={{ margin: 0 }}>
+                    <Settings size={20} className="section-icon" /> Preferencias
+                  </h3>
+                  <div className="settings-row" style={{ marginTop: "0.5rem" }}>
+                    <span className="settings-label">Tema Visual</span>
+                    <div className="settings-action" style={{ width: "145px" }}>
                       <AuraSelect 
                         value={theme}
                         onChange={setTheme}
                         options={[
-                          { value: "neon", label: "Neón Cyberspace" },
-                          { value: "classic", label: "Aura Clásico" }
+                          { value: "neon", label: "Neón" },
+                          { value: "classic", label: "Aura" }
                         ]}
                         icon={Palette}
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="config-list-section">
-                <h3 className="section-subtitle"><Shield size={20} className="section-icon" /> Cuenta y Seguridad</h3>
-                <div className="neon-card config-list-container">
-                  <div className="config-list-item">
-                    <span>Cambiar contraseña</span>
-                    <button className="primary-btn-neon-s" onClick={() => setShowPasswordModal(true)}>
-                      <RefreshCw size={14} style={{ marginRight:"8px" }} /> Actualizar
-                    </button>
+
+                {/* Seguridad */}
+                <div className="neon-card config-list-container sec-card">
+                  <h3 className="section-subtitle-neon" style={{ margin: 0 }}>
+                    <Shield size={20} className="section-icon" /> Seguridad
+                  </h3>
+                  
+                  <div className="settings-row" style={{ marginTop: "0.5rem" }}>
+                    <span className="settings-label">Contraseña</span>
+                    <div className="settings-action">
+                      <button className="primary-btn-neon-s" style={{ padding: "0.6rem 1.4rem", fontSize: "0.8rem", minWidth: "120px" }} onClick={() => setShowPasswordModal(true)}>
+                        <RefreshCw size={14} style={{ marginRight: "8px" }} /> Actualizar
+                      </button>
+                    </div>
                   </div>
-                  <div className="config-list-item danger-zone">
-                    <span>Eliminar cuenta definitivamente</span>
-                    <button className="danger-btn-neon-s" onClick={() => setShowDeleteModal(true)}>
-                      <Trash2 size={14} style={{ marginRight:"8px" }} /> Eliminar
-                    </button>
+                  
+                  <div className="danger-zone">
+                    <div className="settings-row">
+                      <span className="settings-label danger-label">Gestión Cuenta</span>
+                      <div className="settings-action">
+                        <button className="danger-btn-neon-s" style={{ padding: "0.6rem 1.4rem", fontSize: "0.8rem", minWidth: "120px" }} onClick={() => setShowDeleteModal(true)}>
+                          <Trash2 size={14} style={{ marginRight: "8px" }} /> Eliminar
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
               </div>
-            </section>
+            </div>
           </section>
         </main>
       </div>
