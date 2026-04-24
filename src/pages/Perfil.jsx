@@ -32,6 +32,7 @@ function Perfil() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({ passwordActual: "", passwordNueva: "", confirmar: "" });
   const [passwordLoading, setPasswordLoading] = useState(false);
+  const [showActual, setShowActual] = useState(false);
   const [showNueva, setShowNueva] = useState(false);
   const [showConfirmar, setShowConfirmar] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -552,9 +553,14 @@ function Perfil() {
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
               <div className="mini-input-group">
                 <label style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "6px", display: "block" }}>Contraseña Actual</label>
-                <input type="password" placeholder="Ingresa tu clave actual" value={passwordData.passwordActual}
-                  onChange={(e) => setPasswordData({ ...passwordData, passwordActual: e.target.value })}
-                  className="neon-input-s" style={{ background: "rgba(255,255,255,0.03)" }} />
+                <div style={{ position:"relative" }}>
+                  <input type={showActual ? "text" : "password"} placeholder="Ingresa tu clave actual" value={passwordData.passwordActual}
+                    onChange={(e) => setPasswordData({ ...passwordData, passwordActual: e.target.value })}
+                    className="neon-input-s" style={{ background: "rgba(255,255,255,0.03)" }} />
+                  <span onClick={() => setShowActual(!showActual)} style={{ position:"absolute", right:"1rem", top:"50%", transform:"translateY(-50%)", cursor:"pointer", color:"#aaa" }}>
+                    {showActual ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </span>
+                </div>
               </div>
 
               <div className="mini-input-group">

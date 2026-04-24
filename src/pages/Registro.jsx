@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import mascotaImg from "../assets/mascota.png";
 import "../Styles/Registro.css";
 import { registerUser } from "../services/authService";
@@ -10,7 +11,9 @@ function Registro() {
   const [usuario, setUsuario] = useState("");
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
   const [habilidades, setHabilidades] = useState("");
   const navigate = useNavigate();
 
@@ -63,11 +66,21 @@ function Registro() {
           </div>
           <div className="input-group">
             <label>Contraseña</label>
-            <input type="password" placeholder="Crea una contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <div style={{ position: "relative" }}>
+              <input type={showPassword ? "text" : "password"} placeholder="Crea una contraseña" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: "100%", boxSizing: "border-box" }} />
+              <span onClick={() => setShowPassword(!showPassword)} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "rgba(255,255,255,0.4)" }}>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
+            </div>
           </div>
           <div className="input-group">
             <label>Confirmar Contraseña</label>
-            <input type="password" placeholder="Confirma tu contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <div style={{ position: "relative" }}>
+              <input type={showConfirm ? "text" : "password"} placeholder="Confirma tu contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "100%", boxSizing: "border-box" }} />
+              <span onClick={() => setShowConfirm(!showConfirm)} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", cursor:"pointer", color: "rgba(255,255,255,0.4)" }}>
+                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
+            </div>
           </div>
           <div className="role-section">
             <label className="role-title">Escoge tu Rol</label>

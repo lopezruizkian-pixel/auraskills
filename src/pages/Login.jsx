@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader } from "lucide-react";
+import { Loader, Eye, EyeOff } from "lucide-react";
 import mascotaImg from "../assets/mascota.png";
 import "../Styles/Login.css";
 import { loginUser } from "../services/authService";
@@ -15,6 +15,7 @@ function Login() {
 
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -98,17 +99,35 @@ function Login() {
             </div>
 
             <div className="input-group">
-              <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (errors.password) setErrors({ ...errors, password: "" });
-                }}
-                disabled={isLoading}
-                className={errors.password ? "input-error" : ""}
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors({ ...errors, password: "" });
+                  }}
+                  disabled={isLoading}
+                  className={errors.password ? "input-error" : ""}
+                  style={{ width: "100%", boxSizing: "border-box" }}
+                />
+                <span 
+                  onClick={() => setShowPassword(!showPassword)} 
+                  style={{ 
+                    position: "absolute", 
+                    right: "1rem", 
+                    top: "50%", 
+                    transform: "translateY(-50%)", 
+                    cursor: "pointer", 
+                    color: "rgba(255,255,255,0.4)",
+                    display: "flex",
+                    alignItems: "center"
+                  }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </span>
+              </div>
               {errors.password && <span className="error-text">{errors.password}</span>}
             </div>
 
