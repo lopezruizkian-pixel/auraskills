@@ -41,6 +41,14 @@
   backdrop-filter: blur(5px);
 }
 
+/* --- GRID DE ESTADÍSTICAS (KPIs) --- */
+.perfil-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
 /* --- LAYOUT DE DOS COLUMNAS --- */
 .perfil-grid-layout {
   display: grid;
@@ -186,6 +194,7 @@
 
 @media (max-width: 1024px) {
   .perfil-grid-layout { grid-template-columns: 1fr; }
+  .perfil-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -203,4 +212,6 @@
     display: flex;
     justify-content: center;
   }
+
+  .perfil-stats-grid { grid-template-columns: 1fr; }
 }
