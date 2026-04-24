@@ -11,7 +11,7 @@
   gap: 30px;
   padding: 30px 40px;
   margin-bottom: 2rem;
-  position: relative; /* Necesario para el botón absoluto */
+  position: relative;
   overflow: hidden;
   border-color: rgba(0, 255, 255, 0.4);
 }
@@ -25,7 +25,6 @@
   object-fit: cover;
 }
 
-/* --- BOTON EDITAR (ESQUINA SUPERIOR DERECHA) --- */
 .perfil-actions {
   position: absolute;
   top: 25px;
@@ -90,6 +89,20 @@
     transparent 100%
   );
   margin: 0 1rem;
+}
+
+/* --- MODALES Y BOTONES (FIX) --- */
+.primary-btn-neon-s, .danger-btn-neon-s {
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.modal-overlay-neon {
+  backdrop-filter: blur(8px);
+  z-index: 2000 !important;
 }
 
 /* --- FILAS COMPACTAS --- */
@@ -179,13 +192,13 @@
   .perfil-header-card {
     flex-direction: column;
     text-align: center;
-    padding-top: 60px; /* Espacio para el botón absoluto */
+    padding-top: 60px;
   }
   
   .perfil-actions {
     top: 15px;
     right: 50%;
-    transform: translateX(50%); /* Centrado en móviles */
+    transform: translateX(50%);
     width: 100%;
     display: flex;
     justify-content: center;
