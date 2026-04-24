@@ -168,11 +168,13 @@ function RoomPage() {
       }
       leaveCurrentRoom();
       storage.remove('salaActiva');
+      localStorage.removeItem(`room_start_${roomId}`);
       navigate('/home', { replace: true });
     } catch (err) {
       console.error('Error al finalizar sesión:', err);
       // Salir de todos modos para no bloquear al usuario
       storage.remove('salaActiva');
+      localStorage.removeItem(`room_start_${roomId}`);
       navigate('/home', { replace: true });
     }
   };
@@ -256,7 +258,25 @@ function RoomPage() {
                 <Clock3 size={14} className="icon-neon" />
                 <div className="status-item-info">
                   <span>En vivo</span>
-                  <strong>{formatSessionDuration(sessionInfo, now)}</strong>
+                  <strong>{(() => {
+                    // LÓGICA DEL GUARDIÁN DEL TIEMPO:
+                    // Intentamos recuperar la hora de inicio original de la memoria local
+                    // para evitar que se reinicie si el servidor nos manda una nueva al reconectar.
+                    const storageKey = `room_start_${roomId}`;
+                    let startTime = sessionInfo?.startedAt;
+                    
+                    if (sessionInfo?.isActive && sessionInfo?.startedAt) {
+                      const savedStart = localStorage.getItem(storageKey);
+                      if (!savedStart) {
+                        localStorage.setItem(storageKey, sessionInfo.startedAt);
+                      } else {
+                        // Usamos la hora guardada (la más antigua conocida)
+                        startTime = savedStart;
+                      }
+                    }
+
+                    return formatSessionDuration({ ...sessionInfo, startedAt: startTime }, now);
+                  })()}</strong>
                 </div>
               </div>
               <div className="status-item-mini">
