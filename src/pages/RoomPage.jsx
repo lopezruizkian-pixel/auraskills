@@ -231,13 +231,6 @@ function RoomPage() {
       />
 
       <div className="room-container">
-        <section className="room-main-panel">
-          {/* Chat con prioridad máxima */}
-          <div className="room-chat-area">
-            <ChatRoom sendMessage={sendMessage} sendReaction={sendReaction} />
-          </div>
-        </section>
-
         <aside className="room-sidebar">
           {/* Card: Identidad y Contexto */}
           <section className="sidebar-section session-sidebar-card context-card-neon premium-room-card">
@@ -266,6 +259,12 @@ function RoomPage() {
           {/* Lista de Participantes */}
           <ParticipantsList />
         </aside>
+
+        <section className="room-main-panel">
+          <div className="room-chat-area">
+            <ChatRoom sendMessage={sendMessage} sendReaction={sendReaction} />
+          </div>
+        </section>
       </div>
 
       <ReactionsContainer />
