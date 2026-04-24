@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader, Eye, EyeOff } from "lucide-react";
+import { Loader, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import mascotaImg from "../assets/mascota.png";
 import "../Styles/Login.css";
 import { loginUser } from "../services/authService";
@@ -73,10 +73,18 @@ function Login() {
 
   return (
     <div className="login-container">
+      {/* Botón de Regreso */}
+      <button className="back-btn-minimal" onClick={() => navigate(-1)}>
+        <ArrowLeft size={24} />
+        <span>Volver</span>
+      </button>
+
       <div className="split-screen-wrapper">
         
         <div className="mascota-side">
           <img src={mascotaImg} alt="Mascota Aura" className="mascota-img" />
+          <div className="aura-core"></div>
+          <div className="aura-ring"></div>
         </div>
 
         <div className="login-box">

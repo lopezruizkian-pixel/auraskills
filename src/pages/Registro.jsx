@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import mascotaImg from "../assets/mascota.png";
 import "../Styles/Registro.css";
 import { registerUser } from "../services/authService";
@@ -47,9 +47,17 @@ function Registro() {
 
   return (
     <div className="registro-container">
+      {/* Botón de Regreso */}
+      <button className="back-btn-minimal" onClick={() => navigate(-1)}>
+        <ArrowLeft size={24} />
+        <span>Volver</span>
+      </button>
+
       <div className="split-screen-wrapper">
         <div className="mascota-side">
           <img src={mascotaImg} alt="Mascota Aura" className="mascota-img" />
+          <div className="aura-core"></div>
+          <div className="aura-ring"></div>
         </div>
         <div className="registro-box-extended">
           <div className="registro-header">

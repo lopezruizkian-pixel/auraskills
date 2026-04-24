@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 :root {
   --neon-cyan: #00ffff;
@@ -24,7 +24,12 @@
 
 @keyframes pulseAura {
   from { opacity: 0.15; transform: scale(0.9); }
-  to { opacity: 0.35; transform: scale(1.1); }
+  to { opacity: 0.35; transform: scale(1.15); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ═════════════════════════════════════════════════════════════════════ */
@@ -43,6 +48,30 @@
   position: relative;
 }
 
+/* --- BOTÓN DE REGRESO --- */
+.back-btn-minimal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  z-index: 1000;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 10px;
+}
+
+.back-btn-minimal:hover {
+  color: var(--neon-cyan);
+  transform: translateX(-5px);
+}
+
 .split-screen-wrapper {
   display: flex;
   align-items: center;
@@ -55,39 +84,60 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════ */
-/* LADO MASCOTA CON AURA */
+/* LADO MASCOTA CON ORBE ANIMADO */
 /* ═════════════════════════════════════════════════════════════════════ */
 
 .mascota-side {
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: center;
   position: relative;
   animation: floatMascota 4s ease-in-out infinite;
-}
-
-.mascota-side::before {
-  content: "";
-  position: absolute;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%);
-  filter: blur(50px);
-  opacity: 0.2;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  animation: pulseAura 5s infinite alternate;
-  z-index: -1;
 }
 
 .mascota-img {
   width: 100%;
   max-width: 380px;
   filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.3));
+  z-index: 5;
+}
+
+.aura-core {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%);
+  filter: blur(50px);
+  opacity: 0.2;
+  animation: pulseAura 5s infinite alternate;
+  z-index: 1;
+}
+
+.aura-ring {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border: 1.5px solid rgba(0, 255, 255, 0.15);
+  border-radius: 50%;
+  animation: rotate 25s linear infinite;
+  z-index: 2;
+}
+
+.aura-ring::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 20px var(--neon-cyan);
 }
 
 /* ═════════════════════════════════════════════════════════════════════ */
-/* CAJA DE REGISTRO - DISEÑO PREMIUM */
+/* CAJA DE REGISTRO */
 /* ═════════════════════════════════════════════════════════════════════ */
 
 .registro-box-extended {
@@ -108,13 +158,6 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 255, 255, 0.2) transparent;
-}
-
-/* Scrollbar Personalizado */
-.registro-box-extended::-webkit-scrollbar { width: 6px; }
-.registro-box-extended::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 255, 0.2);
-  border-radius: 10px;
 }
 
 .registro-header {
@@ -247,7 +290,8 @@
 }
 
 @media (max-width: 768px) {
-  .split-screen-wrapper { flex-direction: column; }
+  .back-btn-minimal { top: 20px; left: 20px; }
+  .split-screen-wrapper { flex-direction: column; padding: 70px 20px 20px; }
   .mascota-side { order: -1; }
   .mascota-img { max-width: 250px; }
   .registro-box-extended { max-width: 100%; }
