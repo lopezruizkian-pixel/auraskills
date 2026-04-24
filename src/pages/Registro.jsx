@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import mascotaImg from "../assets/mascota.png";
 import "../Styles/Registro.css";
@@ -116,6 +116,15 @@ function Registro() {
           <button className="primary-btn" onClick={handleRegistro}>
             Registrarse
           </button>
+
+          <div className="register-link">
+            <p>
+              ¿Ya tienes una cuenta? <br />
+              <Link to="/login" style={{ color: "var(--neon-cyan)", fontWeight: "700", textDecoration: "none" }}>
+                ¡Inicia sesión aquí!
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

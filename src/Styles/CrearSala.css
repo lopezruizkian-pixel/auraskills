@@ -72,6 +72,14 @@
   font-weight: 600;
 }
 
+.input-hint {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgba(0, 255, 255, 0.6);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
 .input-wrapper {
   position: relative;
   display: flex;
