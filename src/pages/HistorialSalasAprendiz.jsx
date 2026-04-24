@@ -32,7 +32,7 @@ const formatDuration = (seconds = 0) => {
 import { storage } from "../services/storage";
 
 function HistorialSalasAprendiz() {
-  const [rol] = useState(storage.get("userRole") || "alumno");
+  const [rol] = useState((storage.get("userRole") || "alumno").toLowerCase());
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,37 +67,48 @@ function HistorialSalasAprendiz() {
 
         setHistory(merged);
 
-        // Cargar habilidades del mentor si aplica
+        // Cargar habilidades del mentor usando mentorId (Endpoint oficial)
         if (rol === "mentor") {
           try {
-            const skills = await fetchMySkills();
+            const { fetchSkills } = await import("../services/skillService");
+            const userId = storage.get("userId");
+            const skills = await fetchSkills({ mentorId: userId });
             setMySkills(skills);
           } catch (err) {
-            console.error("Error cargando habilidades del mentor:", err);
+            console.error("Error cargando habilidades por mentorId:", err);
           }
         }
-      } catch {
+      } catch (err) {
+        console.error("Error general en historial:", err);
         setHistory([]);
       } finally {
         setIsLoading(false);
       }
     };
     loadHistory();
-  }, []);
+  }, [rol]);
 
   const uniqueSkills = useMemo(() => {
-    const historySkills = history.map(item => item.habilidad || item.room_name || item.nombreSala).filter(Boolean);
-    const mentorSkills = mySkills.map(s => s.nombre).filter(Boolean);
-    
-    return ["Todas", ...new Set([...historySkills, ...mentorSkills])];
-  }, [history, mySkills]);
+    if (rol === "mentor") {
+      // PARA MENTORES: SOLO sus habilidades relacionadas
+      const mentorSkills = mySkills.map(s => s.nombre).filter(Boolean);
+      return ["Todas", ...new Set(mentorSkills)];
+    } else {
+      // PARA APRENDICES: Solo lo que hay en su historial real
+      const historySkills = history.map(item => 
+        item.habilidad || item.skill_name || item.habilidad_nombre || item.skill?.nombre
+      ).filter(Boolean);
+      return ["Todas", ...new Set(historySkills)];
+    }
+  }, [history, mySkills, rol]);
 
   const filteredHistory = useMemo(() => {
     let result = history.filter((item) => {
       const name = (item.habilidad || item.room_name || item.nombreSala || "").toLowerCase();
       const mentor = (item.mentor_name || item.mentor || "").toLowerCase();
       const matchesSearch = name.includes(searchTerm.toLowerCase()) || mentor.includes(searchTerm.toLowerCase());
-      const matchesSkill = filterSkill === "Todas" || (item.habilidad || item.room_name || item.nombreSala) === filterSkill;
+      const matchesSkill = filterSkill === "Todas" || 
+        (item.habilidad || item.skill_name || item.habilidad_nombre || item.skill?.nombre || item.room_name || item.nombreSala) === filterSkill;
 
       return matchesSearch && matchesSkill;
     });
@@ -119,14 +130,27 @@ function HistorialSalasAprendiz() {
   const historialData = useMemo(() => {
     if (isLoading) return [{ id: "loading-row", fecha: "Cargando...", habilidad: "", mentor: "", duracion: "" }];
     if (filteredHistory.length === 0) return [{ id: "empty-row", fecha: "Sin coincidencias", habilidad: "", mentor: "", duracion: "" }];
-    return filteredHistory.map((item) => ({
-      id: item.id,
-      fecha: formatDate(item.started_at || item.startedAt || item.fecha),
-      sala: item.room_name || item.nombreSala || "—",
-      habilidad: item.habilidad || "—",
-      mentor: item.mentor_name || item.mentor || "—",
-      duracion: formatDuration(item.duration_seconds ?? item.duracionSegundos ?? item.duracion ?? 0),
-    }));
+    
+    return filteredHistory.map((item) => {
+      // Normalización inteligente del nombre de la habilidad
+      const displaySkill = 
+        item.habilidad || 
+        item.skill_name || 
+        item.habilidad_nombre || 
+        item.skill?.nombre || 
+        item.nombreSala || 
+        item.room_name || 
+        "—";
+
+      return {
+        id: item.id,
+        fecha: formatDate(item.started_at || item.startedAt || item.fecha),
+        sala: item.room_name || item.nombreSala || "—",
+        habilidad: displaySkill,
+        mentor: item.mentor_name || item.mentor || "—",
+        duracion: formatDuration(item.duration_seconds ?? item.duracionSegundos ?? item.duracion ?? 0),
+      };
+    });
   }, [filteredHistory, isLoading]);
 
   return (
@@ -153,7 +177,7 @@ function HistorialSalasAprendiz() {
                 <AuraSelect 
                   value={filterSkill}
                   onChange={setFilterSkill}
-                  options={uniqueSkills.map(s => ({ value: s, label: s === "Todas" ? "Todas las habilidades" : s }))}
+                  options={uniqueSkills.map(s => ({ value: s, label: s === "Todas" ? "Habilidades" : s }))}
                   icon={BookOpen}
                 />
                 <AuraSelect 

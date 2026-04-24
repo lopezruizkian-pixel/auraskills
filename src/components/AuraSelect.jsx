@@ -40,9 +40,16 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
           position: "relative"
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {Icon && <Icon size={16} color="#00ffff" />}
-          <span style={{ color: selectedOption ? "#fff" : "rgba(255,255,255,0.4)", fontSize: "0.9rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0, flex: 1 }}>
+          {Icon && <Icon size={16} color="#00ffff" style={{ flexShrink: 0 }} />}
+          <span style={{ 
+            color: selectedOption ? "#fff" : "rgba(255,255,255,0.4)", 
+            fontSize: "0.9rem",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            flex: 1
+          }}>
             {displayValue}
           </span>
         </div>
@@ -96,11 +103,16 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: "2px"
+                    marginBottom: "2px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
                   }}
                 >
-                  {optLabel}
-                  {isSelected && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#00ffff", boxShadow: "0 0 8px #00ffff" }} />}
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {optLabel}
+                  </span>
+                  {isSelected && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#00ffff", boxShadow: "0 0 8px #00ffff", flexShrink: 0, marginLeft: "8px" }} />}
                 </div>
               );
             })}

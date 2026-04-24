@@ -44,18 +44,41 @@ function SalaActivaCard({ id, titulo, habilidad, inscritos, capacidad, onClose, 
         </div>
       </div>
 
-      <div className="room-actions-premium" style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "12px" }}>
+      <div className="room-actions-premium" style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "15px", marginTop: "10px" }}>
         <button 
           className="secondary-btn-s" 
           onClick={handleClose}
-          style={{ height: "54px", background: "rgba(255, 0, 85, 0.1)", borderColor: "rgba(255, 0, 85, 0.3)", color: "#ff3366" }}
+          style={{ 
+            height: "56px", 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center", 
+            gap: "10px",
+            background: "rgba(255, 0, 85, 0.08)", 
+            borderColor: "rgba(255, 0, 85, 0.4)", 
+            color: "#ff3366",
+            borderRadius: "14px",
+            fontWeight: "700",
+            padding: "0"
+          }}
         >
-          <Power size={18} />
+          <Power size={20} />
           Finalizar
         </button>
-        <button className="enter-room-btn" onClick={onEnter} style={{ height: "54px" }}>
+        <button 
+          className="enter-room-btn" 
+          onClick={onEnter} 
+          style={{ 
+            height: "56px", 
+            margin: "0", 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center",
+            padding: "0"
+          }}
+        >
           Entrar a la sala
-          <ChevronRight size={18} />
+          <ChevronRight size={20} />
         </button>
       </div>
     </article>

@@ -86,7 +86,7 @@ function HomeMentor() {
       {/* Stats */}
       <div className="perfil-stats-grid" style={{ marginBottom: "2rem" }}>
         <PerfilStatCard titulo="Salas Creadas" valor={stats.salasCreadas} icon={Video} color="#00ffff" />
-        <PerfilStatCard titulo="Alumnos Ayudados" valor={stats.alumnosAyudados} icon={User} color="#ff00ff" />
+        <PerfilStatCard titulo="Asistencias Totales" valor={stats.alumnosAyudados} icon={User} color="#ff00ff" />
         <PerfilStatCard titulo="Horas Mentoreando" valor={`${stats.horasMentoreando}h`} icon={Clock} color="#00ff00" />
       </div>
 
@@ -105,7 +105,7 @@ function HomeMentor() {
           <p>No tienes salas activas aún. Crea una para comenzar a ser mentor.</p>
         </div>
       ) : (
-        <div className="active-room-container">
+        <div className="active-room-container" style={{ width: "min(100%, 600px)", margin: "0 auto" }}>
           {rooms.map((room) => {
             const participantCount = room.sessionInfo?.participantCount || 0;
             const maxCapacity = room.capacidad_maxima || 10;
@@ -120,7 +120,7 @@ function HomeMentor() {
                     <span className="live-dot"></span>
                     EN VIVO
                   </div>
-                  <div className="room-id">ID: {room.id}</div>
+                  <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", fontWeight: "600" }}>SALA ACTIVA</span>
                 </div>
 
                 <div className="room-main-info">
