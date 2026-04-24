@@ -5,7 +5,7 @@ import PerfilStatCard from "../components/PerfilStatCard";
 import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette } from "lucide-react";
+import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Mail } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
@@ -361,17 +361,6 @@ function Perfil() {
               <div className="config-list-section" style={{ marginTop: "1rem" }}>
                 <h3 className="section-subtitle"><Settings size={20} className="section-icon" /> Preferencias de la aplicación</h3>
                 <div className="neon-card config-list-container">
-                  {rol !== "mentor" && (
-                    <div className="config-list-item">
-                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: "#00ff00", boxShadow: "0 0 8px #00ff00" }}></span>
-                        <span>Notificaciones</span>
-                      </div>
-                      <button className="primary-btn-neon-s" style={{ background: "transparent", border: "1px solid #00ff00", color: "#00ff00", padding: "0.5rem 1rem", fontSize: "0.85rem" }}>
-                        Desactivar
-                      </button>
-                    </div>
-                  )}
                   <div className="config-list-item">
                     <span>Modo de visualización</span>
                     <div style={{ width: "200px" }}>
@@ -410,20 +399,100 @@ function Perfil() {
         </main>
       </div>
 
-      {/* Edit Modal */}
       {showEditModal && (
-        <div style={{ position:"fixed", top:0, left:0, width:"100vw", height:"100vh", background:"rgba(0,0,0,0.75)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:1000 }}>
-          <div style={{ background:"#0d0d1a", border:"1px solid #00ffff", borderRadius:"14px", padding:"2rem", width:"400px", display:"flex", flexDirection:"column", gap:"0.75rem" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-              <h3 style={{ color:"#00ffff", margin:0 }}>...</h3>
-              <X size={20} style={{ cursor:"pointer", color:"#aaa" }} onClick={() => setShowEditModal(false)} />
-            </div>
-            {/* ... edit fields ... */}
-            <div style={{ display:"flex", gap:"1rem", marginTop:"0.5rem" }}>
-              <button className="primary-btn-neon-s" onClick={handleSave} disabled={saving}>
-                <Check size={14} style={{ marginRight:"6px" }} />{saving ? "Guardando..." : "Guardar cambios"}
+        <div style={{ 
+          position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", 
+          background: "rgba(0, 0, 0, 0.8)", display: "flex", alignItems: "center", 
+          justifyContent: "center", zIndex: 1000, backdropFilter: "blur(8px)" 
+        }}>
+          <div className="neon-card" style={{ 
+            width: "min(90%, 450px)", 
+            padding: "2.5rem", 
+            border: "1px solid rgba(0, 255, 255, 0.3)",
+            position: "relative",
+            overflow: "hidden"
+          }}>
+            {/* Decoración Neón superior */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "2px", background: "linear-gradient(90deg, transparent, #00ffff, transparent)" }}></div>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <Edit3 size={24} color="#00ffff" />
+                <h3 style={{ color: "#fff", margin: 0, fontSize: "1.5rem", fontWeight: "800", letterSpacing: "-0.02em" }}>Editar Perfil</h3>
+              </div>
+              <button 
+                onClick={() => setShowEditModal(false)}
+                style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", transition: "color 0.2s" }}
+                onMouseEnter={(e) => e.target.style.color = "#ff00ff"}
+                onMouseLeave={(e) => e.target.style.color = "rgba(255,255,255,0.4)"}
+              >
+                <X size={24} />
               </button>
-              <button className="danger-btn-neon-s" onClick={() => setShowEditModal(false)}>Cancelar</button>
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="mini-input-group">
+                <label style={{ color: "#00ffff", fontSize: "0.75rem", textTransform: "uppercase", fontWeight: "800", letterSpacing: "1.5px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <User size={14} /> Nombre Completo
+                </label>
+                <input 
+                  type="text" 
+                  className="neon-input-s" 
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  value={editData.nombre} 
+                  onChange={(e) => setEditData({ ...editData, nombre: e.target.value })}
+                  placeholder="Tu nombre real"
+                />
+              </div>
+
+              <div className="mini-input-group">
+                <label style={{ color: "#00ffff", fontSize: "0.75rem", textTransform: "uppercase", fontWeight: "800", letterSpacing: "1.5px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Mail size={14} /> Usuario
+                </label>
+                <div style={{ position: "relative" }}>
+                  <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)" }}>@</span>
+                  <input 
+                    type="text" 
+                    className="neon-input-s" 
+                    style={{ paddingLeft: "32px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}
+                    value={editData.usuario} 
+                    onChange={(e) => setEditData({ ...editData, usuario: e.target.value })}
+                    placeholder="usuario123"
+                  />
+                </div>
+              </div>
+
+              <div className="mini-input-group">
+                <label style={{ color: "#00ffff", fontSize: "0.75rem", textTransform: "uppercase", fontWeight: "800", letterSpacing: "1.5px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <BookOpen size={14} /> Intereses y Habilidades
+                </label>
+                <textarea 
+                  className="neon-input-s" 
+                  style={{ minHeight: "100px", resize: "none", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", lineHeight: "1.6" }}
+                  value={editData.intereses} 
+                  onChange={(e) => setEditData({ ...editData, intereses: e.target.value })}
+                  placeholder="React, Diseño, Node.js, etc."
+                />
+                <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", marginTop: "6px" }}>Sépáralos por comas para generar etiquetas automáticamente.</span>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "1rem", marginTop: "2.5rem" }}>
+              <button 
+                className="primary-btn-neon-s" 
+                style={{ flex: 2, height: "52px" }}
+                onClick={handleSave} 
+                disabled={saving}
+              >
+                {saving ? <div className="aura-spinner-mini"></div> : <><Check size={18} style={{ marginRight: "8px" }} /> Guardar Cambios</>}
+              </button>
+              <button 
+                className="danger-btn-neon-s" 
+                style={{ flex: 1, background: "transparent", border: "1px solid rgba(255,0,255,0.3)", height: "52px" }}
+                onClick={() => setShowEditModal(false)}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
