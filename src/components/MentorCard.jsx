@@ -1,6 +1,6 @@
 import { User, Circle } from "lucide-react";
 
-function MentorCard({ nombre, habilidad, nombreSala, onJoin, isJoining, isActive }) {
+function MentorCard({ nombre, habilidad, nombreSala, descripcion, onJoin, isJoining, isActive }) {
   return (
     <div className="neon-card mentor-card-layout">
       <div className="mentor-card-content">
@@ -15,10 +15,20 @@ function MentorCard({ nombre, habilidad, nombreSala, onJoin, isJoining, isActive
           />
         </div>
         <div className="mentor-details">
-          <p className="mentor-text"><strong>Mentor:</strong> {nombre}</p>
-          <p className="mentor-text"><strong>Sala:</strong> {nombreSala}</p>
-          <p className="mentor-text"><strong>Habilidad:</strong> {habilidad}</p>
+          <div className="mentor-header-info">
+            <h3 className="mentor-room-name">{nombreSala}</h3>
+            <p className="mentor-name-text">con {nombre}</p>
+          </div>
+          
+          <div className="mentor-badge-row">
+            <span className="mentor-skill-badge">{habilidad}</span>
+          </div>
 
+          {descripcion && (
+            <p className="mentor-description-text">
+              {descripcion}
+            </p>
+          )}
         </div>
       </div>
       <div className="mentor-card-action">

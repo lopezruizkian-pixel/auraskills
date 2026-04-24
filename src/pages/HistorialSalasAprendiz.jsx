@@ -4,7 +4,8 @@ import Sidebar from "../components/Sidebar";
 import HistorialRow from "../components/HistorialRow";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { Search, User, History, RefreshCw } from "lucide-react";
+import { Search, User, History, RefreshCw, BookOpen } from "lucide-react";
+import AuraSelect from "../components/AuraSelect";
 import { getUserRoomHistory } from "../services/roomService";
 import { fetchMySkills } from "../services/skillService";
 import "../Styles/Home.css";
@@ -148,18 +149,23 @@ function HistorialSalasAprendiz() {
           <section className="historial-section">
             <div className="historial-top-actions">
               {/* Título redundante eliminado */}
-              <div className="filter-chips">
-                <select className="neon-select-s" value={filterSkill} onChange={(e) => setFilterSkill(e.target.value)}>
-                  <option value="Todas">Todas las habilidades</option>
-                  {uniqueSkills.filter(s => s !== "Todas").map(skill => (
-                    <option key={skill} value={skill}>{skill}</option>
-                  ))}
-                </select>
-                <select className="neon-select-s" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                  <option value="Recientes">Más recientes</option>
-                  <option value="MasDuracion">Más duración</option>
-                  <option value="MenosDuracion">Menos duración</option>
-                </select>
+              <div className="filter-chips" style={{ display: "flex", gap: "1.5rem" }}>
+                <AuraSelect 
+                  value={filterSkill}
+                  onChange={setFilterSkill}
+                  options={uniqueSkills.map(s => ({ value: s, label: s === "Todas" ? "Todas las habilidades" : s }))}
+                  icon={BookOpen}
+                />
+                <AuraSelect 
+                  value={sortOrder}
+                  onChange={setSortOrder}
+                  options={[
+                    { value: "Recientes", label: "Más recientes" },
+                    { value: "MasDuracion", label: "Más duración" },
+                    { value: "MenosDuracion", label: "Menos duración" }
+                  ]}
+                  icon={RefreshCw}
+                />
               </div>
             </div>
             

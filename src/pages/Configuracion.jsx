@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff } from "lucide-react";
+import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette } from "lucide-react";
+import AuraSelect from "../components/AuraSelect";
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { logoutUser } from "../services/authService";
@@ -74,10 +75,17 @@ function Configuracion() {
                 </div>
                 <div className="config-list-item">
                   <span>Modo de visualización</span>
-                  <select className="config-select" onChange={(e) => setTheme(e.target.value)} value={theme}>
-                    <option value="neon">Neón Cyberspace</option>
-                    <option value="classic">Aura Clásico</option>
-                  </select>
+                  <div style={{ width: "220px" }}>
+                    <AuraSelect 
+                      value={theme}
+                      onChange={setTheme}
+                      options={[
+                        { value: "neon", label: "Neón Cyberspace" },
+                        { value: "classic", label: "Aura Clásico" }
+                      ]}
+                      icon={Palette}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

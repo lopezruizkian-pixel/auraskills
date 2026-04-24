@@ -5,12 +5,14 @@ import PerfilStatCard from "../components/PerfilStatCard";
 import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff } from "lucide-react";
+import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
 import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
+import AuraSelect from "../components/AuraSelect";
+import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
 import "../Styles/Home.css";
 import "../Styles/Perfil.css";
 import "../Styles/Configuracion.css";
@@ -35,11 +37,12 @@ function Perfil() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
-  // Habilidades
   const [allSkills, setAllSkills] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [savingSkills, setSavingSkills] = useState(false);
   const [activeTab, setActiveTab] = useState("mis-skills");
+  // Habilidades Aprendiz (Cálculo dinámico)
+  const [aprendizSkills, setAprendizSkills] = useState([]);
 
   useEffect(() => { fetchProfile(); }, []);
 
@@ -53,6 +56,39 @@ function Perfil() {
         habilidades: (data.habilidades || []).join(", "),
         intereses: (data.intereses || []).join(", "),
       });
+
+      // Si es Aprendiz, calculamos sus habilidades por historial
+      if (rol !== "mentor") {
+        try {
+          const { getUserRoomHistory } = await import("../services/roomService");
+          const history = await getUserRoomHistory();
+          const myId = storage.get("userId");
+          
+          // Filtrar solo sesiones donde fui alumno
+          const studySessions = history.filter(s => s.mentor_id !== myId);
+          
+          // Agrupar por habilidad y contar sesiones (con normalización de campos)
+          const skillCounts = studySessions.reduce((acc, s) => {
+            const skillName = s.habilidad || s.skill_name || s.habilidad_nombre || s.skillName || (s.skill && s.skill.nombre);
+            if (!skillName) return acc;
+            acc[skillName] = (acc[skillName] || 0) + 1;
+            return acc;
+          }, {});
+
+          // Convertir a array de objetos con Nivel
+          const calculatedSkills = Object.entries(skillCounts).map(([nombre, count]) => {
+            let nivel = "Básico";
+            if (count >= 9) nivel = "Avanzado";
+            else if (count >= 4) nivel = "Intermedio";
+            
+            return { nombre, count, nivel };
+          });
+
+          setAprendizSkills(calculatedSkills);
+        } catch (err) {
+          console.error("Error calculando habilidades de aprendiz:", err);
+        }
+      }
 
       if (rol === "mentor") {
         const userId = storage.get("userId");
@@ -142,8 +178,22 @@ function Perfil() {
 
   const inputStyle = { background:"#1a1a2e", border:"1px solid #333", borderRadius:"8px", padding:"0.7rem 2.8rem 0.7rem 1rem", color:"#fff", width:"100%", fontSize:"0.95rem", boxSizing:"border-box" };
 
-  if (loading) return <div className="home-container"><p style={{ padding: "2rem" }}>...</p></div>;
-  if (!userData) return <div className="home-container"><p style={{ padding: "2rem" }}>...</p></div>;
+  if (loading || !userData) {
+    return (
+      <div className="home-container">
+        <div className="home-main-layout">
+          <Sidebar rol={rol} />
+          <main className="home-content">
+            <GlobalHeader />
+            <div className="loading-global-container">
+              <div className="aura-spinner"></div>
+              <p className="loading-text-neon">Sincronizando Aura...</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.usuario}`;
 
@@ -185,9 +235,22 @@ function Perfil() {
               <>
                 <h2 className="section-subtitle-neon">Habilidades que estás aprendiendo</h2>
                 <div className="neon-card perfil-skills-card">
-                  {userData.habilidades && userData.habilidades.length > 0
-                    ? userData.habilidades.map((hab, i) => <SkillTag key={i} nombre={hab} color="#00ffff" />)
-                    : <p>No hay habilidades registradas.</p>}
+                  {aprendizSkills.length > 0 ? (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                      {aprendizSkills.map((hab, i) => (
+                        <SkillTag 
+                          key={i} 
+                          nombre={hab.nombre} 
+                          nivel={hab.nivel} 
+                          color={hab.nivel === "Avanzado" ? "#ff00ff" : hab.nivel === "Intermedio" ? "#ffff00" : "#00ffff"} 
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ color: "rgba(255,255,255,0.5)", margin: 0 }}>
+                      No tienes habilidades registradas aún. ¡Entra a una sala en vivo para empezar a aprender!
+                    </p>
+                  )}
                 </div>
               </>
             )}
@@ -311,10 +374,17 @@ function Perfil() {
                   )}
                   <div className="config-list-item">
                     <span>Modo de visualización</span>
-                    <select className="config-select" onChange={(e) => setTheme(e.target.value)} value={theme}>
-                      <option value="neon">Neón Cyberspace</option>
-                      <option value="classic">Aura Clásico</option>
-                    </select>
+                    <div style={{ width: "200px" }}>
+                      <AuraSelect 
+                        value={theme}
+                        onChange={setTheme}
+                        options={[
+                          { value: "neon", label: "Neón Cyberspace" },
+                          { value: "classic", label: "Aura Clásico" }
+                        ]}
+                        icon={Palette}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

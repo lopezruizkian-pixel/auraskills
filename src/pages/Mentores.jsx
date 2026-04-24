@@ -2,14 +2,26 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import MentorCard from "../components/MentorCard";
-import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { Search, User, Users, RefreshCw } from "lucide-react";
+import SkillTag from "../components/SkillTag";
+import { Search, Users, BookOpen, Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
+import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
+import { storage } from "../services/storage";
 import "../Styles/Mentores.css";
 
-import { storage } from "../services/storage";
+const iconMap = {
+  'Tecnología': Code,
+  'Diseño': Palette,
+  'Negocios': Megaphone,
+  'Educación': Languages,
+  'Arte': Music,
+  'Entretenimiento': Gamepad2,
+  'Tecnologia': Code,
+  'Diseno': Palette,
+  'Educacion': Languages,
+};
 
 function Mentores() {
   const [rol] = useState(storage.get("userRole") || "alumno");
@@ -18,14 +30,21 @@ function Mentores() {
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [filtroHabilidad, setFiltroHabilidad] = useState("");
   const [joining, setJoining] = useState(null);
+
+  // Categorías
+  const [dynamicCategories, setDynamicCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [skillsInCategory, setSkillsInCategory] = useState([]);
+  const [loadingSkills, setLoadingSkills] = useState(false);
 
   const load = async () => {
     try {
       const data = await fetchActiveRooms();
-      setRooms(data);
-      setFiltered(data);
+      // FILTRO: Solo salas donde el mentor ya esté dentro
+      const activeRooms = data.filter(r => r.sessionInfo?.isActive);
+      setRooms(activeRooms);
+      setFiltered(activeRooms);
     } catch (err) {
       console.error("Error cargando mentores:", err);
     } finally {
@@ -33,68 +52,82 @@ function Mentores() {
     }
   };
 
+  const loadCategories = async () => {
+    try {
+      const data = await fetchCategories();
+      setDynamicCategories(data);
+    } catch (err) {
+      console.error("Error cargando categorias:", err);
+    }
+  };
+
   useEffect(() => {
     load();
+    loadCategories();
     
     const socket = getDashboardSocket();
-    
     const handleUpdate = () => {
       console.log('Salas actualizadas, recargando...');
       load();
     };
-    
     socket.on('roomsUpdated', handleUpdate);
-
-    return () => {
-      socket.off('roomsUpdated', handleUpdate);
-    };
+    return () => socket.off('roomsUpdated', handleUpdate);
   }, []);
+
   useEffect(() => {
-    let result = rooms;
-    if (search.trim()) {
+    if (!search.trim()) {
+      setFiltered(rooms);
+    } else {
       const q = search.toLowerCase();
-      result = result.filter((r) =>
-        r.mentor_nombre?.toLowerCase().includes(q) ||
-        r.habilidad?.toLowerCase().includes(q)
+      setFiltered(
+        rooms.filter((r) =>
+          r.nombre?.toLowerCase().includes(q) ||
+          r.habilidad?.toLowerCase().includes(q) ||
+          r.mentor_nombre?.toLowerCase().includes(q)
+        )
       );
     }
-    if (filtroHabilidad) result = result.filter((r) => r.habilidad === filtroHabilidad);
-    setFiltered(result);
-  }, [search, filtroHabilidad, rooms]);
+  }, [search, rooms]);
 
-  const habilidades = [...new Set(rooms.map((r) => r.habilidad).filter(Boolean))];
+  const handleCategoryClick = async (category) => {
+    if (activeCategory === category) {
+      setActiveCategory(null);
+      setSkillsInCategory([]);
+      return;
+    }
+    setActiveCategory(category);
+    setLoadingSkills(true);
+    try {
+      const skills = await fetchSkills({ categoria: category });
+      setSkillsInCategory(skills);
+    } catch (err) {
+      console.error("Error cargando habilidades por categoria:", err);
+    } finally {
+      setLoadingSkills(false);
+    }
+  };
 
   const handleJoin = async (room) => {
-    console.log(`[DEBUG] Mentores.jsx - handleJoin iniciado para sala ID:`, room.id);
     setJoining(room.id);
     try {
-      console.log(`[DEBUG] Obteniendo detalles de la sala...`);
       const roomDetails = await fetchRoom(room.id);
-      console.log(`[DEBUG] Detalles obtenidos:`, roomDetails);
-
       if (!roomDetails.sessionInfo?.isActive) {
-        console.log(`[DEBUG] Bloqueado: sessionInfo.isActive es falso o indefinido.`);
         alert("El mentor aún no ha ingresado a esta sala.");
         setJoining(null);
         return;
       }
 
-      console.log(`[DEBUG] sessionInfo.isActive es TRUE. Intentando unirse (joinRoom)...`);
-      try { 
-        await joinRoom(room.id); 
-        console.log(`[DEBUG] joinRoom exitoso para sala ID:`, room.id);
-      } catch (err) {
-        console.log(`[DEBUG] Error atrapado en joinRoom:`, err.message);
-        if (!err.message?.includes("Ya estás en esta sala")) {
-          console.error(`[DEBUG] Error crítico en joinRoom:`, err);
-          throw err;
-        } else {
-          console.log(`[DEBUG] El usuario ya estaba en la sala, continuando a navegación.`);
-        }
+      try { await joinRoom(room.id); } catch (err) {
+        if (!err.message?.includes("Ya estás en esta sala")) throw err;
       }
 
-      console.log(`[DEBUG] Guardando historial y navegando a /sala/${room.id}`);
-      const infoSala = { id: room.id, nombre: room.nombre, habilidad: room.habilidad, mood: room.mood, mentor: room.mentor_nombre || "Sin mentor" };
+      const infoSala = { 
+        id: room.id, 
+        nombre: room.nombre, 
+        habilidad: room.habilidad, 
+        mood: room.mood, 
+        mentor: room.mentor_nombre || "Sin mentor" 
+      };
       const visitadas = storage.get("historialSalas") || [];
       if (!visitadas.some((s) => s.id === room.id)) {
         storage.set("historialSalas", [infoSala, ...visitadas]);
@@ -102,10 +135,8 @@ function Mentores() {
 
       navigate(`/sala/${room.id}`);
     } catch (err) {
-      console.error("[DEBUG] Error general en handleJoin:", err);
       alert("Error al intentar unirte a la sala: " + (err.message || "Error desconocido"));
     } finally {
-      console.log(`[DEBUG] handleJoin finalizado. Restableciendo estado joining.`);
       setJoining(null);
     }
   };
@@ -119,33 +150,88 @@ function Mentores() {
 
           <div className="search-container-neon search-extended">
             <Search className="search-icon" size={20} />
-            <input type="text" placeholder="Buscar mentor o habilidad..." className="search-input-neon"
+            <input type="text" placeholder="¿Qué quieres aprender hoy? Busca una sala o mentor..." className="search-input-neon"
               value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
-          <section className="mentores-section">
-            {/* Título redundante eliminado */}
-            <div className="filtros-container">
-              <select className="filtro-neon" value={filtroHabilidad} onChange={(e) => setFiltroHabilidad(e.target.value)}>
-                <option value="">Habilidad</option>
-                {habilidades.map((h) => <option key={h} value={h}>{h}</option>)}
-              </select>
+
+          {/* Explorador de Categorías */}
+          <div className="categories-container">
+            <div className="categories-scroll-wrapper">
+              {dynamicCategories.map((catName) => {
+                const Icon = iconMap[catName] || BookOpen;
+                const isActive = activeCategory === catName;
+                return (
+                  <button
+                    key={catName}
+                    onClick={() => handleCategoryClick(catName)}
+                    className={`category-btn-neon ${isActive ? "active" : ""}`}
+                  >
+                    <Icon size={18} />
+                    <span>{catName}</span>
+                  </button>
+                );
+              })}
             </div>
+
+            {activeCategory && (
+              <div className="skills-explorer-panel neon-card" style={{ marginTop: "1rem", padding: "1.5rem", borderStyle: "dashed" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                  <h4 style={{ margin: 0, color: "#00ffff", display: "flex", alignItems: "center", gap: "8px" }}>
+                    Especialidades en {activeCategory}
+                    <ChevronRight size={16} />
+                  </h4>
+                  <button 
+                    onClick={() => { setActiveCategory(null); setSkillsInCategory([]); }}
+                    style={{ background: "transparent", border: "none", color: "#aaa", cursor: "pointer", fontSize: "0.8rem" }}
+                  >
+                    Cerrar
+                  </button>
+                </div>
+                
+                {loadingSkills ? (
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <div className="aura-spinner-mini"></div>
+                    <span style={{ fontSize: "0.85rem", color: "#aaa" }}>Cargando catálogo...</span>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                    {skillsInCategory.map((skill) => (
+                      <SkillTag 
+                        key={skill.id || skill._id} 
+                        nombre={skill.nombre} 
+                        color="#00ffff" 
+                        onClick={setSearch}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <section className="mentores-section">
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "2rem" }}>
+              <Users size={24} color="#00ffff" />
+              <h2 className="section-title-neon" style={{ margin: 0 }}>Salas Disponibles</h2>
+            </div>
+
             {loading ? (
               <div className="loading-global-container">
                 <div className="aura-spinner"></div>
-                <span className="loading-text-neon">Buscando mentores</span>
+                <span className="loading-text-neon">Buscando conocimiento...</span>
               </div>
             ) : filtered.length === 0 ? (
               <div className="empty-state-centered">
                 <Users size={100} className="empty-icon" style={{ marginBottom: "2rem", opacity: 0.15 }} />
-                <h3 style={{ color: "#fff", fontSize: "2rem", marginBottom: "0.8rem", fontWeight: "700" }}>No hay mentores activos</h3>
-                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", maxWidth: "450px", margin: "0 auto" }}>En este momento no hay mentores enseñando esta habilidad. ¡Sé el primero en crear una sala!</p>
+                <h3 style={{ color: "#fff", fontSize: "2rem", marginBottom: "0.8rem", fontWeight: "700" }}>No hay salas activas</h3>
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", maxWidth: "450px", margin: "0 auto" }}>En este momento no hay mentores enseñando. ¡Vuelve más tarde!</p>
               </div>
             ) : (
               <div className="mentores-grid">
                 {filtered.map((room) => (
                   <MentorCard key={room.id} id={room.id} nombre={room.mentor_nombre || "Mentor"}
                     habilidad={room.habilidad} nombreSala={room.nombre}
+                    descripcion={room.descripcion}
                     isActive={room.sessionInfo?.isActive}
                     onJoin={() => handleJoin(room)} isJoining={joining === room.id} />
                 ))}

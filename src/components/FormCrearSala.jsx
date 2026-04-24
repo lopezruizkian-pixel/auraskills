@@ -15,6 +15,7 @@ import { createRoom } from '../services/roomService';
 import { fetchSkills } from '../services/skillService';
 import { useToast } from '../hooks/useToast';
 import { validateForm, validators } from '../services/validation';
+import AuraSelect from './AuraSelect';
 import '../Styles/CrearSala.css';
 
 function FormCrearSala({ onCancel, onSuccess }) {
@@ -151,23 +152,14 @@ function FormCrearSala({ onCancel, onSuccess }) {
                 <div className='input-label-row'>
                   <label htmlFor='room-skill'>Habilidad a ensenar</label>
                 </div>
-                <div className='input-wrapper'>
-                  <Wrench className='input-icon' size={18} />
-                  <select
-                    id='room-skill'
-                    name='habilidad'
+                <div className='input-wrapper' style={{ border: "none", padding: 0 }}>
+                  <AuraSelect 
                     value={formData.habilidad}
-                    onChange={handleChange}
-                    disabled={isLoading}
-                    className={errors.habilidad ? 'input-error' : ''}
-                  >
-                    <option value='' disabled>Selecciona una habilidad</option>
-                    {mySkills.map((hab) => (
-                      <option key={hab.id || hab._id} value={hab.id || hab._id}>
-                        {hab.nombre}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setFormData(prev => ({ ...prev, habilidad: val }))}
+                    options={mySkills.map(hab => ({ value: hab.id || hab._id, label: hab.nombre }))}
+                    placeholder="Selecciona una habilidad"
+                    icon={Wrench}
+                  />
                 </div>
                 {errors.habilidad && <span className='error-text'>{errors.habilidad}</span>}
               </div>
@@ -200,24 +192,21 @@ function FormCrearSala({ onCancel, onSuccess }) {
                 <label htmlFor='room-mood'>Mood de la sesion</label>
                 <span className='field-optional'>Opcional</span>
               </div>
-              <div className='input-wrapper'>
-                <Smile className='input-icon' size={18} />
-                <select
-                  id='room-mood'
-                  name='mood'
-                  value={formData.mood}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                  className={errors.mood ? 'input-error' : ''}
-                >
-                  <option value=''>Selecciona el ambiente</option>
-                  <option value='Concentrado'>Concentrado 🧠</option>
-                  <option value='Relajado'>Relajado ☕</option>
-                  <option value='Energetico'>Energetico 🔥</option>
-                  <option value='Creativo'>Creativo 🎨</option>
-                  <option value='Chill'>Chill 🌊</option>
-                </select>
-              </div>
+                <div className='input-wrapper' style={{ border: "none", padding: 0 }}>
+                  <AuraSelect 
+                    value={formData.mood}
+                    onChange={(val) => setFormData(prev => ({ ...prev, mood: val }))}
+                    options={[
+                      { value: "Concentrado", label: "Concentrado 🧠" },
+                      { value: "Relajado", label: "Relajado ☕" },
+                      { value: "Energetico", label: "Energetico 🔥" },
+                      { value: "Creativo", label: "Creativo 🎨" },
+                      { value: "Chill", label: "Chill 🌊" }
+                    ]}
+                    placeholder="Selecciona el ambiente"
+                    icon={Smile}
+                  />
+                </div>
               {errors.mood && <span className='error-text'>{errors.mood}</span>}
             </div>
 

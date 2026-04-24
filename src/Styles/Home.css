@@ -71,8 +71,8 @@
   box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
 }
 
-.neon-card + .neon-card,
-.mentor-list-card + .mentor-list-card {
+.neon-card + .neon-card:not(.mentores-grid > .neon-card),
+.mentor-list-card + .mentor-list-card:not(.mentores-grid > .mentor-list-card) {
   margin-top: 1rem;
 }
 

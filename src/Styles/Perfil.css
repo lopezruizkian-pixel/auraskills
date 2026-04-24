@@ -247,3 +247,49 @@
     margin-top: 20px;
   }
 }
+/* --- BADGES DE NIVEL --- */
+.skill-level-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.skill-level-container:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 255, 255, 0.2);
+  transform: translateY(-4px);
+}
+
+.skill-level-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.skill-level-badge.básico {
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.skill-level-badge.intermedio {
+  background: rgba(255, 255, 0, 0.1);
+  color: #ffff00;
+  border: 1px solid rgba(255, 255, 0, 0.3);
+}
+
+.skill-level-badge.avanzado {
+  background: rgba(255, 0, 255, 0.1);
+  color: #ff00ff;
+  border: 1px solid rgba(255, 0, 255, 0.3);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+}

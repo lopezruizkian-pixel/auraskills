@@ -7,6 +7,7 @@ import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
 import GlobalHeader from "../components/GlobalHeader";
 import SkillTag from "./SkillTag";
+import Sidebar from "./Sidebar";
 import { Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { storage } from "../services/storage";
 
@@ -19,11 +20,14 @@ function HomeAprendiz() {
   const [joining, setJoining] = useState(null);
   const [salasVisitadas, setSalasVisitadas] = useState([]);
   const [stats, setStats] = useState({ salasAsistidas: 0, horasEstudio: 0, cursos: 0 });
+  const rol = storage.get("userRole") || "alumno";
   // Categorías
   const [activeCategory, setActiveCategory] = useState(null);
   const [skillsInCategory, setSkillsInCategory] = useState([]);
   const [loadingSkills, setLoadingSkills] = useState(false);
   const [dynamicCategories, setDynamicCategories] = useState([]);
+  const [recentSessions, setRecentSessions] = useState([]);
+  const [nextMilestone, setNextMilestone] = useState(null);
 
   const iconMap = {
     'Tecnología': Code,
@@ -78,24 +82,54 @@ function HomeAprendiz() {
 
   const loadRooms = async () => {
     try {
-      const data = await fetchActiveRooms();
-      setRooms(data);
-      setFiltered(data);
+      const [history, activeRoomsData] = await Promise.all([
+        getUserRoomHistory(),
+        fetchActiveRooms()
+      ]);
+      
+      // FILTRO: Solo salas donde el mentor ya esté dentro
+      const liveRooms = activeRoomsData.filter(r => r.sessionInfo?.isActive);
+      // ORDENAR: Más recientes primero
+      liveRooms.sort((a, b) => new Date(b.sessionInfo?.startedAt || 0) - new Date(a.sessionInfo?.startedAt || 0));
+      
+      setRooms(liveRooms);
+      setFiltered(liveRooms);
 
-      // Cargar estadísticas desde el historial
-      const history = await getUserRoomHistory();
-      // Filtrar sesiones donde el usuario fue participante (no mentor)
       const userId = storage.get("userId");
       const myStudySessions = history.filter(s => s.mentor_id !== userId);
+      
+      // ORDENAR historial: Más reciente arriba
+      myStudySessions.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
+      // Actividad Reciente
+      setRecentSessions(myStudySessions.slice(0, 3));
+
+      // Stats
       const totalSeconds = myStudySessions.reduce((acc, s) => acc + (s.duration_seconds || 0), 0);
-      const uniqueSkills = new Set(myStudySessions.map(s => s.habilidad).filter(Boolean));
+      const uniqueSkills = new Set(myStudySessions.map(s => s.habilidad || s.skill_name || s.skill?.nombre).filter(Boolean));
 
       setStats({
         salasAsistidas: myStudySessions.length,
         horasEstudio: Math.round(totalSeconds / 3600 * 10) / 10,
         cursos: uniqueSkills.size
       });
+
+      // Cálculo de Hito (Sutil)
+      const skillCounts = myStudySessions.reduce((acc, s) => {
+        const name = s.habilidad || s.skill_name || s.skill?.nombre;
+        if (name) acc[name] = (acc[name] || 0) + 1;
+        return acc;
+      }, {});
+
+      let milestone = null;
+      for (const [name, count] of Object.entries(skillCounts)) {
+        if (count === 3 || count === 8) {
+          milestone = { name, level: count === 3 ? "Intermedio" : "Avanzado" };
+          break;
+        }
+      }
+      setNextMilestone(milestone);
+
     } catch (err) {
       console.error("Error cargando salas:", err);
     } finally {
@@ -183,161 +217,125 @@ function HomeAprendiz() {
   };
 
   return (
-    <section className="salas-activas-section">
+    <section className="dashboard-content-inner">
       <GlobalHeader />
+      {/* Bienvenida Personalizada */}
+      <section className="welcome-banner-neon" style={{ marginBottom: "2.5rem" }}>
+        <h1 className="welcome-title">
+          ¡Hola, <span className="text-glow">{storage.get("userName") || "Aprendiz"}</span>!
+        </h1>
+        <p className="welcome-subtitle">¿Qué vamos a dominar hoy en el multiverso del código?</p>
+      </section>
 
       {/* Stats */}
-      <div className="perfil-stats-grid" style={{ marginBottom: "2rem" }}>
+      <div className="perfil-stats-grid" style={{ marginBottom: "2.5rem" }}>
         <PerfilStatCard titulo="Salas Asistidas" valor={stats.salasAsistidas} icon={Video} color="#00ffff" />
         <PerfilStatCard titulo="Horas de Estudio" valor={`${stats.horasEstudio}h`} icon={Clock} color="#ff00ff" />
-        <PerfilStatCard titulo="Cursos" valor={stats.cursos} icon={BookOpen} color="#00ff00" />
+        <PerfilStatCard titulo="Cursos / Habilidades" valor={stats.cursos} icon={BookOpen} color="#00ff00" />
       </div>
 
-      <div
-        className="search-container-neon"
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "stretch", marginBottom: "1rem" }}
-      >
-        <Search className="search-icon" size={20} />
-        <input
-          type="text"
-          placeholder="Buscar habilidad o mentor..."
-          className="search-input-neon"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* Categories Bar */}
-      <div className="categories-container" style={{ marginBottom: "2rem" }}>
-        <div style={{ display: "flex", gap: "10px", overflowX: "auto", paddingBottom: "10px", scrollbarWidth: "none" }}>
-          {dynamicCategories.map((catName) => {
-            const Icon = iconMap[catName] || BookOpen;
-            const isActive = activeCategory === catName;
-            return (
-              <button
-                key={catName}
-                onClick={() => handleCategoryClick(catName)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "0.6rem 1.2rem",
-                  borderRadius: "12px",
-                  border: isActive ? "1px solid #00ffff" : "1px solid #333",
-                  background: isActive ? "rgba(0, 255, 255, 0.1)" : "#0d0d1a",
-                  color: isActive ? "#00ffff" : "#ccc",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s",
-                  boxShadow: isActive ? "0 0 10px rgba(0, 255, 255, 0.2)" : "none"
-                }}
-              >
-                <Icon size={16} />
-                <span style={{ fontSize: "0.9rem", fontWeight: isActive ? "600" : "400" }}>{catName}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {activeCategory && (
-          <div className="skills-explorer-panel neon-card" style={{ marginTop: "1rem", padding: "1.5rem", borderStyle: "dashed" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <h4 style={{ margin: 0, color: "#00ffff", display: "flex", alignItems: "center", gap: "8px" }}>
-                Explorando: {activeCategory}
-                <ChevronRight size={16} />
-              </h4>
-              <button 
-                onClick={() => { setActiveCategory(null); setSkillsInCategory([]); }}
-                style={{ background: "transparent", border: "none", color: "#aaa", cursor: "pointer", fontSize: "0.8rem" }}
-              >
-                Cerrar
-              </button>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "2rem", marginBottom: "3rem", alignItems: "start" }}>
+        
+        {/* COLUMNA IZQUIERDA: ACTIVIDAD */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ background: "rgba(255, 0, 255, 0.1)", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Clock size={18} color="#ff00ff" />
+              </div>
+              <h4 style={{ margin: 0, color: "#fff", fontSize: "1rem" }}>Actividad Reciente</h4>
             </div>
-            
-            {loadingSkills ? (
-              <div style={{ display: "flex", gap: "10px" }}>
-                <div className="aura-spinner-mini"></div>
-                <span style={{ fontSize: "0.85rem", color: "#aaa" }}>Cargando catálogo...</span>
-              </div>
-            ) : skillsInCategory.length > 0 ? (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {skillsInCategory.map((skill) => (
-                  <SkillTag 
-                    key={skill.id || skill._id} 
-                    nombre={skill.nombre} 
-                    nivel={skill.nivel} 
-                    color="#00ffff" 
-                    onClick={setSearch}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p style={{ fontSize: "0.85rem", color: "#aaa" }}>No hay habilidades registradas en esta categoría aún.</p>
+            {nextMilestone && (
+              <span style={{ fontSize: "0.85rem", color: "#00ffff", background: "rgba(0,255,255,0.1)", padding: "4px 12px", borderRadius: "20px" }}>
+                <Award size={14} style={{ marginRight: "6px" }} />
+                Próximo nivel en {nextMilestone.name} pronto
+              </span>
             )}
           </div>
-        )}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {recentSessions.length > 0 ? (
+              recentSessions.map((s, i) => (
+                <div key={i} className="neon-card" style={{ padding: "1.25rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                    <div style={{ width: "45px", height: "45px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", color: "#00ffff" }}>
+                      <BookOpen size={24} />
+                    </div>
+                    <div>
+                      <h5 style={{ margin: 0, color: "#fff", fontSize: "1rem" }}>{s.room_nombre || s.habilidad || "Sesión de Aura"}</h5>
+                      <div style={{ display: "flex", gap: "12px", marginTop: "4px", fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                          <User size={12} /> {s.mentor_nombre || "Mentor Aura"}
+                        </span>
+                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                          <Clock size={12} /> {s.duration_seconds ? `${Math.round(s.duration_seconds / 60)} min` : "15 min"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", display: "block" }}>
+                      {s.created_at ? new Date(s.created_at).toLocaleDateString() : "Reciente"}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="neon-card" style={{ padding: "2rem", textAlign: "center", color: "rgba(255,255,255,0.3)" }}>
+                Aún no tienes actividad registrada.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* COLUMNA DERECHA: EN VIVO */}
+        <aside style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{ background: "rgba(0, 255, 255, 0.1)", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Users size={18} color="#00ffff" />
+            </div>
+            <h4 style={{ margin: 0, color: "#fff", fontSize: "1rem" }}>Mentores en Vivo</h4>
+          </div>
+          <div className="neon-card" style={{ padding: "1.5rem", minHeight: "200px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              {rooms.length > 0 ? (
+                rooms.slice(0, 4).map((room) => (
+                  <div key={room.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "8px", borderRadius: "10px", background: "rgba(255,255,255,0.02)", cursor: "pointer" }} onClick={() => navigate("/mentores")}>
+                    <div style={{ width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #00ffff", background: "#140022", overflow: "hidden" }}>
+                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${room.mentor_nombre}`} alt="avatar" />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ margin: 0, color: "#fff", fontSize: "0.85rem", fontWeight: "600" }}>{room.mentor_nombre}</p>
+                      <p style={{ margin: 0, color: "#00ffff", fontSize: "0.7rem" }}>{room.habilidad}</p>
+                    </div>
+                    <ChevronRight size={14} color="rgba(255,255,255,0.3)" />
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.85rem", textAlign: "center", marginTop: "2rem" }}>
+                  No hay mentores activos ahora.
+                </p>
+              )}
+            </div>
+            {rooms.length > 4 && (
+              <button onClick={() => navigate("/mentores")} style={{ width: "100%", marginTop: "1rem", background: "transparent", border: "none", color: "#00ffff", fontSize: "0.8rem", cursor: "pointer" }}>
+                Ver todos ({rooms.length})
+              </button>
+            )}
+          </div>
+        </aside>
       </div>
 
-      {loading ? (
-        <div className="loading-global-container">
-          <div className="aura-spinner"></div>
-          <span className="loading-text-neon">Buscando salas</span>
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="empty-state-centered">
-          <Users size={100} className="empty-icon-neon" />
-          <h3 className="empty-state-title">No hay salas disponibles</h3>
-          <p className="empty-state-text">Vuelve mas tarde o explora nuevas habilidades para encontrar mentores activos.</p>
-        </div>
-      ) : (
-        <div className="salas-grid" style={{ alignItems: "stretch" }}>
-          {filtered.map((room) => (
-            <article key={room.id} className="neon-card mentor-list-card dashboard-room-card dashboard-room-card-student">
-              <div className="dashboard-room-card-top">
-                <div className="dashboard-room-icon">
-                  <BookOpen size={30} strokeWidth={1.7} />
-                </div>
-                <div className="dashboard-room-badges">
-                  <span className={`dashboard-room-badge ${room.sessionInfo?.isActive ? "live" : "offline"}`}>
-                    <Radio size={12} />
-                    {room.sessionInfo?.isActive ? "Mentor activo" : "Mentor inactivo"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="dashboard-room-content">
-                <h3 className="dashboard-room-title">{room.nombre}</h3>
-                <div className="dashboard-room-meta">
-                  <p>
-                    <User size={15} />
-                    <span>{room.mentor_nombre || "Sin mentor"}</span>
-                  </p>
-                  <p>
-                    <BookOpen size={15} />
-                    <span>{room.habilidad || "Habilidad no definida"}</span>
-                  </p>
-                  <p>
-                    <Smile size={15} />
-                    <span>{room.mood || "Sin mood definido"}</span>
-                  </p>
-                </div>
-              </div>
-
-              <div className="dashboard-room-actions">
-                <button
-                  className="primary-btn-s dashboard-room-btn"
-                  onClick={() => handleJoin(room)}
-                  disabled={joining === room.id || !room.sessionInfo?.isActive}
-                  title={!room.sessionInfo?.isActive ? "El mentor no esta activo" : ""}
-                >
-                  {joining === room.id ? "Entrando..." : "Entrar a sala"}
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
-
-      )}
+      {/* Footer Minimalista */}
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem", paddingBottom: "4rem" }}>
+        <button 
+          className="primary-btn-neon-s" 
+          onClick={() => navigate("/mentores")}
+          style={{ padding: "0.8rem 2.5rem" }}
+        >
+          Explorar todos los Mentores
+        </button>
+      </div>
     </section>
   );
 }

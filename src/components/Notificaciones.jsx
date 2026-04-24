@@ -26,7 +26,13 @@ function Notificaciones() {
   const loadNotifs = async () => {
     try {
       const rooms = await fetchActiveRooms();
-      const nuevas = rooms.map((r) => ({
+      // FILTRO: Solo salas donde el mentor ya esté dentro (isActive === true)
+      const activeRooms = rooms.filter(r => r.sessionInfo?.isActive);
+      
+      // ORDENAR: La más reciente arriba
+      activeRooms.sort((a, b) => new Date(b.sessionInfo?.startedAt || 0) - new Date(a.sessionInfo?.startedAt || 0));
+
+      const nuevas = activeRooms.map((r) => ({
         id: r.id,
         tipo: "sala",
         titulo: `Sala disponible: ${r.nombre}`,
