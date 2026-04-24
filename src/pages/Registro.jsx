@@ -52,6 +52,10 @@ function Registro() {
           <img src={mascotaImg} alt="Mascota Aura" className="mascota-img" />
         </div>
         <div className="registro-box-extended">
+          <div className="registro-header">
+            <h2>Únete a la Aventura</h2>
+            <p className="registro-subtitle">Crea tu cuenta y empieza a aprender</p>
+          </div>
           <div className="input-group">
             <label>Nombre</label>
             <input type="text" placeholder="Ingresa tu nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
