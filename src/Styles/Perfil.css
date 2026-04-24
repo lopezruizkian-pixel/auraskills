@@ -43,11 +43,11 @@
 
 /* --- GRID DE ESTADÍSTICAS (KPIs) --- */
 .perfil-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  width: 100%;
-  align-items: stretch; /* Fuerza alturas iguales */
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+  align-items: stretch !important; /* Fuerza alturas iguales */
 }
 
 .stat-card {
@@ -55,40 +55,44 @@
   align-items: center !important;
   gap: 1.25rem !important;
   padding: 1.5rem !important;
-  height: 100%;
+  min-height: 110px !important; /* Altura mínima garantizada */
+  height: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .stat-icon-wrapper {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
-  flex-shrink: 0; /* Evita que se aplaste */
+  width: 50px !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  flex-shrink: 0 !important;
 }
 
 .stat-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  justify-content: center !important;
 }
 
 .stat-titulo {
-  margin: 0;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
+  margin: 0 !important;
+  font-size: 0.75rem !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
 }
 
 .stat-valor {
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: 900;
-  line-height: 1;
+  margin: 0 !important;
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
 }
 
 /* --- LAYOUT DE DOS COLUMNAS --- */
@@ -236,7 +240,7 @@
 
 @media (max-width: 1024px) {
   .perfil-grid-layout { grid-template-columns: 1fr; }
-  .perfil-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .perfil-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 @media (max-width: 768px) {
@@ -255,9 +259,10 @@
     justify-content: center;
   }
 
-  .perfil-stats-grid { grid-template-columns: 1fr; }
+  .perfil-stats-grid { grid-template-columns: 1fr !important; }
   
   .stat-card {
     padding: 1.25rem !important;
+    min-height: 90px !important;
   }
 }
