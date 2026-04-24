@@ -5,7 +5,6 @@ import { storage } from '../services/storage';
 import {
   Type,
   Wrench,
-  Smile,
   Users,
   AlignLeft,
   Plus,
@@ -25,7 +24,6 @@ function FormCrearSala({ onCancel, onSuccess }) {
   const [formData, setFormData] = useState({
     nombre: '',
     habilidad: '',
-    mood: '',
     limiteEstudiantes: '',
     descripcion: '',
   });
@@ -84,7 +82,6 @@ function FormCrearSala({ onCancel, onSuccess }) {
       const roomData = {
         nombre: formData.nombre.trim(),
         skill_id: selectedSkill?.id || selectedSkill?._id || formData.habilidad,
-        mood: formData.mood,
         capacidad_maxima: parseInt(formData.limiteEstudiantes, 10),
         descripcion: formData.descripcion.trim(),
       };
@@ -94,7 +91,6 @@ function FormCrearSala({ onCancel, onSuccess }) {
         id: createdRoom.id || createdRoom._id,
         titulo: createdRoom.nombre || roomData.nombre,
         habilidad: createdRoom.habilidad || roomData.habilidad,
-        mood: createdRoom.mood || roomData.mood,
         capacidad: createdRoom.capacidad_maxima || roomData.capacidad_maxima,
       });
 
@@ -174,9 +170,9 @@ function FormCrearSala({ onCancel, onSuccess }) {
                     id='room-limit'
                     type='number'
                     name='limiteEstudiantes'
-                    placeholder='Max. 10'
-                    min='1'
-                    max='50'
+                    placeholder='Min. 2 - Max. 10'
+                    min='2'
+                    max='10'
                     value={formData.limiteEstudiantes}
                     onChange={handleChange}
                     disabled={isLoading}
@@ -187,28 +183,6 @@ function FormCrearSala({ onCancel, onSuccess }) {
               </div>
             </div>
 
-            <div className='input-group-neon'>
-              <div className='input-label-row'>
-                <label htmlFor='room-mood'>Mood de la sesion</label>
-                <span className='field-optional'>Opcional</span>
-              </div>
-                <div className='input-wrapper' style={{ border: "none", padding: 0 }}>
-                  <AuraSelect 
-                    value={formData.mood}
-                    onChange={(val) => setFormData(prev => ({ ...prev, mood: val }))}
-                    options={[
-                      { value: "Concentrado", label: "Concentrado 🧠" },
-                      { value: "Relajado", label: "Relajado ☕" },
-                      { value: "Energetico", label: "Energetico 🔥" },
-                      { value: "Creativo", label: "Creativo 🎨" },
-                      { value: "Chill", label: "Chill 🌊" }
-                    ]}
-                    placeholder="Selecciona el ambiente"
-                    icon={Smile}
-                  />
-                </div>
-              {errors.mood && <span className='error-text'>{errors.mood}</span>}
-            </div>
 
             <div className='input-group-neon'>
               <div className='input-label-row'>

@@ -190,7 +190,7 @@ export const validators = {
         : { valid: false, error: 'Debes seleccionar una habilidad' },
 
     limiteEstudiantes: (value) => 
-      validateRange(value, 1, 50, 'Límite de estudiantes'),
+      validateRange(value, 2, 10, 'El cupo de estudiantes'),
     descripcion: (value) => 
       value.length > 500
         ? { valid: false, error: 'La descripción no debe exceder 500 caracteres' }

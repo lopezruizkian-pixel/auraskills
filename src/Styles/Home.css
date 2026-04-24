@@ -213,20 +213,6 @@
   color: rgba(0, 255, 255, 0.45);
 }
 
-.mood-indicator {
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1.3rem;
-  border-radius: 14px;
-  background: rgba(0, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 255, 0.28);
-  color: #9bf6ff;
-  text-align: center;
-  font-weight: 700;
-  width: fit-content;
-}
 
 .dashboard-room-card {
   display: flex;

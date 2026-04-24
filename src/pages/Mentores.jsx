@@ -125,7 +125,6 @@ function Mentores() {
         id: room.id, 
         nombre: room.nombre, 
         habilidad: room.habilidad, 
-        mood: room.mood, 
         mentor: room.mentor_nombre || "Sin mentor" 
       };
       const visitadas = storage.get("historialSalas") || [];

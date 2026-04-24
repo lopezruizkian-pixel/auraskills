@@ -69,7 +69,6 @@ function HomeMentor() {
       id: room.id,
       titulo: room.nombre,
       habilidad: room.habilidad,
-      mood: room.mood,
       inscritos: room.sessionInfo?.participantCount || 0,
       capacidad: room.capacidad_maxima || 10,
     };

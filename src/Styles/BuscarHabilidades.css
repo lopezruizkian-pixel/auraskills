@@ -379,13 +379,10 @@
 
   .dashboard-actions-right {
     justify-content: center;
-  }
-
-  .dashboard-actions-right .mood-indicator {
     width: 100%;
   }
 
-  .dashboard-actions-right > :not(.mood-indicator) {
+  .dashboard-actions-right > * {
     width: auto;
   }
 
