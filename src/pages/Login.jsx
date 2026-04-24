@@ -80,7 +80,10 @@ function Login() {
         </div>
 
         <div className="login-box">
-          <h2>Iniciar Sesión</h2>
+          <div className="login-header">
+            <h2>Bienvenido</h2>
+            <p className="login-subtitle">Ingresa a tu cuenta de AuraSkill</p>
+          </div>
 
           <form onSubmit={handleLogin}>
             <div className="input-group">
