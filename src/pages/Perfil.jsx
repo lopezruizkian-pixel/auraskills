@@ -8,7 +8,7 @@ import GlobalHeader from "../components/GlobalHeader";
 import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
-import { fetchMySkills } from "../services/skillService";
+import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
 import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
 import "../Styles/Home.css";
@@ -35,6 +35,11 @@ function Perfil() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
+  // Habilidades
+  const [allSkills, setAllSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [savingSkills, setSavingSkills] = useState(false);
+  const [activeTab, setActiveTab] = useState("mis-skills");
 
   useEffect(() => { fetchProfile(); }, []);
 
@@ -50,8 +55,14 @@ function Perfil() {
       });
 
       if (rol === "mentor") {
-        const skills = await fetchMySkills();
-        setCreatedSkills(skills);
+        const userId = storage.get("userId");
+        const [mySkills, catalog] = await Promise.all([
+          fetchSkills({ mentorId: userId }),
+          fetchSkills()
+        ]);
+        setCreatedSkills(mySkills);
+        setAllSkills(catalog);
+        setSelectedSkills(mySkills.map(s => s.id || s._id));
       }
     } catch (err) {
       console.error("Error cargando perfil:", err);
@@ -108,6 +119,27 @@ function Perfil() {
     finally { setDeleteLoading(false); }
   };
 
+  const handleToggleSkill = async (skillId) => {
+    const isSelected = selectedSkills.includes(skillId);
+    
+    try {
+      if (isSelected) {
+        await unassignSkill(skillId);
+        setSelectedSkills(prev => prev.filter(id => id !== skillId));
+      } else {
+        await assignSkill(skillId);
+        setSelectedSkills(prev => [...prev, skillId]);
+      }
+      
+      // Actualizar la lista de "Mis Habilidades" en segundo plano
+      const userId = storage.get("userId");
+      const updatedMySkills = await fetchSkills({ mentorId: userId });
+      setCreatedSkills(updatedMySkills);
+    } catch (err) {
+      alert("Error al actualizar la habilidad: " + (err.message || "Error desconocido"));
+    }
+  };
+
   const inputStyle = { background:"#1a1a2e", border:"1px solid #333", borderRadius:"8px", padding:"0.7rem 2.8rem 0.7rem 1rem", color:"#fff", width:"100%", fontSize:"0.95rem", boxSizing:"border-box" };
 
   if (loading) return <div className="home-container"><p style={{ padding: "2rem" }}>...</p></div>;
@@ -154,23 +186,99 @@ function Perfil() {
                 <h2 className="section-subtitle-neon">Habilidades que estás aprendiendo</h2>
                 <div className="neon-card perfil-skills-card">
                   {userData.habilidades && userData.habilidades.length > 0
-                    ? userData.habilidades.map((hab, i) => <SkillTag key={i} nombre={hab} nivel="—" color="#00ffff" />)
+                    ? userData.habilidades.map((hab, i) => <SkillTag key={i} nombre={hab} color="#00ffff" />)
                     : <p>No hay habilidades registradas.</p>}
                 </div>
               </>
             )}
 
-            {/* Habilidades creadas: Solo para Mentores */}
+            {/* Habilidades: Solo para Mentores (Catálogo Global) */}
             {rol === "mentor" && (
               <>
-                <h2 className="section-subtitle-neon">Tus Habilidades (Creadas)</h2>
-                <div className="neon-card perfil-skills-card">
-                  {createdSkills.length > 0 ? (
-                    createdSkills.map((skill, i) => (
-                      <SkillTag key={i} nombre={skill.nombre} nivel={skill.nivel || "Pro"} color="#ff00ff" />
-                    ))
+                <div className="perfil-skills-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                  <h2 className="section-subtitle-neon" style={{ margin: 0 }}>Gestión de Especialidades</h2>
+                  <div className="skills-tab-switcher" style={{ display: "flex", gap: "10px", background: "#0d0d1a", padding: "4px", borderRadius: "10px", border: "1px solid #333" }}>
+                    <button 
+                      className={`tab-btn ${activeTab === "mis-skills" ? "active" : ""}`} 
+                      onClick={() => setActiveTab("mis-skills")}
+                      style={{
+                        padding: "0.5rem 1rem",
+                        borderRadius: "8px",
+                        border: "none",
+                        background: activeTab === "mis-skills" ? "#ff00ff" : "transparent",
+                        color: activeTab === "mis-skills" ? "#fff" : "#aaa",
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        transition: "all 0.3s",
+                        boxShadow: activeTab === "mis-skills" ? "0 0 10px rgba(255, 0, 255, 0.5)" : "none"
+                      }}
+                    >
+                      Mis Especialidades
+                    </button>
+                    <button 
+                      className={`tab-btn ${activeTab === "catalogo" ? "active" : ""}`} 
+                      onClick={() => setActiveTab("catalogo")}
+                      style={{
+                        padding: "0.5rem 1rem",
+                        borderRadius: "8px",
+                        border: "none",
+                        background: activeTab === "catalogo" ? "#00ffff" : "transparent",
+                        color: activeTab === "catalogo" ? "#fff" : "#aaa",
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        transition: "all 0.3s",
+                        boxShadow: activeTab === "catalogo" ? "0 0 10px rgba(0, 255, 255, 0.5)" : "none"
+                      }}
+                    >
+                      Catálogo Global
+                    </button>
+                  </div>
+                </div>
+
+                <div className="neon-card perfil-skills-card" style={{ minHeight: "150px" }}>
+                  {activeTab === "mis-skills" ? (
+                    <div style={{ width: "100%" }}>
+                      {createdSkills.length > 0 ? (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                          {createdSkills.map((skill, i) => (
+                            <SkillTag key={i} nombre={skill.nombre} color="#ff00ff" />
+                          ))}
+                        </div>
+                      ) : (
+                        <p>No tienes especialidades asignadas. Ve al catálogo para elegir las tuyas.</p>
+                      )}
+                    </div>
                   ) : (
-                    <p>No has creado habilidades todavía.</p>
+                    <div style={{ width: "100%" }}>
+                      <p style={{ fontSize: "0.85rem", color: "#aaa", marginBottom: "1rem" }}>Selecciona las habilidades que dominas para poder crear salas sobre ellas:</p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "1.5rem" }}>
+                        {allSkills.map((skill) => {
+                          const isSelected = selectedSkills.includes(skill.id || skill._id);
+                          return (
+                            <div 
+                              key={skill.id || skill._id} 
+                              onClick={() => handleToggleSkill(skill.id || skill._id)}
+                              style={{
+                                padding: "0.5rem 1rem",
+                                borderRadius: "20px",
+                                border: isSelected ? "1px solid #ff00ff" : "1px solid #333",
+                                background: isSelected ? "rgba(255, 0, 255, 0.1)" : "transparent",
+                                cursor: "pointer",
+                                transition: "all 0.2s",
+                                color: isSelected ? "#ff00ff" : "#ccc",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                boxShadow: isSelected ? "0 0 10px rgba(255, 0, 255, 0.3)" : "none"
+                              }}
+                            >
+                              {skill.nombre}
+                              {isSelected && <Check size={14} />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
                 </div>
               </>
@@ -180,7 +288,7 @@ function Perfil() {
               <>
                 <h2 className="section-subtitle-neon">Intereses</h2>
                 <div className="neon-card perfil-skills-card">
-                  {userData.intereses.map((int, i) => <SkillTag key={i} nombre={int} nivel="—" color="#ff00ff" />)}
+                  {userData.intereses.map((int, i) => <SkillTag key={i} nombre={int} color="#ff00ff" />)}
                 </div>
               </>
             )}

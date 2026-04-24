@@ -36,12 +36,13 @@ function HomeMentor() {
   const loadRooms = async () => {
     try {
       const data = await fetchActiveRooms();
-      // Solo salas del mentor actual
-      const myRooms = data.filter((r) => r.mentor_id === userId);
+      // Solo salas del mentor actual, ordenadas por ID descendente (más nuevas primero)
+      const myRooms = data
+        .filter((r) => r.mentor_id === userId)
+        .sort((a, b) => b.id - a.id);
 
-      // Solo mostramos la sala "más actual" o la que esté en vivo (prioridad)
-      const activeRoom = myRooms.find(r => r.sessionInfo?.isActive) || myRooms[0];
-      setRooms(activeRoom ? [activeRoom] : []);
+      // Mostramos siempre la sala más reciente
+      setRooms(myRooms.length > 0 ? [myRooms[0]] : []);
 
       // Cargar estadísticas desde el historial
       const history = await getUserRoomHistory();

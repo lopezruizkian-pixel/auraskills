@@ -155,11 +155,30 @@ function RoomPage() {
     },
   ]), [isMentor, mentorName, roomData, sessionInfo]);
 
-  const handleLeaveSession = () => {
+  const handleLeaveSession = async () => {
     if (isLeaving) {
       return;
     }
 
+    setIsLeaving(true);
+    try {
+      if (isMentor) {
+        const { closeRoom } = await import('../services/roomService');
+        await closeRoom(roomId);
+      }
+      leaveCurrentRoom();
+      storage.remove('salaActiva');
+      navigate('/home', { replace: true });
+    } catch (err) {
+      console.error('Error al finalizar sesión:', err);
+      // Salir de todos modos para no bloquear al usuario
+      storage.remove('salaActiva');
+      navigate('/home', { replace: true });
+    }
+  };
+
+  const handleJustLeave = () => {
+    if (isLeaving) return;
     setIsLeaving(true);
     leaveCurrentRoom();
     storage.remove('salaActiva');
@@ -206,6 +225,7 @@ function RoomPage() {
       <RoomHeader
         isMentor={isMentor}
         onLeaveSession={handleLeaveSession}
+        onJustLeave={handleJustLeave}
         isLeaving={isLeaving}
       />
 

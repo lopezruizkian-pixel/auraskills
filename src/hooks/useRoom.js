@@ -5,7 +5,7 @@ import { storage } from '../services/storage';
 
 // Hook para cargar datos de la sala
 export const useRoom = (roomId) => {
-  const { setRoomData, setSessionInfo } = useContext(RoomContext);
+  const { setRoomData, setSessionInfo, isLoading } = useContext(RoomContext);
 
   useEffect(() => {
     if (!roomId) {
@@ -51,5 +51,5 @@ export const useRoom = (roomId) => {
     loadRoom();
   }, [roomId, setRoomData, setSessionInfo]);
 
-  return { isLoading: false };
+  return { isLoading };
 };

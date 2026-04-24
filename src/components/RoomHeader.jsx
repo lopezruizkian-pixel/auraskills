@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { RoomContext } from '../context/RoomContext';
-import { Clock, DoorOpen, Signal, Sparkles, Users } from 'lucide-react';
+import { Clock, DoorOpen, Signal, Sparkles, Users, Power } from 'lucide-react';
 import '../Styles/RoomComponents.css';
 
 const formatDuration = (totalSeconds = 0) => {
@@ -34,7 +34,7 @@ const getMentorName = (roomData, sessionInfo, participants) => {
   return 'Mentor pendiente';
 };
 
-function RoomHeader({ isMentor = false, onLeaveSession, isLeaving = false }) {
+function RoomHeader({ isMentor = false, onLeaveSession, onJustLeave, isLeaving = false }) {
   const { roomData, participants, connectionStatus, sessionInfo } = useContext(RoomContext);
   const [now, setNow] = useState(Date.now());
 
@@ -134,21 +134,36 @@ function RoomHeader({ isMentor = false, onLeaveSession, isLeaving = false }) {
           </div>
         </div>
 
-        <button
-          type="button"
-          className={`room-action-btn ${isMentor ? 'mentor' : 'student'}`}
-          onClick={onLeaveSession}
-          disabled={isLeaving}
-        >
-          <DoorOpen size={16} />
-          <span>
-            {isLeaving
-              ? 'Saliendo...'
-              : isMentor
-                ? 'Finalizar sesion'
-                : 'Salir de la sala'}
-          </span>
-        </button>
+        <div className="room-header-actions" style={{ display: 'flex', gap: '10px' }}>
+          {isMentor && (
+            <button
+              type="button"
+              className="room-action-btn student"
+              onClick={onJustLeave}
+              disabled={isLeaving}
+              style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <DoorOpen size={16} />
+              <span>Solo salir</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            className={`room-action-btn ${isMentor ? 'mentor' : 'student'}`}
+            onClick={onLeaveSession}
+            disabled={isLeaving}
+          >
+            {isMentor ? <Power size={16} /> : <DoorOpen size={16} />}
+            <span>
+              {isLeaving
+                ? 'Saliendo...'
+                : isMentor
+                  ? 'Finalizar sesión'
+                  : 'Salir de la sala'}
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -12,15 +12,30 @@ const normalizeSkill = (skill) => {
   };
 };
 
-export const fetchSkills = async (query = '') => {
-  const searchParams = query.trim() ? `?q=${encodeURIComponent(query.trim())}` : '';
-  const response = await httpClient.get(`/skills${searchParams}`);
+export const fetchSkills = async (params = {}) => {
+  const queryParams = new URLSearchParams();
+  if (params.q) queryParams.append('q', params.q);
+  if (params.mentorId) queryParams.append('mentorId', params.mentorId);
+  if (params.categoria) queryParams.append('categoria', params.categoria);
+  if (params.own) queryParams.append('own', 'true');
+
+  const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+  const response = await httpClient.get(`/skills${queryString}`);
   return Array.isArray(response) ? response.map(normalizeSkill) : [];
 };
 
 export const fetchMySkills = async () => {
-  const response = await httpClient.get(`/skills?own=true`);
-  return Array.isArray(response) ? response.map(normalizeSkill) : [];
+  return await fetchSkills({ own: true });
+};
+
+export const assignSkill = async (skillId) => {
+  const response = await httpClient.post('/skills/assign', { skillId });
+  return response;
+};
+
+export const unassignSkill = async (skillId) => {
+  const response = await httpClient.delete(`/skills/${skillId}`);
+  return response;
 };
 
 export const createSkill = async (skillData) => {
@@ -30,4 +45,9 @@ export const createSkill = async (skillData) => {
 
 export const deleteSkill = async (skillId) => {
   return await httpClient.delete(`/skills/${skillId}`);
+};
+
+export const fetchCategories = async () => {
+  const response = await httpClient.get('/skills/categories');
+  return Array.isArray(response) ? response : [];
 };

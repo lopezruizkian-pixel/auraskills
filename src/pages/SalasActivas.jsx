@@ -73,9 +73,21 @@ function SalasActivas() {
     if (salaActiva?.id) navigate(`/sala/${salaActiva.id}`);
   };
 
-  const handleCloseRoom = () => {
-    storage.remove("salaActiva");
-    window.location.reload();
+  const handleCloseRoom = async () => {
+    try {
+      if (salaActiva?.id) {
+        const { closeRoom } = await import("../services/roomService");
+        await closeRoom(salaActiva.id);
+      }
+      storage.remove("salaActiva");
+      setSalaActiva(null);
+      window.location.reload();
+    } catch (err) {
+      console.error("Error al cerrar la sala:", err);
+      alert("No se pudo cerrar la sala en el servidor, pero se quitó de tu vista local.");
+      storage.remove("salaActiva");
+      setSalaActiva(null);
+    }
   };
 
   // Vista filtrada por habilidad
@@ -157,7 +169,13 @@ function SalasActivas() {
               {salaActiva ? (
                 <SalaActivaCard {...salaActiva} onClose={handleCloseRoom} onEnter={handleEnterRoom} />
               ) : showCreateForm ? (
-                <FormCrearSala onCancel={() => setShowCreateForm(false)} />
+                <FormCrearSala 
+                  onCancel={() => setShowCreateForm(false)} 
+                  onSuccess={() => {
+                    setShowCreateForm(false);
+                    setSalaActiva(storage.get("salaActiva"));
+                  }} 
+                />
               ) : (
                 <div className="empty-state-centered">
                   <VideoOff size={100} className="empty-icon" style={{ marginBottom: "2rem", opacity: 0.2 }} />

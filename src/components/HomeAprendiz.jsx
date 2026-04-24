@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Search, BookOpen, User, Smile, Radio, Users, Clock, Award, Video } from "lucide-react";
 import PerfilStatCard from "./PerfilStatCard";
 import { fetchActiveRooms, joinRoom, fetchRoom, getUserRoomHistory } from "../services/roomService";
+import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
 import GlobalHeader from "../components/GlobalHeader";
+import SkillTag from "./SkillTag";
+import { Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { storage } from "../services/storage";
 
 function HomeAprendiz() {
@@ -16,9 +19,29 @@ function HomeAprendiz() {
   const [joining, setJoining] = useState(null);
   const [salasVisitadas, setSalasVisitadas] = useState([]);
   const [stats, setStats] = useState({ salasAsistidas: 0, horasEstudio: 0, cursos: 0 });
+  // Categorías
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [skillsInCategory, setSkillsInCategory] = useState([]);
+  const [loadingSkills, setLoadingSkills] = useState(false);
+  const [dynamicCategories, setDynamicCategories] = useState([]);
+
+  const iconMap = {
+    'Tecnología': Code,
+    'Diseño': Palette,
+    'Negocios': Megaphone,
+    'Educación': Languages,
+    'Arte': Music,
+    'Entretenimiento': Gamepad2,
+    'Tecnologia': Code,
+    'Diseno': Palette,
+    'Educacion': Languages,
+  };
+
+  // Eliminamos la lista hardcoded de categories
 
   useEffect(() => {
     loadRooms();
+    loadCategories();
 
     const socket = getDashboardSocket();
 
@@ -77,6 +100,33 @@ function HomeAprendiz() {
       console.error("Error cargando salas:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const data = await fetchCategories();
+      setDynamicCategories(data);
+    } catch (err) {
+      console.error("Error cargando categorias:", err);
+    }
+  };
+
+  const handleCategoryClick = async (category) => {
+    if (activeCategory === category) {
+      setActiveCategory(null);
+      setSkillsInCategory([]);
+      return;
+    }
+    setActiveCategory(category);
+    setLoadingSkills(true);
+    try {
+      const skills = await fetchSkills({ categoria: category });
+      setSkillsInCategory(skills);
+    } catch (err) {
+      console.error("Error cargando habilidades por categoria:", err);
+    } finally {
+      setLoadingSkills(false);
     }
   };
 
@@ -145,7 +195,7 @@ function HomeAprendiz() {
 
       <div
         className="search-container-neon"
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "stretch", marginBottom: "1.5rem" }}
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "stretch", marginBottom: "1rem" }}
       >
         <Search className="search-icon" size={20} />
         <input
@@ -155,6 +205,77 @@ function HomeAprendiz() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
+
+      {/* Categories Bar */}
+      <div className="categories-container" style={{ marginBottom: "2rem" }}>
+        <div style={{ display: "flex", gap: "10px", overflowX: "auto", paddingBottom: "10px", scrollbarWidth: "none" }}>
+          {dynamicCategories.map((catName) => {
+            const Icon = iconMap[catName] || BookOpen;
+            const isActive = activeCategory === catName;
+            return (
+              <button
+                key={catName}
+                onClick={() => handleCategoryClick(catName)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "0.6rem 1.2rem",
+                  borderRadius: "12px",
+                  border: isActive ? "1px solid #00ffff" : "1px solid #333",
+                  background: isActive ? "rgba(0, 255, 255, 0.1)" : "#0d0d1a",
+                  color: isActive ? "#00ffff" : "#ccc",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s",
+                  boxShadow: isActive ? "0 0 10px rgba(0, 255, 255, 0.2)" : "none"
+                }}
+              >
+                <Icon size={16} />
+                <span style={{ fontSize: "0.9rem", fontWeight: isActive ? "600" : "400" }}>{catName}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {activeCategory && (
+          <div className="skills-explorer-panel neon-card" style={{ marginTop: "1rem", padding: "1.5rem", borderStyle: "dashed" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+              <h4 style={{ margin: 0, color: "#00ffff", display: "flex", alignItems: "center", gap: "8px" }}>
+                Explorando: {activeCategory}
+                <ChevronRight size={16} />
+              </h4>
+              <button 
+                onClick={() => { setActiveCategory(null); setSkillsInCategory([]); }}
+                style={{ background: "transparent", border: "none", color: "#aaa", cursor: "pointer", fontSize: "0.8rem" }}
+              >
+                Cerrar
+              </button>
+            </div>
+            
+            {loadingSkills ? (
+              <div style={{ display: "flex", gap: "10px" }}>
+                <div className="aura-spinner-mini"></div>
+                <span style={{ fontSize: "0.85rem", color: "#aaa" }}>Cargando catálogo...</span>
+              </div>
+            ) : skillsInCategory.length > 0 ? (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                {skillsInCategory.map((skill) => (
+                  <SkillTag 
+                    key={skill.id || skill._id} 
+                    nombre={skill.nombre} 
+                    nivel={skill.nivel} 
+                    color="#00ffff" 
+                    onClick={setSearch}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p style={{ fontSize: "0.85rem", color: "#aaa" }}>No hay habilidades registradas en esta categoría aún.</p>
+            )}
+          </div>
+        )}
       </div>
 
       {loading ? (

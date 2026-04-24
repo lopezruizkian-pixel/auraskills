@@ -12,12 +12,12 @@ import {
   Loader,
 } from 'lucide-react';
 import { createRoom } from '../services/roomService';
-import { fetchMySkills, createSkill } from '../services/skillService';
+import { fetchSkills } from '../services/skillService';
 import { useToast } from '../hooks/useToast';
 import { validateForm, validators } from '../services/validation';
 import '../Styles/CrearSala.css';
 
-function FormCrearSala({ onCancel }) {
+function FormCrearSala({ onCancel, onSuccess }) {
   const navigate = useNavigate();
   const { success: showSuccess, error: showError } = useToast();
 
@@ -47,7 +47,8 @@ function FormCrearSala({ onCancel }) {
 
   const loadSkills = async () => {
     try {
-      const skills = await fetchMySkills();
+      const userId = storage.get('userId');
+      const skills = await fetchSkills({ mentorId: userId });
       setMySkills(skills);
     } catch (err) {
       console.error('Error al cargar mis habilidades:', err);
@@ -62,34 +63,6 @@ function FormCrearSala({ onCancel }) {
     }
   };
 
-  const handleNewSkillChange = (e) => {
-    const { name, value } = e.target;
-    setNewSkillData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSaveNewSkill = async (e) => {
-    e.preventDefault();
-    if (!newSkillData.nombre || !newSkillData.descripcion) {
-      showError('Por favor completa los campos de la nueva habilidad');
-      return;
-    }
-
-    setIsCreatingSkill(true);
-    try {
-      const mentorId = storage.get('userId');
-      const payload = { ...newSkillData, mentor_id: mentorId };
-      const created = await createSkill(payload);
-      showSuccess('Habilidad creada con exito');
-      setMySkills((prev) => [...prev, created]);
-      setFormData((prev) => ({ ...prev, habilidad: created.id || created._id }));
-      setIsModalOpen(false);
-      setNewSkillData({ nombre: '', descripcion: '', categoria: 'Tecnologia', nivel: 'basico' });
-    } catch (err) {
-      showError('No se pudo crear la habilidad');
-    } finally {
-      setIsCreatingSkill(false);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -109,8 +82,7 @@ function FormCrearSala({ onCancel }) {
 
       const roomData = {
         nombre: formData.nombre.trim(),
-        habilidad: selectedSkill?.nombre || formData.habilidad,
-        habilidad_id: selectedSkill?.id || selectedSkill?._id,
+        skill_id: selectedSkill?.id || selectedSkill?._id || formData.habilidad,
         mood: formData.mood,
         capacidad_maxima: parseInt(formData.limiteEstudiantes, 10),
         descripcion: formData.descripcion.trim(),
@@ -122,11 +94,26 @@ function FormCrearSala({ onCancel }) {
         titulo: createdRoom.nombre || roomData.nombre,
         habilidad: createdRoom.habilidad || roomData.habilidad,
         mood: createdRoom.mood || roomData.mood,
-        inscritos: createdRoom.sessionInfo?.participantCount || 0,
         capacidad: createdRoom.capacidad_maxima || roomData.capacidad_maxima,
       });
+
+      // Guardar en el historial local para que aparezca inmediatamente
+      const currentHistory = storage.get('historialSalas') || [];
+      const newHistoryItem = {
+        id: createdRoom.id || createdRoom._id,
+        nombreSala: createdRoom.nombre || roomData.nombre,
+        habilidad: createdRoom.habilidad || roomData.habilidad || selectedSkill?.nombre,
+        fecha: new Date().toISOString(),
+        mentor: storage.get('userName') || 'Yo',
+        duracion: 0
+      };
+      storage.set('historialSalas', [newHistoryItem, ...currentHistory]);
       showSuccess('Sala creada con exito');
-      navigate('/salas-activas');
+      if (onSuccess) {
+        onSuccess(createdRoom);
+      } else {
+        navigate('/salas-activas');
+      }
     } catch (err) {
       showError(err.message || 'Error al crear la sala');
     } finally {
@@ -164,34 +151,23 @@ function FormCrearSala({ onCancel }) {
                 <div className='input-label-row'>
                   <label htmlFor='room-skill'>Habilidad a ensenar</label>
                 </div>
-                <div className='skill-selector-row'>
-                  <div className='input-wrapper'>
-                    <Wrench className='input-icon' size={18} />
-                    <select
-                      id='room-skill'
-                      name='habilidad'
-                      value={formData.habilidad}
-                      onChange={handleChange}
-                      disabled={isLoading}
-                      className={errors.habilidad ? 'input-error' : ''}
-                    >
-                      <option value='' disabled>Selecciona una habilidad</option>
-                      {mySkills.map((hab) => (
-                        <option key={hab.id || hab._id} value={hab.id || hab._id}>
-                          {hab.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <button
-                    type='button'
-                    className='add-skill-btn'
-                    onClick={() => setIsModalOpen(true)}
-                    title='Anadir nueva habilidad'
+                <div className='input-wrapper'>
+                  <Wrench className='input-icon' size={18} />
+                  <select
+                    id='room-skill'
+                    name='habilidad'
+                    value={formData.habilidad}
+                    onChange={handleChange}
                     disabled={isLoading}
+                    className={errors.habilidad ? 'input-error' : ''}
                   >
-                    <Plus size={20} />
-                  </button>
+                    <option value='' disabled>Selecciona una habilidad</option>
+                    {mySkills.map((hab) => (
+                      <option key={hab.id || hab._id} value={hab.id || hab._id}>
+                        {hab.nombre}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 {errors.habilidad && <span className='error-text'>{errors.habilidad}</span>}
               </div>
@@ -286,91 +262,6 @@ function FormCrearSala({ onCancel }) {
         </section>
       </div>
 
-      {isModalOpen && typeof document !== 'undefined' && createPortal(
-        <div className='skill-modal-overlay'>
-          <div className='skill-modal-content'>
-            <h3 className='skill-modal-title'>Nueva habilidad</h3>
-            <div className='formulario-sala'>
-              <div className='input-group-neon'>
-                <div className='input-label-row'>
-                  <label htmlFor='skill-name'>Nombre de la habilidad</label>
-                </div>
-                <div className='input-wrapper'>
-                  <Type className='input-icon' size={18} />
-                  <input
-                    id='skill-name'
-                    name='nombre'
-                    value={newSkillData.nombre}
-                    onChange={handleNewSkillChange}
-                    placeholder='Ej. React Avanzado'
-                    disabled={isCreatingSkill}
-                  />
-                </div>
-              </div>
-
-              <div className='input-group-neon'>
-                <div className='input-label-row'>
-                  <label htmlFor='skill-category'>Categoria</label>
-                </div>
-                <div className='input-wrapper'>
-                  <Wrench className='input-icon' size={18} />
-                  <select
-                    id='skill-category'
-                    name='categoria'
-                    value={newSkillData.categoria}
-                    onChange={handleNewSkillChange}
-                    disabled={isCreatingSkill}
-                  >
-                    <option value='Tecnologia'>Tecnologia</option>
-                    <option value='Diseno'>Diseno</option>
-                    <option value='Negocios'>Negocios</option>
-                    <option value='Educacion'>Educacion</option>
-                    <option value='Arte'>Arte</option>
-                    <option value='Entretenimiento'>Entretenimiento</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className='input-group-neon'>
-                <div className='input-label-row'>
-                  <label htmlFor='skill-description'>Descripcion breve</label>
-                </div>
-                <div className='input-wrapper is-textarea'>
-                  <AlignLeft className='input-icon' size={18} />
-                  <textarea
-                    id='skill-description'
-                    name='descripcion'
-                    value={newSkillData.descripcion}
-                    onChange={handleNewSkillChange}
-                    placeholder='Define los objetivos de esta habilidad...'
-                    disabled={isCreatingSkill}
-                  />
-                </div>
-              </div>
-
-              <div className='skill-modal-actions'>
-                <button
-                  type='button'
-                  className='skill-modal-btn skill-btn-cancel'
-                  onClick={() => setIsModalOpen(false)}
-                  disabled={isCreatingSkill}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type='button'
-                  className='skill-modal-btn skill-btn-save'
-                  onClick={handleSaveNewSkill}
-                  disabled={isCreatingSkill}
-                >
-                  {isCreatingSkill ? 'Guardando...' : 'Crear habilidad'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
     </div>
   );
 }
