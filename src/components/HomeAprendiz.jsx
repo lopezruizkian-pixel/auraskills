@@ -10,6 +10,7 @@ import SkillTag from "./SkillTag";
 import Sidebar from "./Sidebar";
 import { Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { storage } from "../services/storage";
+import "../Styles/Mentores.css";
 
 function HomeAprendiz() {
   const navigate = useNavigate();
@@ -256,27 +257,21 @@ function HomeAprendiz() {
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {recentSessions.length > 0 ? (
               recentSessions.map((s, i) => (
-                <div key={i} className="neon-card" style={{ padding: "1.25rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                    <div style={{ width: "45px", height: "45px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", color: "#00ffff" }}>
-                      <BookOpen size={24} />
+                <div key={i} className="premium-history-card">
+                  <div className="history-card-content">
+                    <div className="history-icon-glow">
+                      <BookOpen size={20} />
                     </div>
-                    <div>
-                      <h5 style={{ margin: 0, color: "#fff", fontSize: "1rem" }}>{s.room_nombre || s.habilidad || "Sesión de Aura"}</h5>
-                      <div style={{ display: "flex", gap: "12px", marginTop: "4px", fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>
-                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                          <User size={12} /> {s.mentor_nombre || "Mentor Aura"}
-                        </span>
-                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                          <Clock size={12} /> {s.duration_seconds ? `${Math.round(s.duration_seconds / 60)} min` : "15 min"}
-                        </span>
+                    <div className="history-info">
+                      <h5 className="history-title">{s.room_nombre || s.habilidad || "Sesión de Aura"}</h5>
+                      <div className="history-meta">
+                        <span className="history-mentor"><User size={12} /> {s.mentor_nombre || "Mentor Aura"}</span>
+                        <span className="history-duration"><Clock size={12} /> {s.duration_seconds ? `${Math.round(s.duration_seconds / 60)} min` : "15 min"}</span>
                       </div>
                     </div>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", display: "block" }}>
-                      {s.created_at ? new Date(s.created_at).toLocaleDateString() : "Reciente"}
-                    </span>
+                  <div className="history-date-badge">
+                    {s.created_at ? new Date(s.created_at).toLocaleDateString() : "Reciente"}
                   </div>
                 </div>
               ))

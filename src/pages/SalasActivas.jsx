@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import SalaActivaCard from "../components/SalaActivaCard";
 import FormCrearSala from "../components/FormCrearSala";
+import MentorCard from "../components/MentorCard";
 import GlobalHeader from "../components/GlobalHeader";
 import { Bell, User, Circle, VideoOff, PlusCircle, X, RefreshCw } from "lucide-react";
 import { fetchActiveRooms, joinRoom } from "../services/roomService";
@@ -145,24 +146,15 @@ function SalasActivas() {
               ) : (
                 <div className="single-sala-container">
                   {salasFiltered.map((room) => (
-                    <div key={room.id} className="neon-card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <div>
-                          <h3 style={{ color: "#00ffff", margin: 0 }}>{room.nombre}</h3>
-                          <p style={{ color: "#aaa", margin: "0.5rem 0 0" }}>
-                            <strong>Mentor:</strong> {room.mentor_nombre} &nbsp;|&nbsp;
-                            <strong>Habilidad:</strong> {room.habilidad}
-                          </p>
-                        </div>
-                        <button
-                          className="primary-btn-s"
-                          onClick={() => handleJoin(room)}
-                          disabled={joining === room.id}
-                        >
-                          {joining === room.id ? "Entrando..." : "Entrar a sala"}
-                        </button>
-                      </div>
-                    </div>
+                    <MentorCard 
+                      key={room.id}
+                      nombre={room.mentor_nombre || "Mentor"}
+                      habilidad={room.habilidad}
+                      nombreSala={room.nombre}
+                      isActive={true}
+                      onJoin={() => handleJoin(room)}
+                      isJoining={joining === room.id}
+                    />
                   ))}
                 </div>
               )}
