@@ -44,36 +44,47 @@ function ChatRoom({ sendMessage, sendReaction }) {
     sendReaction(emoji);
   };
 
+  const userId = storage.get('userId');
+
   return (
-    <div className="chat-room">
+    <div className="chat-room premium-chat">
       <div className="chat-header">
-        <h3>Chat en vivo</h3>
-        <span className="message-count">{messages.length}</span>
+        <h3>Canal de Sesión</h3>
+        <span className="message-count">{messages.length} mensajes</span>
       </div>
 
       <div className="messages-container">
         {messages.length === 0 ? (
           <div className="no-messages">
-            <p>La sesion ya esta lista para conversar.</p>
-            <p className="text-small">
-              Comparte el objetivo del encuentro o haz la primera pregunta para romper el hielo.
-            </p>
+            <div className="aura-portal-mini"></div>
+            <p>La conexión está establecida.</p>
+            <p className="text-small">Comparte algo para iniciar la conversación.</p>
           </div>
         ) : (
-          messages.map((message) => (
-            <div key={message.id} className="message">
-              <div className="message-avatar">{message.userAvatar}</div>
-              <div className="message-content">
-                <div className="message-header">
-                  <strong>{message.userName}</strong>
+          messages.map((message) => {
+            const isMe = message.userId === userId;
+            return (
+              <div key={message.id} className={`message-wrapper ${isMe ? 'is-me' : 'is-other'}`}>
+                {!isMe && (
+                  <div className="message-avatar-container">
+                    <div className="msg-avatar">{message.userAvatar}</div>
+                  </div>
+                )}
+                <div className="message-bubble">
+                  {!isMe && <span className="message-author">{message.userName}</span>}
+                  <p className="message-text">{message.texto}</p>
                   <span className="message-time">
                     {formatMessageTime(message.timestamp)}
                   </span>
                 </div>
-                <p className="message-text">{message.texto}</p>
+                {isMe && (
+                  <div className="message-avatar-container">
+                    <div className="msg-avatar me">{message.userAvatar}</div>
+                  </div>
+                )}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
         <div ref={messagesEndRef} />
       </div>

@@ -181,3 +181,219 @@
   scrollbar-width: thin;
 }
 
+/* ============ PREMIUM CHAT STYLES ============ */
+
+.chat-room.premium-chat {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 0, 25, 0.4);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.chat-header {
+  padding: 1.2rem 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #00ffff;
+  margin: 0;
+}
+
+.message-count {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+.messages-container {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.message-wrapper {
+  display: flex;
+  gap: 12px;
+  max-width: 85%;
+  width: fit-content;
+}
+
+.message-wrapper.is-me {
+  align-self: flex-end;
+  flex-direction: row;
+}
+
+.message-wrapper.is-other {
+  align-self: flex-start;
+}
+
+.message-avatar-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.msg-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 0, 255, 0.1);
+  border: 1px solid #ff00ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+}
+
+.msg-avatar.me {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.message-bubble {
+  padding: 10px 16px;
+  border-radius: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.is-me .message-bubble {
+  background: linear-gradient(135deg, #00ffff, #0088ff);
+  color: #000;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+}
+
+.is-other .message-bubble {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-bottom-left-radius: 4px;
+}
+
+.message-author {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #ff00ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.message-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.message-time {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  align-self: flex-end;
+}
+
+.is-me .message-time {
+  color: #000;
+}
+
+.chat-footer {
+  padding: 1.2rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.message-input-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.message-input-form:focus-within {
+  border-color: #00ffff;
+  background: rgba(0, 255, 255, 0.05);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+}
+
+.message-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 10px 4px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.reactions-btn, .send-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.reactions-btn:hover {
+  color: #ff00ff;
+}
+
+.send-btn {
+  color: #00ffff;
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  color: #fff;
+}
+
+.send-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.no-messages {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.aura-portal-mini {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: auraRotate 2s linear infinite;
+}

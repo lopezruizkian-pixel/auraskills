@@ -199,11 +199,9 @@ function RoomPage() {
 
   if (roomLoading) {
     return (
-      <div className="room-loading">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Cargando sala...</p>
-        </div>
+      <div className="loading-global-container">
+        <div className="aura-spinner"></div>
+        <p className="loading-text-neon">Sincronizando Sala...</p>
       </div>
     );
   }
@@ -242,7 +240,7 @@ function RoomPage() {
 
         <aside className="room-sidebar">
           {/* Card: Identidad y Contexto */}
-          <section className="sidebar-section session-sidebar-card context-card-neon">
+          <section className="sidebar-section session-sidebar-card context-card-neon premium-room-card">
             <div className="session-sidebar-header">
               <span className="session-sidebar-kicker">Habilidad</span>
               <h3 className="habilidad-highlight">{roomData?.habilidad || 'General'}</h3>
@@ -252,45 +250,20 @@ function RoomPage() {
             </p>
           </section>
 
-          {/* Card: Estado en Vivo */}
-          <section className="sidebar-section session-sidebar-card status-card-neon">
+          {/* Card: Participantes y Capacidad */}
+          <section className="sidebar-section session-sidebar-card status-card-neon premium-room-card">
             <div className="status-grid-compact">
               <div className="status-item-mini">
-                <Clock3 size={14} className="icon-neon" />
+                <Users2 size={16} className="icon-neon" />
                 <div className="status-item-info">
-                  <span>En vivo</span>
-                  <strong>{(() => {
-                    // LÓGICA DEL GUARDIÁN DEL TIEMPO:
-                    // Intentamos recuperar la hora de inicio original de la memoria local
-                    // para evitar que se reinicie si el servidor nos manda una nueva al reconectar.
-                    const storageKey = `room_start_${roomId}`;
-                    let startTime = sessionInfo?.startedAt;
-                    
-                    if (sessionInfo?.isActive && sessionInfo?.startedAt) {
-                      const savedStart = localStorage.getItem(storageKey);
-                      if (!savedStart) {
-                        localStorage.setItem(storageKey, sessionInfo.startedAt);
-                      } else {
-                        // Usamos la hora guardada (la más antigua conocida)
-                        startTime = savedStart;
-                      }
-                    }
-
-                    return formatSessionDuration({ ...sessionInfo, startedAt: startTime }, now);
-                  })()}</strong>
-                </div>
-              </div>
-              <div className="status-item-mini">
-                <Users2 size={14} className="icon-neon" />
-                <div className="status-item-info">
-                  <span>Capacidad</span>
+                  <span>Capacidad de Sala</span>
                   <strong>{participants.length} / {roomData?.capacidad_maxima || 10}</strong>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Card: Participantes */}
+          {/* Lista de Participantes */}
           <ParticipantsList />
         </aside>
       </div>
