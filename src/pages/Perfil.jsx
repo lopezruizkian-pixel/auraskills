@@ -346,16 +346,19 @@ function Perfil() {
             )}
 
             {/* Sección Sobre mí */}
-            {(userData.intereses?.[0] || userData.bio) && (
-              <>
-                <h2 className="section-subtitle-neon">Sobre mí</h2>
-                <div className="neon-card perfil-skills-card" style={{ padding: "1.5rem" }}>
-                  <p style={{ color: "rgba(255,255,255,0.85)", lineHeight: "1.8", margin: 0, fontSize: "1rem", whiteSpace: "pre-wrap" }}>
-                    {userData.bio || userData.intereses?.[0] || "No hay una descripción disponible aún."}
-                  </p>
-                </div>
-              </>
-            )}
+            <h2 className="section-subtitle-neon">Sobre mí</h2>
+            <div className="neon-card perfil-skills-card" style={{ padding: "1.5rem", marginBottom: "2rem" }}>
+              <p style={{ 
+                color: (userData.bio || userData.intereses?.[0]) ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.4)", 
+                lineHeight: "1.8", 
+                margin: 0, 
+                fontSize: "1rem", 
+                whiteSpace: "pre-wrap",
+                fontStyle: (userData.bio || userData.intereses?.[0]) ? "normal" : "italic" 
+              }}>
+                {userData.bio || userData.intereses?.[0] || "Aún no has escrito una descripción. ¡Haz clic en Editar Perfil para contarnos un poco sobre ti y tus metas!"}
+              </p>
+            </div>
 
             {/* Config Sections from Configuracion */}
             <section className="configuracion-section">
