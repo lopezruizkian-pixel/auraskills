@@ -47,7 +47,15 @@
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 1.5rem !important;
   width: 100% !important;
-  align-items: stretch !important; /* Fuerza alturas iguales */
+  align-items: stretch !important;
+  margin-top: 0 !important;
+  margin-bottom: 2.5rem !important;
+}
+
+/* Reset de márgenes de Home.css que rompen el grid */
+.perfil-stats-grid .neon-card {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .stat-card {
@@ -55,18 +63,19 @@
   align-items: center !important;
   gap: 1.25rem !important;
   padding: 1.5rem !important;
-  min-height: 110px !important; /* Altura mínima garantizada */
+  min-height: 100px !important;
   height: 100% !important;
   box-sizing: border-box !important;
+  position: relative !important;
 }
 
 .stat-icon-wrapper {
-  width: 50px !important;
-  height: 50px !important;
+  width: 48px !important;
+  height: 48px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   background: rgba(255, 255, 255, 0.03) !important;
   flex-shrink: 0 !important;
 }
@@ -76,21 +85,22 @@
   flex-direction: column !important;
   gap: 2px !important;
   justify-content: center !important;
+  flex: 1 !important;
 }
 
 .stat-titulo {
   margin: 0 !important;
-  font-size: 0.75rem !important;
+  font-size: 0.7rem !important;
   color: rgba(255, 255, 255, 0.5) !important;
   text-transform: uppercase !important;
-  letter-spacing: 1px !important;
-  font-weight: 600 !important;
+  letter-spacing: 1.2px !important;
+  font-weight: 700 !important;
   line-height: 1.2 !important;
 }
 
 .stat-valor {
   margin: 0 !important;
-  font-size: 1.6rem !important;
+  font-size: 1.5rem !important;
   font-weight: 900 !important;
   line-height: 1 !important;
 }
