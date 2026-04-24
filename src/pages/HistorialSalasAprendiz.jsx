@@ -121,7 +121,8 @@ function HistorialSalasAprendiz() {
     return filteredHistory.map((item) => ({
       id: item.id,
       fecha: formatDate(item.started_at || item.startedAt || item.fecha),
-      habilidad: item.habilidad || item.room_name || item.nombreSala || "—",
+      sala: item.room_name || item.nombreSala || "—",
+      habilidad: item.habilidad || "—",
       mentor: item.mentor_name || item.mentor || "—",
       duracion: formatDuration(item.duration_seconds ?? item.duracionSegundos ?? item.duracion ?? 0),
     }));
@@ -187,8 +188,9 @@ function HistorialSalasAprendiz() {
               <div className="historial-table-container">
                 <div className="historial-table-header">
                   <div className="header-item-neon">Fecha</div>
+                  <div className="header-item-neon">Sala</div>
                   <div className="header-item-neon">Habilidad</div>
-                  <div className="header-item-neon">{rol === "mentor" ? "Tipo" : "Mentor"}</div>
+                  <div className="header-item-neon">Mentor</div>
                   <div className="header-item-neon">Duración</div>
                 </div>
                 <div className="historial-list">
