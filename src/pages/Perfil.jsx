@@ -543,11 +543,11 @@ function Perfil() {
               </div>
             </div>
 
-            <div style={{ display:"flex", gap:"1rem", marginTop:"1rem" }}>
-              <button className="primary-btn-neon-s" style={{ flex: 1, height: "48px" }} onClick={handleChangePassword} disabled={passwordLoading}>
-                {passwordLoading ? <div className="aura-spinner-mini"></div> : "Actualizar Clave"}
+            <div style={{ display:"flex", flexDirection: "column", gap:"1rem", marginTop:"1rem" }}>
+              <button className="primary-btn-neon-s" style={{ width: "100%", height: "48px" }} onClick={handleChangePassword} disabled={passwordLoading}>
+                {passwordLoading ? <div className="aura-spinner-mini"></div> : "Actualizar Clave de Acceso"}
               </button>
-              <button className="danger-btn-neon-s" style={{ flex: 1, height: "48px", background: "transparent", border: "1px solid rgba(255,0,255,0.3)" }} onClick={() => setShowPasswordModal(false)}>Cancelar</button>
+              <button className="danger-btn-neon-s" style={{ width: "100%", height: "48px", background: "transparent", border: "1px solid rgba(255,0,255,0.3)" }} onClick={() => setShowPasswordModal(false)}>Cancelar Protocolo</button>
             </div>
           </div>
         </div>
@@ -578,11 +578,11 @@ function Perfil() {
                 className="neon-input-s" style={{ border: "1px solid rgba(255,0,85,0.3)", background: "rgba(255,0,85,0.03)" }} />
             </div>
 
-            <div style={{ display:"flex", gap:"1rem", marginTop:"0.5rem" }}>
-              <button className="danger-btn-neon-s" style={{ flex: 1, height: "48px" }} onClick={handleDeleteAccount} disabled={deleteLoading}>
+            <div style={{ display:"flex", flexDirection: "column", gap:"1rem", marginTop:"0.5rem" }}>
+              <button className="danger-btn-neon-s" style={{ width: "100%", height: "48px" }} onClick={handleDeleteAccount} disabled={deleteLoading}>
                 {deleteLoading ? "Procesando..." : "Eliminar Permanentemente"}
               </button>
-              <button className="primary-btn-neon-s" style={{ flex: 1, height: "48px", background: "transparent", border: "1px solid rgba(0,255,255,0.3)" }} onClick={() => setShowDeleteModal(false)}>Cancelar</button>
+              <button className="primary-btn-neon-s" style={{ width: "100%", height: "48px", background: "transparent", border: "1px solid rgba(0,255,255,0.3)" }} onClick={() => setShowDeleteModal(false)}>Cancelar y Volver</button>
             </div>
           </div>
         </div>
