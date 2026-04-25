@@ -1,6 +1,6 @@
-import { User, Radio, Users, ChevronRight } from "lucide-react";
+import { User, Radio, Users, ChevronRight, Info } from "lucide-react";
 
-function MentorCard({ nombre, habilidad, nombreSala, descripcion, onJoin, isJoining, isActive }) {
+function MentorCard({ nombre, habilidad, nombreSala, onJoin, onInfo, isJoining, isActive }) {
   return (
     <div className={`premium-room-card ${isActive ? "active-glow" : ""}`}>
       {/* Header con Badge de Estado */}
@@ -36,7 +36,6 @@ function MentorCard({ nombre, habilidad, nombreSala, descripcion, onJoin, isJoin
           <div className="room-info-main">
             <h3 className="room-title-premium">{nombreSala}</h3>
             <p className="mentor-subtitle">con <span className="mentor-name-highlight">{nombre}</span></p>
-            {descripcion && <p className="room-desc-premium">{descripcion}</p>}
           </div>
         </div>
       </div>
@@ -50,16 +49,25 @@ function MentorCard({ nombre, habilidad, nombreSala, descripcion, onJoin, isJoin
           </div>
         </div>
 
-        <button 
-          className="premium-action-btn join-btn" 
-          onClick={onJoin} 
-          disabled={isJoining}
-        >
-          <div className="btn-content">
-            <span>{isJoining ? "ACCEDIENDO..." : "ENTRAR A SALA"}</span>
-            <ChevronRight size={18} />
-          </div>
-        </button>
+        <div className="mentor-card-actions-group">
+          <button 
+            className="premium-action-btn-secondary" 
+            onClick={onInfo}
+          >
+            <Info size={18} />
+            <span>Ver detalles</span>
+          </button>
+          <button 
+            className="premium-action-btn join-btn" 
+            onClick={onJoin} 
+            disabled={isJoining}
+          >
+            <div className="btn-content">
+              <span>{isJoining ? "ACCEDIENDO..." : "ENTRAR A SALA"}</span>
+              <ChevronRight size={18} />
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Decoración de Esquina */}

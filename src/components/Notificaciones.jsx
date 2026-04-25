@@ -99,7 +99,7 @@ function Notificaciones() {
     handleDismiss(n.id);
     setOpen(false);
     if (n.tipo === "sala") {
-      navigate(`/sala/${n.id}`);
+      navigate("/mentores", { state: { roomId: n.id } });
     }
   };
 

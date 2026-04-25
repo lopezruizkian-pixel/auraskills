@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import MentorCard from "../components/MentorCard";
 import GlobalHeader from "../components/GlobalHeader";
+import SalaDetailModal from "../components/SalaDetailModal";
 import SkillTag from "../components/SkillTag";
 import { Search, Users, BookOpen, Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
@@ -26,11 +27,13 @@ const iconMap = {
 function Mentores() {
   const [rol] = useState(storage.get("userRole") || "alumno");
   const navigate = useNavigate();
+  const location = useLocation();
   const [rooms, setRooms] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [joining, setJoining] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   // Categorías
   const [dynamicCategories, setDynamicCategories] = useState([]);
@@ -71,8 +74,20 @@ function Mentores() {
       load();
     };
     socket.on('roomsUpdated', handleUpdate);
+
+    // Si venimos de una notificación, abrir el modal automáticamente
+    if (location.state?.roomId) {
+      const checkAndOpen = () => {
+        if (rooms.length > 0) {
+          const roomToOpen = rooms.find(r => r.id === location.state.roomId);
+          if (roomToOpen) setSelectedRoom(roomToOpen);
+        }
+      };
+      checkAndOpen();
+    }
+
     return () => socket.off('roomsUpdated', handleUpdate);
-  }, []);
+  }, [rooms.length, location.state]);
 
   useEffect(() => {
     if (!search.trim()) {
@@ -230,13 +245,22 @@ function Mentores() {
                 {filtered.map((room) => (
                   <MentorCard key={room.id} id={room.id} nombre={room.mentor_nombre || "Mentor"}
                     habilidad={room.habilidad} nombreSala={room.nombre}
-                    descripcion={room.descripcion}
                     isActive={room.sessionInfo?.isActive}
-                    onJoin={() => handleJoin(room)} isJoining={joining === room.id} />
+                    onJoin={() => handleJoin(room)} 
+                    onInfo={() => setSelectedRoom(room)}
+                    isJoining={joining === room.id} />
                 ))}
               </div>
             )}
           </section>
+
+          <SalaDetailModal 
+            isOpen={!!selectedRoom} 
+            onClose={() => setSelectedRoom(null)} 
+            room={selectedRoom}
+            onJoin={() => handleJoin(selectedRoom)}
+            isJoining={joining === (selectedRoom?.id)}
+          />
         </main>
       </div>
     </div>
