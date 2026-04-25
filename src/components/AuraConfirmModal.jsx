@@ -29,26 +29,27 @@ const AuraConfirmModal = ({
   };
 
   const getAccentColor = () => {
-    return type === 'danger' || type === 'logout' || type === 'power' ? '#ff00ff' : '#00ffff';
+    return type === 'danger' || type === 'logout' || type === 'power' ? '#ff0055' : '#00ffff';
   };
 
   return createPortal(
     <div className='aura-modal-overlay' onClick={handleOverlayClick}>
-      <div className='aura-modal-content' style={{ maxWidth: '450px', width: '90%', textAlign: 'center' }}>
+      <div className='aura-modal-content' style={{ maxWidth: '450px', width: '90%', textAlign: 'center', border: `1px solid rgba(${getAccentColor() === '#ff0055' ? '255, 0, 85' : '0, 255, 255'}, 0.4)` }}>
         <button className="aura-modal-close" onClick={onClose}>
           <X size={20} />
         </button>
 
         <div className='aura-modal-icon-detail' style={{ 
-          background: `rgba(${getAccentColor() === '#ff00ff' ? '255, 0, 255' : '0, 255, 255'}, 0.1)`,
+          background: `rgba(${getAccentColor() === '#ff0055' ? '255, 0, 85' : '0, 255, 255'}, 0.1)`,
           color: getAccentColor(),
           marginBottom: '1.5rem',
-          display: 'inline-flex'
+          display: 'inline-flex',
+          border: `1px solid rgba(${getAccentColor() === '#ff0055' ? '255, 0, 85' : '0, 255, 255'}, 0.2)`
         }}>
           {getIcon()}
         </div>
 
-        <h3 className='aura-modal-title' style={{ marginBottom: '1rem' }}>{title}</h3>
+        <h3 className='aura-modal-title' style={{ marginBottom: '1rem', color: getAccentColor() }}>{title}</h3>
         <p className='aura-modal-text' style={{ color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', marginBottom: '2rem' }}>
           {message}
         </p>
@@ -59,11 +60,11 @@ const AuraConfirmModal = ({
             className='aura-modal-btn aura-btn-confirm' 
             style={{ 
               flex: 1,
-              background: getAccentColor() === '#ff00ff' 
-                ? 'linear-gradient(135deg, #ff00ff, #7000ff)' 
+              background: getAccentColor() === '#ff0055' 
+                ? 'linear-gradient(135deg, #ff0055, #a00037)' 
                 : 'linear-gradient(135deg, #00ffff, #0088ff)',
-              color: getAccentColor() === '#ff00ff' ? '#fff' : '#0a0014',
-              boxShadow: `0 10px 25px rgba(${getAccentColor() === '#ff00ff' ? '255, 0, 255' : '0, 255, 255'}, 0.3)`
+              color: getAccentColor() === '#ff0055' ? '#fff' : '#0a0014',
+              boxShadow: `0 10px 25px rgba(${getAccentColor() === '#ff0055' ? '255, 0, 85' : '0, 255, 255'}, 0.4)`
             }} 
             onClick={onConfirm}
           >
