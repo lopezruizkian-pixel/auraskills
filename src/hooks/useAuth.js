@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../services/storage';
+import { logoutUser } from '../services/authService';
 
 /**
  * Hook para gestionar autenticación
@@ -12,6 +13,7 @@ export const useAuth = () => {
     return !!storage.get('userId');
   }, []);
 
+  const getUser = useCallback(() => {
     return {
       userId: storage.get('userId'),
       userName: storage.get('userName'),
@@ -23,8 +25,8 @@ export const useAuth = () => {
     return !!storage.get('userId');
   }, []);
 
-  const logout = useCallback(() => {
-    storage.clear();
+  const logout = useCallback(async () => {
+    await logoutUser();
     navigate('/login');
   }, [navigate]);
 
