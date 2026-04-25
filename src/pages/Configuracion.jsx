@@ -5,7 +5,6 @@ import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
 import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette } from "lucide-react";
 import AuraSelect from "../components/AuraSelect";
-import { useTheme } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
@@ -19,7 +18,6 @@ function Configuracion() {
   const { askConfirmation } = useConfirm();
   const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
-  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({ passwordActual: "", passwordNueva: "", confirmar: "" });
@@ -87,7 +85,6 @@ function Configuracion() {
           <GlobalHeader />
 
           <section className="configuracion-section">
-            {/* Título redundante eliminado */}
             <div className="config-list-section" style={{ marginTop: "1rem" }}>
               <h3 className="section-subtitle"><Settings size={20} className="section-icon" /> Preferencias de la aplicación</h3>
               <div className="neon-card config-list-container">
@@ -99,20 +96,6 @@ function Configuracion() {
                   <button className="primary-btn-neon-s" style={{ background: "transparent", border: "1px solid #00ff00", color: "#00ff00", padding: "0.5rem 1rem", fontSize: "0.85rem" }}>
                     Desactivar
                   </button>
-                </div>
-                <div className="config-list-item">
-                  <span>Modo de visualización</span>
-                  <div style={{ width: "220px" }}>
-                    <AuraSelect 
-                      value={theme}
-                      onChange={setTheme}
-                      options={[
-                        { value: "dark", label: "Cyber-Dark" },
-                        { value: "light", label: "Premium-Snow" }
-                      ]}
-                      icon={Palette}
-                    />
-                  </div>
                 </div>
               </div>
             </div>
