@@ -13,7 +13,12 @@ const AuraSwal = Swal.mixin({
     icon: 'aura-swal-icon'
   },
   buttonsStyling: false,
-  backdrop: `rgba(0,0,0,0.85)`
+  backdrop: `
+    rgba(0,0,0,0.85)
+    url("")
+    no-repeat
+    center
+  `
 });
 
 /**
