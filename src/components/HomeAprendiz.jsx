@@ -290,9 +290,14 @@ function HomeAprendiz() {
                       <BookOpen size={20} />
                     </div>
                     <div className="history-info">
-                      <h5 className="history-title">{s.room_nombre || s.habilidad || "Sesión de Aura"}</h5>
+                      <h5 className="history-title">
+                        {s.room_nombre || s.titulo || s.nombre || s.room_name || s.habilidad || "Sesión de Aura"}
+                      </h5>
                       <div className="history-meta">
-                        <span className="history-mentor"><User size={12} /> {s.mentor_nombre || "Mentor Aura"}</span>
+                        <span className="history-mentor">
+                          <User size={12} /> 
+                          {s.mentor_nombre || s.mentor_name || s.mentorName || s.mentor || "Mentor Aura"}
+                        </span>
                         <span className="history-duration"><Clock size={12} /> {s.duration_seconds ? `${Math.round(s.duration_seconds / 60)} min` : "15 min"}</span>
                       </div>
                     </div>
