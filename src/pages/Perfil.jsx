@@ -6,7 +6,7 @@ import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
 import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Mail, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
-import { ThemeContext } from "../context/ThemeContext";
+import { useTheme } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
 import { logoutUser } from "../services/authService";
@@ -32,7 +32,7 @@ function Perfil() {
   const [saving, setSaving] = useState(false);
   const [createdSkills, setCreatedSkills] = useState([]);
   // Config states from Configuracion
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme: currentTheme, setTheme: setGlobalTheme } = useTheme();
   const navigate = useNavigate();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({ passwordActual: "", passwordNueva: "", confirmar: "" });
@@ -439,13 +439,13 @@ function Perfil() {
                   </h3>
                   <div className="settings-row" style={{ marginTop: "0.5rem" }}>
                     <span className="settings-label">Tema Visual</span>
-                    <div className="settings-action" style={{ width: "145px" }}>
+                    <div className="settings-action" style={{ width: "165px" }}>
                       <AuraSelect 
-                        value={theme}
-                        onChange={setTheme}
+                        value={currentTheme}
+                        onChange={setGlobalTheme}
                         options={[
-                          { value: "neon", label: "Neón" },
-                          { value: "classic", label: "Aura" }
+                          { value: "dark", label: "Cyber-Dark" },
+                          { value: "light", label: "Premium-Snow" }
                         ]}
                         icon={Palette}
                       />

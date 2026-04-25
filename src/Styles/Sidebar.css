@@ -1,14 +1,13 @@
 .sidebar-neon {
   width: 280px;
   flex: 0 0 280px;
-  background:
-    linear-gradient(180deg, rgba(13, 0, 26, 0.99), rgba(5, 3, 17, 0.99));
-  border-right: 1px solid rgba(0, 255, 255, 0.12);
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-aura);
   display: flex;
   flex-direction: column;
-  padding: 40px 24px 30px; /* Aumentado el padding lateral */
+  padding: 40px 24px 30px;
   height: 100dvh;
-  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 40;
@@ -72,7 +71,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 20px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-sub);
   cursor: pointer;
   border-radius: 14px;
   border: 1px solid transparent;

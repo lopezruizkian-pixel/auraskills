@@ -10,17 +10,17 @@
   margin: calc(var(--content-gutter, 28px) * -1) calc(var(--content-gutter, 28px) * -1) 1.75rem;
   padding: 1rem 1.2rem;
   border-radius: 0 0 22px 22px;
-  background: rgba(15, 18, 31, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-card);
+  border: 1px solid var(--border-aura);
   border-top: 0;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 14px 28px var(--shadow-aura);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
 .page-title {
   margin: 0;
-  color: #f9fbff;
+  color: var(--text-main);
   font-size: clamp(1.35rem, 2.5vw, 1.9rem);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -97,9 +97,9 @@
   width: min(360px, calc(100vw - 24px));
   overflow: hidden;
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(17, 18, 35, 0.94), rgba(10, 12, 26, 0.92));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.32);
+  background: var(--bg-card);
+  border: 1px solid var(--border-aura);
+  box-shadow: 0 22px 40px var(--shadow-aura);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 70;
@@ -172,14 +172,14 @@
 }
 
 .notifications-item-title {
-  color: #ffffff;
+  color: var(--text-main);
   font-size: 0.92rem;
   font-weight: 700;
 }
 
 .notifications-item-description {
   margin-top: 0.18rem;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--text-sub);
   font-size: 0.82rem;
   line-height: 1.45;
 }
