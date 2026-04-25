@@ -68,14 +68,22 @@ function RoomPage() {
     userRole
   );
 
-  // Monitorizar fin de sesión (Desactivado para permitir persistencia)
-  // Ahora el aprendiz decide cuándo salir, o el socket le notificará de forma distinta
+  // Monitorizar fin de sesión (Redirección explícita)
   useEffect(() => {
-    if (!isMentor && sessionInfo && sessionInfo.isActive === false) {
-      console.log('[RoomPage] El mentor se ha ausentado o la sesión está en pausa.');
-      // No redirigimos automáticamente para permitir que el aprendiz se quede
+    // Solo expulsar si recibimos la señal de que la sala fue CERRADA definitivamente
+    if (!isMentor && sessionInfo?.isClosed === true && !isLeaving) {
+      console.log('[RoomPage] La sala ha sido cerrada. Finalizando para el aprendiz...');
+      setIsLeaving(true);
+      
+      // Limpieza y redirección inmediata tras el cierre oficial
+      leaveCurrentRoom();
+      storage.remove('salaActiva');
+      localStorage.removeItem(`room_start_${roomId}`);
+      
+      showSuccess("La sesión ha finalizado. ¡Gracias por participar!");
+      navigate('/home', { replace: true });
     }
-  }, [sessionInfo, isMentor]);
+  }, [sessionInfo, isMentor, isLeaving, navigate, leaveCurrentRoom, showSuccess, roomId]);
 
   useEffect(() => {
     if (roomId) {

@@ -255,6 +255,11 @@ export const useWebSocket = (roomId, userId, userName, userAvatar, userRole) => 
         setSessionInfo(roomState?.sessionInfo || null);
       });
 
+      socket.on('roomClosed', () => {
+        console.log('[WebSocket] La sala ha sido cerrada por el mentor');
+        setSessionInfo({ isActive: false, isClosed: true });
+      });
+
       socket.on('roomSessionUpdated', (sessionInfo) => {
         console.log('[WebSocket] Estado de sesion actualizado');
         setSessionInfo(sessionInfo || null);
