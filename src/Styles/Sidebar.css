@@ -15,9 +15,9 @@
 }
 
 .sidebar-header {
-  margin-bottom: 45px;
+  margin-bottom: 60px; /* Bajamos los módulos un poco más */
   display: flex;
-  justify-content: center; /* Centrar logo */
+  justify-content: center;
 }
 
 .sidebar-brand {
@@ -30,7 +30,7 @@
 
 .aura-text {
   margin: 0;
-  font-size: 1.7rem; /* Ligeramente más grande */
+  font-size: 1.7rem;
   color: #ff00ff;
   text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
   font-weight: 900;
@@ -56,12 +56,12 @@
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 20px; /* Más espacio entre módulos */
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 5px; /* Espacio extra para que no se corten las sombras */
+  padding: 15px 8px; /* Mucho más espacio vertical y horizontal para el GLOW */
 }
 
 .nav-item {
