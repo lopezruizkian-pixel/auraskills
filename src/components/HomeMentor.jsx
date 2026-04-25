@@ -6,6 +6,7 @@ import { fetchActiveRooms, getUserRoomHistory } from "../services/roomService";
 import { getDashboardSocket } from "../services/socketConfig";
 import GlobalHeader from "../components/GlobalHeader";
 import { storage } from "../services/storage";
+import { encodeId } from "../utils/obfuscation";
 import "../Styles/Mentores.css";
 
 function HomeMentor() {
@@ -63,10 +64,6 @@ function HomeMentor() {
     }
   };
 
-import { encodeId } from "../utils/obfuscation";
-
-function HomeMentor() {
-...
   const handleEnterRoom = (room) => {
     // Sincronizar con la vista de "Salas Activas" guardando en localStorage
     const infoSala = {
