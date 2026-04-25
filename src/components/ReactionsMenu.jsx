@@ -11,7 +11,7 @@ const REACTIONS = [
   { 
     id: 'like',
     name: 'Me gusta', 
-    url: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Thumbs%20up/3D/thumbs_up_3d.png' 
+    url: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Thumbs%20up/Default/3D/thumbs_up_3d_default.png' 
   },
   { 
     id: 'laugh',
