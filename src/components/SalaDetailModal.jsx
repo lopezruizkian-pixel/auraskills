@@ -13,7 +13,15 @@ const iconMap = {
 const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
   if (!isOpen || !room) return null;
 
-  const Icon = iconMap[room.categoria] || Info;
+  // Debug para verificar qué datos llegan del backend
+  console.log("Datos de la sala en el modal:", room);
+
+  // Normalizar la categoría para la búsqueda (ej. "Backend" -> "BACKEND")
+  const catName = (room.categoria || room.category || "General").toUpperCase();
+  
+  // Buscar el icono en el mapa ignorando mayúsculas
+  const iconKey = Object.keys(iconMap).find(key => key.toUpperCase() === catName);
+  const Icon = iconMap[iconKey] || Info;
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
