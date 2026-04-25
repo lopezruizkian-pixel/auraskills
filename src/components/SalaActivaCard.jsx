@@ -1,9 +1,18 @@
-import React from "react";
 import { Users, Radio, Wrench, LogIn, Power, BookOpen, ChevronRight } from "lucide-react";
+import AuraSwal from "../utils/swal";
 
 function SalaActivaCard({ id, titulo, habilidad, inscritos, capacidad, onClose, onEnter }) {
-  const handleClose = () => {
-    if (window.confirm("¿Seguro que quieres finalizar la sesión?")) {
+  const handleClose = async () => {
+    const result = await AuraSwal.fire({
+      title: '¿FINALIZAR SESIÓN?',
+      text: "Se cerrará la sala para todos los participantes. ¿Deseas continuar?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'SÍ, FINALIZAR',
+      cancelButtonText: 'CANCELAR'
+    });
+
+    if (result.isConfirmed) {
       onClose();
     }
   };
