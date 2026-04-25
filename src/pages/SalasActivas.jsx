@@ -14,6 +14,7 @@ import "../Styles/SalasActivas.css";
 import "../Styles/Mentores.css";
 
 import { storage } from "../services/storage";
+import { encodeId } from "../utils/obfuscation";
 
 function SalasActivas() {
   const { success: showSuccess, error: showError } = useToast();
@@ -96,7 +97,7 @@ function SalasActivas() {
         ...room,
         isCreator: false
       });
-      navigate(`/sala/${room.id}`);
+      navigate(`/sala/${encodeId(room.id)}`);
     } catch (err) {
       showError(err.message || "Error al unirse");
     } finally {
@@ -105,7 +106,7 @@ function SalasActivas() {
   };
 
   const handleEnterRoom = () => {
-    if (salaActiva?.id) navigate(`/sala/${salaActiva.id}`);
+    if (salaActiva?.id) navigate(`/sala/${encodeId(salaActiva.id)}`);
   };
 
   const handleCloseRoom = async () => {

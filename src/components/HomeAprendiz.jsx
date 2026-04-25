@@ -11,6 +11,7 @@ import Sidebar from "./Sidebar";
 import { Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { storage } from "../services/storage";
 import { useToast } from "../hooks/useToast";
+import { encodeId } from "../utils/obfuscation";
 import "../Styles/Mentores.css";
 import AuraAvatar from "./AuraAvatar";
 
@@ -220,6 +221,8 @@ function HomeAprendiz() {
       }
 
       console.log(`[DEBUG] Guardando historial y navegando a /sala/${room.id}`);
+      const encodedId = encodeId(room.id);
+      
       const infoSala = {
         id: room.id,
         nombre: room.nombre,
@@ -232,7 +235,7 @@ function HomeAprendiz() {
         storage.set("historialSalas", [infoSala, ...visitadas]);
       }
 
-      navigate(`/sala/${room.id}`);
+      navigate(`/sala/${encodedId}`);
     } catch (err) {
       console.error("[DEBUG] Error general en handleJoin:", err);
       showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));

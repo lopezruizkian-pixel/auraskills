@@ -11,6 +11,7 @@ import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
 import { storage } from "../services/storage";
 import { useToast } from "../hooks/useToast";
+import { encodeId } from "../utils/obfuscation";
 import "../Styles/Mentores.css";
 
 const iconMap = {
@@ -146,7 +147,7 @@ function Mentores() {
         storage.set("historialSalas", [infoSala, ...visitadas]);
       }
 
-      navigate(`/sala/${room.id}`);
+      navigate(`/sala/${encodeId(room.id)}`);
     } catch (err) {
       showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
     } finally {

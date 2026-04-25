@@ -33,8 +33,12 @@ const getMentorName = (roomData, sessionInfo, participants) => {
   return 'Mentor pendiente';
 };
 
+import { decodeId } from '../utils/obfuscation';
+
 function RoomPage() {
-  const { id: roomId } = useParams();
+  const { id: encodedId } = useParams();
+  const roomId = useMemo(() => decodeId(encodedId), [encodedId]);
+  
   const navigate = useNavigate();
   const {
     initRoom,

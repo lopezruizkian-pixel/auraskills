@@ -63,6 +63,10 @@ function HomeMentor() {
     }
   };
 
+import { encodeId } from "../utils/obfuscation";
+
+function HomeMentor() {
+...
   const handleEnterRoom = (room) => {
     // Sincronizar con la vista de "Salas Activas" guardando en localStorage
     const infoSala = {
@@ -74,7 +78,7 @@ function HomeMentor() {
     };
     storage.set("salaActiva", infoSala);
     
-    navigate(`/sala/${room.id}`);
+    navigate(`/sala/${encodeId(room.id)}`);
   };
 
 
