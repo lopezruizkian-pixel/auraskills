@@ -225,117 +225,102 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
+  max-width: 900px; /* Ancho de lectura óptimo */
+  margin: 0 auto;
 }
 
 .message-wrapper {
   display: flex;
-  gap: 12px;
-  max-width: 85%;
+  gap: 14px;
+  max-width: 80%;
   width: fit-content;
+  animation: auraPulse 0.3s ease-out;
 }
 
-.message-wrapper.is-me {
+.message-wrapper.own-message {
   align-self: flex-end;
-  flex-direction: row;
-}
-
-.message-wrapper.is-other {
-  align-self: flex-start;
-}
-
-.message-avatar-container {
-  display: flex;
-  align-items: flex-end;
-}
-
-.msg-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 0, 255, 0.1);
-  border: 1px solid #ff00ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
-}
-
-.msg-avatar.me {
-  background: rgba(0, 255, 255, 0.1);
-  border-color: #00ffff;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  flex-direction: row-reverse;
 }
 
 .message-bubble {
-  padding: 10px 16px;
-  border-radius: 18px;
+  padding: 12px 18px;
+  border-radius: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  transition: transform 0.2s ease;
+  backdrop-filter: blur(10px);
 }
 
-.is-me .message-bubble {
-  background: #0077ff; /* Azul sólido elegante */
+.message-bubble:hover {
+  transform: translateY(-2px);
+}
+
+.own-bubble {
+  background: rgba(188, 71, 255, 0.15); /* Magenta suave y cristalino */
   color: #fff;
+  border: 1px solid rgba(188, 71, 255, 0.35);
   border-bottom-right-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(188, 71, 255, 0.15);
 }
 
-.is-other .message-bubble {
-  background: #1a1a2e; /* Grafito sólido estilo Login */
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  color: #fff;
+.other-bubble {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
   border-bottom-left-radius: 4px;
 }
 
-.message-author {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: #ff00ff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* Efectos especiales para el Mentor */
+.mentor-glow-bubble {
+  border-color: rgba(255, 0, 150, 0.5);
+  box-shadow: 0 0 20px rgba(255, 0, 150, 0.25);
+  background: linear-gradient(135deg, rgba(188, 71, 255, 0.2) 0%, rgba(255, 0, 150, 0.15) 100%);
 }
 
-.message-text {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  word-break: break-word;
+.message-author {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ff99ff; /* Tono pastel más suave */
+  text-transform: none;
+  letter-spacing: 0.2px;
 }
 
 .message-time {
   font-size: 0.65rem;
-  opacity: 0.5;
-  align-self: flex-end;
+  opacity: 0.6;
+  margin-top: 2px;
 }
 
-.is-me .message-time {
-  color: rgba(255, 255, 255, 0.7);
-}
-
+/* Chat Footer Flotante */
 .chat-footer {
-  padding: 1.2rem;
-  background: rgba(0, 0, 0, 0.4);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem 2rem 2rem;
+  background: transparent;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .message-input-form {
   display: flex;
   gap: 10px;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(15px); /* Efecto cristal */
+  border-radius: 20px;
+  padding: 8px 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .message-input-form:focus-within {
   border-color: #00ffff;
-  background: rgba(0, 255, 255, 0.05);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
 .message-input {
@@ -396,4 +381,274 @@
   border-radius: 50%;
   border-top-color: transparent;
   animation: auraRotate 2s linear infinite;
+}
+
+/* ============ PARTICIPANTS LIST PREMIUM ============ */
+.participants-list {
+  background: rgba(15, 15, 27, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.participants-header {
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participants-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.participants-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.participants-count-badge {
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.participants-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.participant-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Mentor Card - El toque de distinción */
+.participant-item.mentor-card-active {
+  background: linear-gradient(90deg, rgba(255, 0, 150, 0.1) 0%, rgba(15, 15, 27, 0) 100%);
+  border: 1px solid rgba(255, 0, 150, 0.25);
+}
+
+.avatar-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.avatar-container.mini {
+  width: 28px;
+  height: 28px;
+}
+
+.participant-img, .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatar-placeholder {
+  background: linear-gradient(135deg, #2c2c54 0%, #0f0f1b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.mentor-avatar-aura .participant-img, 
+.mentor-avatar-aura .avatar-placeholder {
+  border-color: #ff0096;
+  box-shadow: 0 0 12px rgba(255, 0, 150, 0.4);
+}
+
+.mentor-badge-mini {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #ff0096;
+  color: #fff;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0f0f1b;
+}
+
+.participant-details {
+  flex: 1;
+}
+
+.participant-name {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.mentor-name-glow {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 0, 150, 0.4);
+}
+
+.participant-role {
+  margin: 0;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.status-dot-active {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+
+/* ============ PRESENCE & AWAY STYLES ============ */
+.chat-away-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 15, 27, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.away-content {
+  text-align: center;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.away-icon-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.coffee-icon-anim {
+  color: #ffaa00;
+  filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.4));
+  animation: coffeePulse 2s ease-in-out infinite;
+}
+
+@keyframes coffeePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.4));
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+    filter: drop-shadow(0 0 20px rgba(255, 170, 0, 0.6));
+  }
+}
+
+.away-content h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.away-content p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.btn-action-subtle.active-away {
+  background: rgba(255, 170, 0, 0.15);
+  border-color: rgba(255, 170, 0, 0.4);
+  color: #ffaa00;
+}
+
+.btn-action-subtle.active-away span {
+  color: #ffaa00;
+}
+.btn-back-header {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 0.8rem;
+  flex-shrink: 0;
+}
+
+.btn-back-header:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.4);
+  color: #00ffff;
+  transform: translateX(-3px);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.room-title-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.room-title-compact {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
 }

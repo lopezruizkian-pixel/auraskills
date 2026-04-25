@@ -56,10 +56,19 @@ export const useWebSocket = (roomId, userId, userName, userAvatar, userRole) => 
     removeReaction,
     setUserTyping,
     removeUserTyping,
+    setMentorAway,
+    updateParticipantPresence,
+    participants,
     setError,
   } = useContext(RoomContext);
 
   const socketRef = useRef(null);
+  const participantsRef = useRef(participants);
+
+  // Mantener la referencia actualizada sin disparar efectos
+  useEffect(() => {
+    participantsRef.current = participants;
+  }, [participants]);
   const reconnectTimeoutRef = useRef(null);
 
   const leaveCurrentRoom = useCallback(() => {
@@ -169,6 +178,22 @@ export const useWebSocket = (roomId, userId, userName, userAvatar, userRole) => 
       enabled,
     });
   }, [roomId, userId]);
+
+  const notifyPresenceChanged = useCallback((isAway) => {
+    // Actualización inmediata local para que el usuario vea el cambio al instante
+    setMentorAway(isAway);
+
+    if (!socketRef.current?.connected) {
+      return;
+    }
+
+    socketRef.current.emit('userPresenceChanged', {
+      roomId,
+      userId,
+      isAway,
+      userRole: storage.get('userRole') || 'alumno' // Enviamos el rol para que los demás sepan quién se ausenta
+    });
+  }, [roomId, userId, setMentorAway]);
 
   useEffect(() => {
     if (!roomId || !userId) {
@@ -286,6 +311,25 @@ export const useWebSocket = (roomId, userId, userName, userAvatar, userRole) => 
         console.log('[WebSocket] Audio status:', data?.enabled);
       });
 
+      socket.on('userPresenceChanged', (data) => {
+        console.log('[WebSocket] Presencia cambiada:', data?.userId, 'Ausente:', data?.isAway);
+        
+        // 1. Siempre actualizamos su estado individual en la lista
+        updateParticipantPresence(data?.userId, data?.isAway);
+
+        // 2. Si el que cambió es el mentor (verificamos por rol en el evento o en la lista)
+        if (data?.userRole === 'mentor') {
+          setMentorAway(data?.isAway || false);
+        } else {
+          // Fallback: buscar en la lista si no viene el rol en el evento
+          const currentParticipants = participantsRef.current;
+          const participant = currentParticipants.find(p => p.id === data?.userId);
+          if (participant?.rolInSala === 'mentor') {
+            setMentorAway(data?.isAway || false);
+          }
+        }
+      });
+
       socket.on('disconnect', (reason) => {
         console.log('[WebSocket] Desconectado:', reason);
         setConnectionStatus('desconectado');
@@ -330,6 +374,8 @@ export const useWebSocket = (roomId, userId, userName, userAvatar, userRole) => 
     removeReaction,
     setUserTyping,
     removeUserTyping,
+    setMentorAway,
+    updateParticipantPresence,
     setError,
     leaveCurrentRoom,
   ]);
@@ -342,6 +388,7 @@ export const useWebSocket = (roomId, userId, userName, userAvatar, userRole) => 
     notifyUserStoppedTyping,
     notifyVideoStatusChanged,
     notifyAudioStatusChanged,
+    notifyPresenceChanged,
     isConnected: socketRef.current?.connected || false,
   };
 };

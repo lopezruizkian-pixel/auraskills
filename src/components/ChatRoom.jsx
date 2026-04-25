@@ -6,16 +6,8 @@ import ReactionsMenu from './ReactionsMenu';
 import '../Styles/RoomComponents.css';
 
 const formatMessageTime = (timestamp) => {
-  if (!timestamp) {
-    return '';
-  }
-
-  const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
   return date.toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
@@ -28,21 +20,25 @@ function ChatRoom({ sendMessage, sendReaction }) {
   const [isReactionsOpen, setIsReactionsOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
   }, [messages]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-
-    if (!messageText.trim()) return;
-
-    sendMessage(messageText);
-    setMessageText('');
+    if (messageText.trim()) {
+      sendMessage(messageText);
+      setMessageText('');
+    }
   };
 
   const handleReactionClick = (emoji) => {
     sendReaction(emoji);
+    setIsReactionsOpen(false);
   };
 
   const userId = storage.get('userId');
@@ -56,33 +52,38 @@ function ChatRoom({ sendMessage, sendReaction }) {
 
       <div className="messages-container">
         {messages.length === 0 ? (
-          <div className="no-messages">
-            <div className="aura-portal-mini"></div>
-            <p>La conexión está establecida.</p>
-            <p className="text-small">Comparte algo para iniciar la conversación.</p>
+          <div className="empty-chat">
+            <p>Aun no hay mensajes. ¡Comienza la conversacion!</p>
           </div>
         ) : (
-          messages.map((message) => {
-            const isMe = message.userId === userId;
+          messages.map((msg, index) => {
+            const isMe = msg.userId === userId;
+            const isMentor = msg.userRole === 'mentor';
+            const showAvatar = index === 0 || messages[index - 1].userId !== msg.userId;
+
             return (
-              <div key={message.id} className={`message-wrapper ${isMe ? 'is-me' : 'is-other'}`}>
-                {!isMe && (
-                  <div className="message-avatar-container">
-                    <div className="msg-avatar">{message.userAvatar}</div>
+              <div 
+                key={msg.id || index} 
+                className={`message-wrapper ${isMe ? 'own-message' : 'other-message'} ${isMentor ? 'mentor-msg-wrapper' : ''}`}
+              >
+                {!isMe && showAvatar && (
+                  <div className={`message-avatar ${isMentor ? 'mentor-aura-avatar' : ''}`}>
+                    {msg.userAvatar && msg.userAvatar.startsWith('http') ? (
+                      <img src={msg.userAvatar} alt={msg.userName} />
+                    ) : (
+                      <div className="avatar-placeholder">{msg.userName?.charAt(0) || '?'}</div>
+                    )}
+                    {isMentor && <div className="mentor-badge-chat">M</div>}
                   </div>
                 )}
-                <div className="message-bubble">
-                  {!isMe && <span className="message-author">{message.userName}</span>}
-                  <p className="message-text">{message.texto}</p>
-                  <span className="message-time">
-                    {formatMessageTime(message.timestamp)}
-                  </span>
+                
+                <div className="message-content-group">
+                  {showAvatar && !isMe && <span className="message-author">{msg.userName}</span>}
+                  <div className={`message-bubble ${isMe ? 'own-bubble' : 'other-bubble'} ${isMentor ? 'mentor-glow-bubble' : ''}`}>
+                    <p className="message-text">{msg.texto}</p>
+                    <span className="message-time">{formatMessageTime(msg.timestamp)}</span>
+                  </div>
                 </div>
-                {isMe && (
-                  <div className="message-avatar-container">
-                    <div className="msg-avatar me">{message.userAvatar}</div>
-                  </div>
-                )}
               </div>
             );
           })
@@ -92,6 +93,20 @@ function ChatRoom({ sendMessage, sendReaction }) {
 
       <div className="chat-footer">
         <form className="message-input-form" onSubmit={handleSendMessage}>
+          <div className="reaction-trigger-container">
+            <button
+              type="button"
+              className="btn-icon reaction-btn"
+              onClick={() => setIsReactionsOpen(!isReactionsOpen)}
+            >
+              <Smile size={20} />
+            </button>
+            
+            {isReactionsOpen && (
+              <ReactionsMenu onSelect={handleReactionClick} />
+            )}
+          </div>
+
           <input
             type="text"
             placeholder="Escribe un mensaje..."
@@ -101,30 +116,14 @@ function ChatRoom({ sendMessage, sendReaction }) {
             autoComplete="off"
           />
           <button
-            type="button"
-            className="reactions-btn"
-            onClick={() => setIsReactionsOpen(!isReactionsOpen)}
-            aria-label="Reacciones"
-            title="Agregar reaccion"
-          >
-            <Smile size={18} />
-          </button>
-          <button
             type="submit"
-            className="send-btn"
+            className="btn-icon send-btn"
             disabled={!messageText.trim()}
-            aria-label="Enviar mensaje"
           >
-            <Send size={18} />
+            <Send size={20} />
           </button>
         </form>
       </div>
-
-      <ReactionsMenu
-        onReactionSelect={handleReactionClick}
-        isOpen={isReactionsOpen}
-        setIsOpen={setIsReactionsOpen}
-      />
     </div>
   );
 }

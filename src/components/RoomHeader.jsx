@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { RoomContext } from '../context/RoomContext';
-import { Clock, DoorOpen, Signal, Sparkles, Users, Power } from 'lucide-react';
+import { Power, DoorOpen, Users, Clock, Shield } from 'lucide-react';
 import '../Styles/RoomComponents.css';
 
 const formatDuration = (totalSeconds = 0) => {
@@ -34,7 +34,7 @@ const getMentorName = (roomData, sessionInfo, participants) => {
   return 'Mentor pendiente';
 };
 
-function RoomHeader({ roomId, isMentor = false, onLeaveSession, onJustLeave, isLeaving = false }) {
+function RoomHeader({ roomId, isMentor = false, onLeaveSession, onBack, isLeaving = false }) {
   const { roomData, participants, connectionStatus, sessionInfo } = useContext(RoomContext);
   const [now, setNow] = useState(Date.now());
 
@@ -118,41 +118,38 @@ function RoomHeader({ roomId, isMentor = false, onLeaveSession, onJustLeave, isL
   return (
     <div className="room-header-compact">
       <div className="room-header-left">
-        <h1 className="room-title-compact">{roomData?.nombre || 'Sala de mentoria'}</h1>
-        <div className="room-subtitle-compact">
-          <Sparkles size={12} />
-          <span>{roomData?.habilidad}</span>
-          <span className="divider">|</span>
-          <span>Mentor: {mentorName}</span>
+        <div className="room-title-group">
+          <h1 className="room-title-compact">{roomData?.nombre || 'Sala de mentoria'}</h1>
+        </div>
+      </div>
+
+      <div className="room-header-center">
+        <div className="room-status-capsule">
+          <div className="status-indicator">
+            <div className="status-dot pulse"></div>
+            <span>En vivo</span>
+          </div>
+          <div className="status-divider"></div>
+          <div className="status-metric">
+            <Users size={14} />
+            <span>{participants.length}/{roomData?.capacidad_maxima || 5}</span>
+          </div>
+          <div className="status-divider"></div>
+          <div className="status-metric">
+            <Clock size={14} />
+            <span>{formatDuration(elapsedSeconds)}</span>
+          </div>
         </div>
       </div>
 
       <div className="room-header-right">
-        <div className="room-header-badges">
-          <div className="room-info-badge primary">
-            <Signal size={16} style={{ color: getStatusColor() }} />
-            <span>{getStatusText()}</span>
-          </div>
-
-          <div className="room-info-badge">
-            <Users size={16} />
-            <span>{participants.length}/{roomData?.capacidad_maxima || 15}</span>
-          </div>
-
-          <div className="room-info-badge">
-            <Clock size={16} />
-            <span>{formatDuration(elapsedSeconds)}</span>
-          </div>
-        </div>
-
-        <div className="room-header-actions" style={{ display: 'flex', gap: '10px' }}>
+        <div className="room-header-actions">
           {isMentor && (
             <button
               type="button"
-              className="room-action-btn student"
-              onClick={onJustLeave}
+              className="btn-action-subtle"
+              onClick={onBack}
               disabled={isLeaving}
-              style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
             >
               <DoorOpen size={16} />
               <span>Solo salir</span>
@@ -161,18 +158,12 @@ function RoomHeader({ roomId, isMentor = false, onLeaveSession, onJustLeave, isL
 
           <button
             type="button"
-            className={`room-action-btn ${isMentor ? 'mentor' : 'student'}`}
+            className={`btn-action-primary ${isMentor ? 'mentor' : 'student'}`}
             onClick={onLeaveSession}
             disabled={isLeaving}
           >
             {isMentor ? <Power size={16} /> : <DoorOpen size={16} />}
-            <span>
-              {isLeaving
-                ? 'Saliendo...'
-                : isMentor
-                  ? 'Finalizar sesión'
-                  : 'Salir de la sala'}
-            </span>
+            <span>{isLeaving ? 'Saliendo...' : isMentor ? 'Finalizar sesión' : 'Salir de la sala'}</span>
           </button>
         </div>
       </div>

@@ -2,10 +2,7 @@
   display: flex;
   width: 100%;
   min-height: 100dvh;
-  background:
-    radial-gradient(circle at top left, rgba(0, 255, 255, 0.06), transparent 28%),
-    radial-gradient(circle at top right, rgba(255, 0, 255, 0.05), transparent 22%),
-    #0a0014;
+  background: transparent; /* Ahora usa el fondo global del body */
   overflow-x: clip;
 }
 

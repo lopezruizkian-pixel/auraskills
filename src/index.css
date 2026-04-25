@@ -6,9 +6,16 @@
 }
 
 body {
-  background-color: #0a0014;
+  background: 
+    radial-gradient(circle at top left, rgba(0, 255, 255, 0.06) 0%, transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 0, 255, 0.05) 0%, transparent 22%),
+    radial-gradient(circle at 50% 85%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
+    #0a0014;
   color: white;
+  min-height: 100vh;
+  margin: 0;
   overflow-x: hidden;
+  background-attachment: fixed;
 }
 
 .navbar {

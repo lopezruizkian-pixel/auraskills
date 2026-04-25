@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BookOpen, Clock3, Mic2, ShieldCheck, Users2 } from 'lucide-react';
+import { BookOpen, Clock3, Mic2, ShieldCheck } from 'lucide-react';
 import { RoomContext } from '../context/RoomContext';
 import { useRoom } from '../hooks/useRoom';
 import { useWebSocket } from '../hooks/useWebSocket';
@@ -11,65 +11,23 @@ import ReactionsContainer from '../components/ReactionsContainer';
 import { storage } from "../services/storage";
 import '../Styles/RoomPage.css';
 
-const formatSessionDuration = (sessionInfo, currentTime) => {
-  if (!sessionInfo) {
-    return '00:00:00';
-  }
-
-  if (sessionInfo.isActive && sessionInfo.startedAt) {
-    const startedAtMs = new Date(sessionInfo.startedAt).getTime();
-    const elapsedSeconds = Math.max(0, Math.floor((currentTime - startedAtMs) / 1000));
-    const hours = String(Math.floor(elapsedSeconds / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, '0');
-    const seconds = String(elapsedSeconds % 60).padStart(2, '0');
-
-    return `${hours}:${minutes}:${seconds}`;
-  }
-
-  const safeSeconds = Math.max(0, sessionInfo.durationSeconds || 0);
-  const hours = String(Math.floor(safeSeconds / 3600)).padStart(2, '0');
-  const minutes = String(Math.floor((safeSeconds % 3600) / 60)).padStart(2, '0');
-  const seconds = String(safeSeconds % 60).padStart(2, '0');
-
-  return `${hours}:${minutes}:${seconds}`;
-};
-
 const formatSessionStart = (sessionInfo) => {
   if (!sessionInfo?.startedAt) {
     return 'Se iniciara cuando entre el mentor';
   }
-
   const date = new Date(sessionInfo.startedAt);
-
   if (Number.isNaN(date.getTime())) {
     return 'Sesion en preparacion';
   }
-
-  return date.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
 const getMentorName = (roomData, sessionInfo, participants) => {
-  const mentorParticipant = participants.find((participant) => participant.rolInSala === 'mentor');
-
-  if (mentorParticipant?.nombre) {
-    return mentorParticipant.nombre;
-  }
-
-  if (sessionInfo?.mentorName) {
-    return sessionInfo.mentorName;
-  }
-
-  if (typeof roomData?.mentor === 'string') {
-    return roomData.mentor;
-  }
-
-  if (roomData?.mentor?.nombre) {
-    return roomData.mentor.nombre;
-  }
-
+  const mentorParticipant = participants.find((p) => p.rolInSala === 'mentor');
+  if (mentorParticipant?.nombre) return mentorParticipant.nombre;
+  if (sessionInfo?.mentorName) return sessionInfo.mentorName;
+  if (typeof roomData?.mentor === 'string') return roomData.mentor;
+  if (roomData?.mentor?.nombre) return roomData.mentor.nombre;
   return 'Mentor pendiente';
 };
 
@@ -84,17 +42,17 @@ function RoomPage() {
     error,
     connectionStatus,
   } = useContext(RoomContext);
-  const [now, setNow] = useState(Date.now());
+  
   const [isLeaving, setIsLeaving] = useState(false);
 
   const userId = storage.get('userId') || `user-${Date.now()}`;
   const userName = storage.get('userName') || 'Usuario Anonimo';
   const userRole = storage.get('userRole') || 'alumno';
-  const userAvatar = '👨‍💼';
+  const userAvatar = '👤';
   const isMentor = userRole === 'mentor';
 
   const { isLoading: roomLoading } = useRoom(roomId);
-  const { sendMessage, sendReaction, leaveCurrentRoom } = useWebSocket(
+  const { sendMessage, sendReaction, leaveCurrentRoom, notifyPresenceChanged } = useWebSocket(
     roomId,
     userId,
     userName,
@@ -110,56 +68,13 @@ function RoomPage() {
     }
   }, [roomId, initRoom, navigate]);
 
-  useEffect(() => {
-    if (!sessionInfo?.isActive) {
-      return undefined;
-    }
-
-    const intervalId = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [sessionInfo?.isActive]);
-
   const mentorName = useMemo(
     () => getMentorName(roomData, sessionInfo, participants),
     [participants, roomData, sessionInfo]
   );
 
-  const sessionSummary = useMemo(() => ([
-    {
-      id: 'skill',
-      icon: BookOpen,
-      label: 'Habilidad',
-      value: roomData?.habilidad || 'Por definir',
-    },
-    {
-      id: 'mentor',
-      icon: Mic2,
-      label: 'Mentor al frente',
-      value: mentorName,
-    },
-
-    {
-      id: 'start',
-      icon: Clock3,
-      label: 'Inicio de la sesion',
-      value: formatSessionStart(sessionInfo),
-    },
-    {
-      id: 'access',
-      icon: ShieldCheck,
-      label: 'Tu acceso',
-      value: isMentor ? 'Control total de la sesion' : 'Participacion guiada',
-    },
-  ]), [isMentor, mentorName, roomData, sessionInfo]);
-
   const handleLeaveSession = async () => {
-    if (isLeaving) {
-      return;
-    }
-
+    if (isLeaving) return;
     setIsLeaving(true);
     try {
       if (isMentor) {
@@ -172,30 +87,17 @@ function RoomPage() {
       navigate('/home', { replace: true });
     } catch (err) {
       console.error('Error al finalizar sesión:', err);
-      // Salir de todos modos para no bloquear al usuario
       storage.remove('salaActiva');
-      localStorage.removeItem(`room_start_${roomId}`);
       navigate('/home', { replace: true });
     }
   };
 
-  const handleJustLeave = () => {
-    if (isLeaving) return;
-    setIsLeaving(true);
+
+  const handleBack = () => {
     leaveCurrentRoom();
     storage.remove('salaActiva');
     navigate('/home', { replace: true });
   };
-
-  const stageTitle = isMentor
-    ? 'Espacio para conversar, resolver dudas y acompanar el proceso.'
-    : 'Espacio para seguir la sesion, hacer preguntas y mantener foco.';
-
-  const stageDescription = roomData?.descripcion?.trim()
-    ? roomData.descripcion
-    : isMentor
-      ? 'Usa este espacio para fijar el objetivo de la sesion, compartir contexto y mantener el ritmo de la mentoria en vivo.'
-      : 'Sigue las indicaciones del mentor, participa en el chat y aprovecha este espacio para resolver dudas sin cambiar la configuracion de la sala.';
 
   if (roomLoading) {
     return (
@@ -226,43 +128,29 @@ function RoomPage() {
         roomId={roomId}
         isMentor={isMentor}
         onLeaveSession={handleLeaveSession}
-        onJustLeave={handleJustLeave}
+        onBack={handleBack}
         isLeaving={isLeaving}
       />
 
       <div className="room-container">
         <aside className="room-sidebar">
-          {/* Card: Identidad y Contexto */}
-          <section className="sidebar-section session-sidebar-card context-card-neon premium-room-card">
-            <div className="session-sidebar-header">
-              <span className="session-sidebar-kicker">Habilidad</span>
-              <h3 className="habilidad-highlight">{roomData?.habilidad || 'General'}</h3>
-            </div>
+          <section className="sidebar-section session-sidebar-card premium-room-card">
+            <span className="session-sidebar-kicker">Habilidad</span>
+            <h3 className="habilidad-highlight">{roomData?.habilidad || 'General'}</h3>
+            <div className="sidebar-card-divider"></div>
             <p className="sidebar-description-text">
               {roomData?.descripcion?.trim() || 'Sin descripción adicional para esta sesión.'}
             </p>
           </section>
-
-          {/* Card: Participantes y Capacidad */}
-          <section className="sidebar-section session-sidebar-card status-card-neon premium-room-card">
-            <div className="status-grid-compact">
-              <div className="status-item-mini">
-                <Users2 size={16} className="icon-neon" />
-                <div className="status-item-info">
-                  <span>Capacidad de Sala</span>
-                  <strong>{participants.length} / {roomData?.capacidad_maxima || 10}</strong>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Lista de Participantes */}
           <ParticipantsList />
         </aside>
 
         <section className="room-main-panel">
           <div className="room-chat-area">
-            <ChatRoom sendMessage={sendMessage} sendReaction={sendReaction} />
+            <ChatRoom 
+              sendMessage={sendMessage} 
+              sendReaction={sendReaction} 
+            />
           </div>
         </section>
       </div>
@@ -272,9 +160,7 @@ function RoomPage() {
       {connectionStatus !== 'conectado' && (
         <div className="connection-status-banner">
           <span className="pulse"></span>
-          {connectionStatus === 'conectando'
-            ? 'Conectando...'
-            : 'Reconectando...'}
+          {connectionStatus === 'conectando' ? 'Conectando...' : 'Reconectando...'}
         </div>
       )}
     </div>

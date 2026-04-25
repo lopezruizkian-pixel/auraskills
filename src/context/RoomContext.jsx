@@ -12,6 +12,7 @@ const initialState = {
   localUser: null,
   connectionStatus: 'desconectado', // 'conectando', 'conectado', 'error'
   isLoading: false,
+  isMentorAway: false,
   error: null,
   usersTyping: [],
 };
@@ -150,6 +151,20 @@ const roomReducer = (state, action) => {
         isLoading: false,
       };
 
+    case 'SET_MENTOR_AWAY':
+      return {
+        ...state,
+        isMentorAway: action.payload,
+      };
+    
+    case 'UPDATE_PARTICIPANT_PRESENCE':
+      return {
+        ...state,
+        participants: state.participants.map(p => 
+          p.id === action.payload.userId ? { ...p, isAway: action.payload.isAway } : p
+        )
+      };
+    
     // Reset sala
     case 'RESET_ROOM':
       return initialState;
@@ -227,6 +242,14 @@ export const RoomProvider = ({ children }) => {
     dispatch({ type: 'CLEAR_REACTIONS' });
   }, []);
 
+  const updateParticipantPresence = useCallback((userId, isAway) => {
+    dispatch({ type: 'UPDATE_PARTICIPANT_PRESENCE', payload: { userId, isAway } });
+  }, []);
+
+  const setMentorAway = useCallback((isAway) => {
+    dispatch({ type: 'SET_MENTOR_AWAY', payload: isAway });
+  }, []);
+
   const setError = useCallback((error) => {
     dispatch({ type: 'SET_ERROR', payload: error });
   }, []);
@@ -251,6 +274,8 @@ export const RoomProvider = ({ children }) => {
     setUserTyping,
     removeUserTyping,
     clearReactions,
+    setMentorAway,
+    updateParticipantPresence,
     setError,
   };
 

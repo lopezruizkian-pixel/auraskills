@@ -12,8 +12,19 @@ function Notificaciones() {
   const ref = useRef(null);
 
   const handleOpen = () => {
-    setOpen(!open);
-    if (!open) setUnread(0);
+    const isOpening = !open;
+    setOpen(isOpening);
+    
+    if (isOpening && notifs.length > 0) {
+      // Al abrir, marcar todas las actuales como vistas en localStorage
+      const vistas = JSON.parse(localStorage.getItem("notifs_vistas") || "[]");
+      const nuevasVistas = [...new Set([...vistas, ...notifs.map(n => n.id)])];
+      localStorage.setItem("notifs_vistas", JSON.stringify(nuevasVistas));
+      setUnread(0);
+      
+      // Actualizar el estado local de las notificaciones para que reflejen que ya se vieron
+      setNotifs(prev => prev.map(n => ({ ...n, leida: true })));
+    }
   };
 
   const handleDismiss = (id) => {
@@ -29,7 +40,10 @@ function Notificaciones() {
       const rooms = await fetchActiveRooms();
       const activeRooms = rooms.filter(r => r.sessionInfo?.isActive);
       const descartados = JSON.parse(localStorage.getItem("notifs_descartadas") || "[]");
+      const vistas = JSON.parse(localStorage.getItem("notifs_vistas") || "[]");
+      
       activeRooms.sort((a, b) => new Date(b.sessionInfo?.startedAt || 0) - new Date(a.sessionInfo?.startedAt || 0));
+      
       const nuevas = activeRooms
         .filter(r => !descartados.includes(r.id))
         .map((r) => ({
@@ -37,11 +51,14 @@ function Notificaciones() {
           tipo: "sala",
           titulo: `Sala disponible: ${r.nombre}`,
           descripcion: `${r.mentor_nombre} está enseñando ${r.habilidad}`,
-          leida: false,
+          leida: vistas.includes(r.id),
           tiempo: "Ahora",
         }));
+
       setNotifs(nuevas);
-      setUnread(nuevas.length);
+      // El contador de unread solo cuenta las que no están ni descartadas ni vistas
+      const totalUnread = nuevas.filter(n => !vistas.includes(n.id)).length;
+      setUnread(totalUnread);
     } catch (err) {
       console.error("Error cargando notificaciones:", err);
     }
