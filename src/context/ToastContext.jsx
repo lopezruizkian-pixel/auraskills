@@ -1,51 +1,39 @@
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback } from 'react';
+import { AuraToast } from '../utils/swal';
 
 export const ToastContext = createContext();
 
 export function ToastProvider({ children }) {
-  const [toasts, setToasts] = useState([]);
-
-  const addToast = useCallback((message, type = 'info', duration = 3000) => {
-    const id = Date.now();
-    const toast = { id, message, type, duration };
-
-    setToasts((prev) => [...prev, toast]);
-
-    if (duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, duration);
-    }
-
-    return id;
+  
+  const addToast = useCallback((message, type = 'info') => {
+    AuraToast.fire({
+      icon: type,
+      title: message
+    });
   }, []);
 
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  }, []);
-
-  const success = useCallback((message, duration = 3000) => 
-    addToast(message, 'success', duration), 
+  const success = useCallback((message) => 
+    addToast(message, 'success'), 
   [addToast]);
 
-  const error = useCallback((message, duration = 5000) => 
-    addToast(message, 'error', duration), 
+  const error = useCallback((message) => 
+    addToast(message, 'error'), 
   [addToast]);
 
-  const info = useCallback((message, duration = 3000) => 
-    addToast(message, 'info', duration), 
+  const info = useCallback((message) => 
+    addToast(message, 'info'), 
   [addToast]);
 
-  const warning = useCallback((message, duration = 4000) => 
-    addToast(message, 'warning', duration), 
+  const warning = useCallback((message) => 
+    addToast(message, 'warning'), 
   [addToast]);
 
   return (
     <ToastContext.Provider
       value={{
-        toasts,
+        toasts: [], // Mantenemos el array vacÃ­o por compatibilidad si algÃºn componente lo lee
         addToast,
-        removeToast,
+        removeToast: () => {}, // No hace nada ahora
         success,
         error,
         info,

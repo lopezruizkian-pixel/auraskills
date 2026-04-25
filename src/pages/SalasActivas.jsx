@@ -7,6 +7,7 @@ import MentorCard from "../components/MentorCard";
 import GlobalHeader from "../components/GlobalHeader";
 import { Bell, User, Circle, VideoOff, PlusCircle, X, RefreshCw } from "lucide-react";
 import { fetchActiveRooms, joinRoom } from "../services/roomService";
+import { useToast } from "../hooks/useToast";
 import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/SalasActivas.css";
@@ -15,6 +16,7 @@ import "../Styles/Mentores.css";
 import { storage } from "../services/storage";
 
 function SalasActivas() {
+  const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "mentor");
   const navigate = useNavigate();
   const location = useLocation();
@@ -96,7 +98,7 @@ function SalasActivas() {
       });
       navigate(`/sala/${room.id}`);
     } catch (err) {
-      alert(err.message || "Error al unirse");
+      showError(err.message || "Error al unirse");
     } finally {
       setJoining(null);
     }
@@ -114,10 +116,11 @@ function SalasActivas() {
       }
       storage.remove("salaActiva");
       setSalaActiva(null);
+      showSuccess("Sala cerrada correctamente.");
       window.location.reload();
     } catch (err) {
       console.error("Error al cerrar la sala:", err);
-      alert("No se pudo cerrar la sala en el servidor, pero se quitó de tu vista local.");
+      showError("No se pudo cerrar en el servidor, pero se quitó de tu vista.");
       storage.remove("salaActiva");
       setSalaActiva(null);
     }

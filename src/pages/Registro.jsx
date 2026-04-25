@@ -4,8 +4,10 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import mascotaImg from "../assets/mascota.png";
 import "../Styles/Registro.css";
 import { registerUser } from "../services/authService";
+import { useToast } from "../hooks/useToast";
 
 function Registro() {
+  const { success: showSuccess, error: showError } = useToast();
   const [rol, setRol] = useState("alumno");
   const [nombre, setNombre] = useState("");
   const [usuario, setUsuario] = useState("");
@@ -19,11 +21,11 @@ function Registro() {
 
   const handleRegistro = async () => {
     if (!nombre || !usuario || !correo || !password) {
-      alert("Todos los campos son obligatorios");
+      showError("Todos los campos son obligatorios");
       return;
     }
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      showError("Las contraseñas no coinciden");
       return;
     }
     try {
@@ -38,10 +40,10 @@ function Registro() {
           : [],
       };
       await registerUser(userData);
-      alert("Registro exitoso");
+      showSuccess("¡Bienvenido a AuraSkill! Registro completado.");
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      showError(error.message);
     }
   };
 

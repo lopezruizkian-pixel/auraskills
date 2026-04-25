@@ -9,11 +9,14 @@ import { ThemeContext } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
+import { useToast } from "../hooks/useToast";
+import AuraSwal from "../utils/swal";
 import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/Configuracion.css";
 
 function Configuracion() {
+  const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
   const { theme, setTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -27,26 +30,43 @@ function Configuracion() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleChangePassword = async () => {
-    if (!passwordData.passwordActual || !passwordData.passwordNueva || !passwordData.confirmar) { alert("Completa todos los campos"); return; }
-    if (passwordData.passwordNueva !== passwordData.confirmar) { alert("Las contraseñas nuevas no coinciden"); return; }
+    if (!passwordData.passwordActual || !passwordData.passwordNueva || !passwordData.confirmar) { 
+      showError("Completa todos los campos"); 
+      return; 
+    }
+    if (passwordData.passwordNueva !== passwordData.confirmar) { 
+      showError("Las contraseñas nuevas no coinciden"); 
+      return; 
+    }
     setPasswordLoading(true);
     try {
       await httpClient.put("/auth/change-password", { passwordActual: passwordData.passwordActual, passwordNueva: passwordData.passwordNueva });
-      alert("Contraseña actualizada correctamente");
+      showSuccess("Contraseña actualizada correctamente");
       setShowPasswordModal(false);
       setPasswordData({ passwordActual: "", passwordNueva: "", confirmar: "" });
-    } catch (err) { alert(err.message || "Error al cambiar contraseña"); }
+    } catch (err) { showError(err.message || "Error al cambiar contraseña"); }
     finally { setPasswordLoading(false); }
   };
 
   const handleDeleteAccount = async () => {
-    if (!deletePassword) { alert("Ingresa tu contraseña para confirmar"); return; }
-    if (!window.confirm("¿Estás seguro? Esta acción es irreversible.")) return;
+    if (!deletePassword) { showError("Ingresa tu contraseña para confirmar"); return; }
+    
+    const result = await AuraSwal.fire({
+      title: '¿ELIMINAR CUENTA?',
+      text: "¿Estás seguro? Esta acción es irreversible.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'SÍ, ELIMINAR',
+      cancelButtonText: 'CANCELAR'
+    });
+
+    if (!result.isConfirmed) return;
     setDeleteLoading(true);
     try {
       await httpClient.delete("/auth/delete-account", { body: JSON.stringify({ password: deletePassword }), headers: { "Content-Type": "application/json" } });
-      logoutUser(); alert("Cuenta eliminada"); navigate("/login");
-    } catch (err) { alert(err.message || "Error al eliminar cuenta"); }
+      showSuccess("Cuenta eliminada correctamente");
+      logoutUser(); navigate("/login");
+    } catch (err) { showError(err.message || "Error al eliminar cuenta"); }
     finally { setDeleteLoading(false); }
   };
 

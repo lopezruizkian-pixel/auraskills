@@ -13,12 +13,15 @@ import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
 import AuraSelect from "../components/AuraSelect";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
+import AuraSwal from "../utils/swal";
+import { useToast } from "../hooks/useToast";
 import "../Styles/Home.css";
 import "../Styles/Perfil.css";
 import "../Styles/Configuracion.css";
 import "../Styles/Configuracion.css";
 
 function Perfil() {
+  const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -109,7 +112,7 @@ function Perfil() {
 
   const handleSave = async () => {
     if (!editData.nombre?.trim() || !editData.usuario?.trim()) {
-      alert("El nombre y el nombre de usuario son campos de identidad obligatorios.");
+      showError("El nombre y el nombre de usuario son obligatorios.");
       return;
     }
     
@@ -123,9 +126,9 @@ function Perfil() {
       setUserData(updated);
       storage.set("userName", updated.nombre);
       setShowEditModal(false);
-      alert("¡Perfil actualizado con éxito en la red!");
+      showSuccess("¡Perfil actualizado con éxito!");
     } catch (err) {
-      alert(err.message || "Error de red al actualizar el perfil.");
+      showError(err.message || "Error al actualizar el perfil.");
     } finally {
       setSaving(false);
     }
@@ -135,22 +138,22 @@ function Perfil() {
     const { passwordActual, passwordNueva, confirmar } = passwordData;
     
     if (!passwordActual || !passwordNueva || !confirmar) {
-      alert("Todos los campos de seguridad son obligatorios.");
+      showError("Todos los campos de seguridad son obligatorios.");
       return;
     }
     
     if (passwordNueva.length < 6) {
-      alert("La nueva contraseña debe tener al menos 6 caracteres por seguridad.");
+      showError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
 
     if (passwordActual === passwordNueva) {
-      alert("La nueva contraseña no puede ser igual a la actual. Elige una llave de acceso distinta.");
+      showError("La nueva contraseña no puede ser igual a la actual.");
       return;
     }
 
     if (passwordNueva !== confirmar) {
-      alert("La confirmación no coincide con la nueva contraseña.");
+      showError("La confirmación no coincide.");
       return;
     }
 
@@ -160,11 +163,11 @@ function Perfil() {
         passwordActual: passwordActual, 
         passwordNueva: passwordNueva 
       });
-      alert("Contraseña actualizada. Tu protocolo de seguridad está al día.");
+      showSuccess("Contraseña actualizada correctamente.");
       setShowPasswordModal(false);
       setPasswordData({ passwordActual: "", passwordNueva: "", confirmar: "" });
     } catch (err) { 
-      alert(err.message || "La contraseña actual es incorrecta o hubo un error en el servidor."); 
+      showError(err.message || "Error al actualizar contraseña."); 
     } finally { 
       setPasswordLoading(false); 
     }
@@ -172,13 +175,20 @@ function Perfil() {
 
   const handleDeleteAccount = async () => {
     if (!deletePassword) {
-      alert("Debes ingresar tu contraseña actual para confirmar la baja definitiva.");
+      showError("Ingresa tu contraseña para confirmar.");
       return;
     }
     
-    if (!window.confirm("¡ATENCIÓN! ¿Estás completamente seguro de que deseas eliminar tu cuenta? Esta acción borrará todos tus datos permanentemente.")) {
-      return;
-    }
+    const result = await AuraSwal.fire({
+      title: '¿ELIMINAR CUENTA?',
+      text: "Esta acción es definitiva y borrará todos tus datos. ¿Proceder con la baja?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'SÍ, ELIMINAR',
+      cancelButtonText: 'CANCELAR'
+    });
+
+    if (!result.isConfirmed) return;
 
     setDeleteLoading(true);
     try {
@@ -186,11 +196,11 @@ function Perfil() {
         body: JSON.stringify({ password: deletePassword }), 
         headers: { "Content-Type": "application/json" } 
       });
-      alert("Cuenta eliminada correctamente. Esperamos verte de nuevo en el futuro.");
+      showSuccess("Cuenta eliminada correctamente.");
       logoutUser();
       navigate("/login");
     } catch (err) { 
-      alert(err.message || "Contraseña incorrecta. No se pudo validar la eliminación."); 
+      showError(err.message || "Error al eliminar cuenta."); 
     } finally { 
       setDeleteLoading(false); 
     }
@@ -212,8 +222,9 @@ function Perfil() {
       const userId = storage.get("userId");
       const updatedMySkills = await fetchSkills({ mentorId: userId });
       setCreatedSkills(updatedMySkills);
+      showSuccess("Habilidades actualizadas.");
     } catch (err) {
-      alert("Error al actualizar la habilidad: " + (err.message || "Error desconocido"));
+      showError("Error al actualizar la habilidad.");
     }
   };
 

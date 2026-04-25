@@ -10,6 +10,7 @@ import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
 import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
 import { storage } from "../services/storage";
+import { useToast } from "../hooks/useToast";
 import "../Styles/Mentores.css";
 
 const iconMap = {
@@ -21,6 +22,7 @@ const iconMap = {
 };
 
 function Mentores() {
+  const { info: showInfo, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
   const navigate = useNavigate();
   const location = useLocation();
@@ -123,7 +125,7 @@ function Mentores() {
     try {
       const roomDetails = await fetchRoom(room.id);
       if (!roomDetails.sessionInfo?.isActive) {
-        alert("El mentor aún no ha ingresado a esta sala.");
+        showInfo("El mentor aún no ha ingresado a la sala.");
         setJoining(null);
         return;
       }
@@ -146,7 +148,7 @@ function Mentores() {
 
       navigate(`/sala/${room.id}`);
     } catch (err) {
-      alert("Error al intentar unirte a la sala: " + (err.message || "Error desconocido"));
+      showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
     } finally {
       setJoining(null);
     }

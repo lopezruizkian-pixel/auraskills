@@ -10,9 +10,11 @@ import SkillTag from "./SkillTag";
 import Sidebar from "./Sidebar";
 import { Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
 import { storage } from "../services/storage";
+import { useToast } from "../hooks/useToast";
 import "../Styles/Mentores.css";
 
 function HomeAprendiz() {
+  const { info: showInfo, error: showError } = useToast();
   const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
   const [filtered, setFiltered] = useState([]);
@@ -175,7 +177,7 @@ function HomeAprendiz() {
 
       if (!roomDetails.sessionInfo?.isActive) {
         console.log(`[DEBUG] Bloqueado: sessionInfo.isActive es falso o indefinido.`);
-        alert("El mentor aun no ha ingresado a esta sala.");
+        showInfo("El mentor aún no ha ingresado a la sala.");
         setJoining(null);
         return;
       }
@@ -210,7 +212,7 @@ function HomeAprendiz() {
       navigate(`/sala/${room.id}`);
     } catch (err) {
       console.error("[DEBUG] Error general en handleJoin:", err);
-      alert("Error al intentar unirte a la sala: " + (err.message || "Error desconocido"));
+      showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
     } finally {
       console.log(`[DEBUG] handleJoin finalizado. Restableciendo estado joining.`);
       setJoining(null);

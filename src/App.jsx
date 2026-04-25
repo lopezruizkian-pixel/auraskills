@@ -3,7 +3,6 @@ import { ToastProvider } from './context/ToastContext';
 import { RoomProvider } from './context/RoomContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import ToastContainer from './components/ToastContainer';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Registro from './pages/Registro';
@@ -20,7 +19,6 @@ function App() {
   return (
     <ThemeProvider>
       <ToastProvider>
-        <ToastContainer />
         <Router>
           <RoomProvider>
             <Routes>
