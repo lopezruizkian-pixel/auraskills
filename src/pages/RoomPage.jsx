@@ -112,7 +112,7 @@ function RoomPage() {
       message: '¿Deseas salir al inicio? La sala seguirá activa para los alumnos.',
       confirmText: 'SÍ, SALIR',
       cancelText: 'CANCELAR',
-      type: 'danger',
+      type: 'warning',
       onConfirm: () => {
         leaveCurrentRoom();
         storage.remove('salaActiva');

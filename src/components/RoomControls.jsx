@@ -29,7 +29,7 @@ function RoomControls() {
       message: 'Se cerrará tu conexión actual. ¿Deseas volver al inicio?',
       confirmText: 'SÍ, SALIR',
       cancelText: 'CANCELAR',
-      type: 'danger',
+      type: 'warning',
       onConfirm: () => {
         console.log('Cerrando sesión');
         window.location.href = '/home';
