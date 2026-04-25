@@ -387,6 +387,9 @@
   font-size: 0.88rem !important;
   color: #9aa6d1;
   line-height: 1.5;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .session-stage-stats-vertical {
@@ -479,6 +482,9 @@
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 /* ---- Status Mini Cards ---- */
@@ -562,6 +568,9 @@
   color: #97a6d3;
   line-height: 1.6;
   font-size: 0.92rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .session-sidebar-badge {
