@@ -247,23 +247,27 @@ body .swal2-container.swal2-top-end .aura-toast-popup {
   max-width: 350px !important;
 }
 
-/* Bordes laterales por tipo */
+/* Bordes y Fondos por tipo */
 body .swal2-popup.swal2-toast.swal2-icon-success {
-  border-left: 4px solid #00ffff !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 255, 255, 0.15) !important;
+  background: rgba(0, 30, 30, 0.9) !important; /* Tinte cian */
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 255, 0.1) !important;
 }
 
 body .swal2-popup.swal2-toast.swal2-icon-error {
-  border-left: 4px solid #ff0055 !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 0, 85, 0.15) !important;
+  background: rgba(40, 0, 10, 0.9) !important; /* Tinte rojo/magenta */
+  border: 1px solid rgba(255, 0, 85, 0.3) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 0, 85, 0.1) !important;
 }
 
 body .swal2-popup.swal2-toast.swal2-icon-warning {
-  border-left: 4px solid #ffaa00 !important;
+  background: rgba(40, 25, 0, 0.9) !important; /* Tinte ámbar */
+  border: 1px solid rgba(255, 170, 0, 0.3) !important;
 }
 
 body .swal2-popup.swal2-toast.swal2-icon-info {
-  border-left: 4px solid #7000ff !important;
+  background: rgba(15, 0, 40, 0.9) !important; /* Tinte púrpura */
+  border: 1px solid rgba(112, 0, 255, 0.3) !important;
 }
 
 /* Estilo del texto en Toasts */
