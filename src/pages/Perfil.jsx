@@ -65,7 +65,17 @@ function Perfil() {
       if (rol !== "mentor") {
         try {
           const { getUserRoomHistory } = await import("../services/roomService");
-          const history = await getUserRoomHistory();
+          const backendHistory = await getUserRoomHistory();
+          const localHistory = storage.get("historialSalas") || [];
+          const myId = storage.get("userId");
+          
+          // Unificar historial (Backend + Local)
+          const backendIds = new Set(backendHistory.map(s => s.id));
+          const history = [
+            ...backendHistory,
+            ...localHistory.filter(s => !backendIds.has(s.id))
+          ];
+
           // Función para normalizar texto (quitar acentos)
           const normalize = (str) => 
             (str || "").toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -75,9 +85,12 @@ function Perfil() {
             // 1. Solo donde fui alumno
             if (s.mentor_id === myId) return false;
 
-            // 2. Duraron más de 1 minuto
+            // 2. Duraron más de 1 minuto (O son de la sesión actual que acaba de terminar)
             const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
-            if (dur <= 60) return false;
+            
+            // Si no tiene duración pero es de hoy, le damos el beneficio de la duda para que aparezca
+            const isToday = !s.fecha || new Date(s.fecha).toDateString() === new Date().toDateString();
+            if (dur <= 60 && !isToday) return false;
 
             // 3. Filtra nombres basura (placeholder/defaults)
             const name = normalize(s.titulo || s.nombre || s.room_name);
