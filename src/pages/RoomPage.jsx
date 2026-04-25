@@ -9,6 +9,7 @@ import ChatRoom from '../components/ChatRoom';
 import ParticipantsList from '../components/ParticipantsList';
 import ReactionsContainer from '../components/ReactionsContainer';
 import { storage } from "../services/storage";
+import AuraSwal from "../utils/swal";
 import '../Styles/RoomPage.css';
 
 const formatSessionStart = (sessionInfo) => {
@@ -75,6 +76,20 @@ function RoomPage() {
 
   const handleLeaveSession = async () => {
     if (isLeaving) return;
+
+    const result = await AuraSwal.fire({
+      title: isMentor ? '¿FINALIZAR MENTORÍA?' : '¿SALIR DE LA SALA?',
+      text: isMentor 
+        ? "Esta acción cerrará la sala para todos los participantes." 
+        : "¿Estás seguro que deseas abandonar la sesión?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: isMentor ? 'SÍ, FINALIZAR' : 'SÍ, SALIR',
+      cancelButtonText: 'CANCELAR'
+    });
+
+    if (!result.isConfirmed) return;
+
     setIsLeaving(true);
     try {
       if (isMentor) {
@@ -93,10 +108,21 @@ function RoomPage() {
   };
 
 
-  const handleBack = () => {
-    leaveCurrentRoom();
-    storage.remove('salaActiva');
-    navigate('/home', { replace: true });
+  const handleBack = async () => {
+    const result = await AuraSwal.fire({
+      title: '¿SALIR TEMPORALMENTE?',
+      text: "¿Deseas salir al inicio? La sala seguirá activa para los alumnos.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'SÍ, SALIR',
+      cancelButtonText: 'CANCELAR'
+    });
+
+    if (result.isConfirmed) {
+      leaveCurrentRoom();
+      storage.remove('salaActiva');
+      navigate('/home', { replace: true });
+    }
   };
 
   if (roomLoading) {

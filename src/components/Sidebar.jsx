@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import AuraSwal from "../utils/swal";
 import "../Styles/Sidebar.css";
 
 function Sidebar({ rol }) {
@@ -31,8 +32,19 @@ function Sidebar({ rol }) {
 
   const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    const result = await AuraSwal.fire({
+      title: '¿CERRAR SESIÓN?',
+      text: "¿Estás seguro que deseas salir de AuraSkill?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'SÍ, SALIR',
+      cancelButtonText: 'CANCELAR'
+    });
+
+    if (result.isConfirmed) {
+      logout();
+    }
   };
 
   const isActive = (path) => location.pathname === path;
