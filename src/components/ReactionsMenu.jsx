@@ -30,18 +30,15 @@ const REACTIONS = [
   },
 ];
 
-function ReactionsMenu({ onReactionSelect, isOpen, setIsOpen }) {
+function ReactionsMenu({ onSelect }) {
   return (
-    <div className={`reactions-menu ${isOpen ? 'open' : ''}`}>
+    <div className="reactions-menu open">
       <div className="reactions-menu-content">
         {REACTIONS.map((reaction) => (
           <button
             key={reaction.id}
             className="reaction-btn"
-            onClick={() => {
-              onReactionSelect(reaction.url);
-              setIsOpen(false);
-            }}
+            onClick={() => onSelect(reaction.url)}
             title={reaction.name}
             aria-label={reaction.name}
           >
