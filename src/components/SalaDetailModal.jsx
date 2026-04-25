@@ -67,8 +67,6 @@ const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
                 </p>
               </div>
             </div>
-
-            </div>
           </div>
         </div>
 
