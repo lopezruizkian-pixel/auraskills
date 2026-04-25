@@ -92,8 +92,8 @@ function HomeAprendiz() {
         fetchActiveRooms()
       ]);
       
-      // FILTRO: Solo salas donde el mentor ya esté dentro
-      const liveRooms = activeRoomsData.filter(r => r.sessionInfo?.isActive);
+      // Salas en vivo (todas las abiertas en el servidor)
+      const liveRooms = activeRoomsData;
       // ORDENAR: Más recientes primero
       liveRooms.sort((a, b) => new Date(b.sessionInfo?.startedAt || 0) - new Date(a.sessionInfo?.startedAt || 0));
       

@@ -43,10 +43,10 @@ function Mentores() {
   const load = async () => {
     try {
       const data = await fetchActiveRooms();
-      // FILTRO: Solo salas donde el mentor ya esté dentro
-      const activeRooms = data.filter(r => r.sessionInfo?.isActive);
-      setRooms(activeRooms);
-      setFiltered(activeRooms);
+      // Permitimos ver salas abiertas aunque el mentor esté momentáneamente fuera
+      // La API de /rooms ya filtra las que están cerradas definitivamente
+      setRooms(data);
+      setFiltered(data);
     } catch (err) {
       console.error("Error cargando mentores:", err);
     } finally {
@@ -125,10 +125,17 @@ function Mentores() {
     setJoining(room.id);
     try {
       const roomDetails = await fetchRoom(room.id);
-      if (!roomDetails.sessionInfo?.isActive) {
-        showInfo("El mentor aún no ha ingresado a la sala.");
+      
+      // Si la sesión nunca ha empezado, el mentor no está listo
+      if (!roomDetails.sessionInfo?.startedAt) {
+        showInfo("El mentor aún no ha iniciado esta sesión.");
         setJoining(null);
         return;
+      }
+
+      // Si ha empezado pero el mentor no está dentro físicamente
+      if (!roomDetails.sessionInfo?.isActive) {
+        showInfo("El mentor se ha ausentado un momento, pero puedes pasar a la sala.");
       }
 
       // Enviamos el objeto room completo para asegurar sincronización de nombres
