@@ -51,14 +51,11 @@ function Login() {
       const data = await loginUser(correo, password);
 
       // Guardar datos del usuario usando el hook
-      if (data.token) {
-        setAuthUser({
-          token: data.token,
-          userId: data.user?.id,
-          userName: data.user?.nombre,
-          userRole: data.user?.rol
-        });
-      }
+      setAuthUser({
+        userId: data.user?.id,
+        userName: data.user?.nombre,
+        userRole: data.user?.rol
+      });
 
       showSuccess("¡Sesión iniciada correctamente!");
       setTimeout(() => navigate("/home"), 500);

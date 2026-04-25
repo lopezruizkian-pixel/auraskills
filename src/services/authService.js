@@ -40,6 +40,12 @@ export const validateToken = async () => {
   }
 };
 
-export const logoutUser = () => {
-  storage.clear();
+export const logoutUser = async () => {
+  try {
+    await httpClient.post('/auth/logout');
+  } catch (err) {
+    console.error('Error al notificar logout al servidor:', err);
+  } finally {
+    storage.clear();
+  }
 };

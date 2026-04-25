@@ -15,7 +15,47 @@ import Configuracion from './pages/Configuracion';
 import Perfil from './pages/Perfil';
 import Unauthorized from './pages/Unauthorized';
 
+import { useEffect, useState } from 'react';
+import { validateToken } from './services/authService';
+import { useAuth } from './hooks/useAuth';
+
 function App() {
+  const { setAuthUser, logout } = useAuth();
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const user = await validateToken();
+        if (user) {
+          setAuthUser({
+            userId: user.id,
+            userName: user.nombre,
+            userRole: user.rol
+          });
+        } else {
+          // Si no hay perfil válido, aseguramos limpieza local
+          logout();
+        }
+      } catch (err) {
+        console.error("Error validando sesión inicial:", err);
+        logout();
+      } finally {
+        setIsChecking(false);
+      }
+    };
+    initAuth();
+  }, [setAuthUser, logout]);
+
+  if (isChecking) {
+    return (
+      <div className="loading-global-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#020205' }}>
+        <div className="aura-spinner"></div>
+        <p className="loading-text-neon" style={{ marginTop: '1.5rem', fontSize: '1.2rem' }}>Iniciando AuraSkill...</p>
+      </div>
+    );
+  }
+
   return (
     <ToastProvider>
       <Router>

@@ -15,20 +15,11 @@ class HttpClient {
   }
 
   /**
-   * Obtiene el token de forma dinámica del almacenamiento
-   */
-  getAuthHeader() {
-    const token = storage.get('token');
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
-  }
-
-  /**
-   * Construye headers con autenticación
+   * Construye headers básicos
    */
   buildHeaders(customHeaders = {}) {
     return {
       'Content-Type': 'application/json',
-      ...this.getAuthHeader(),
       ...customHeaders,
     };
   }
@@ -90,6 +81,7 @@ class HttpClient {
       const response = await fetch(url, {
         ...config,
         headers,
+        credentials: 'include', // <--- Envía cookies automáticamente
       });
 
       if (!response.ok) {

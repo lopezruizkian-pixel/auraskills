@@ -9,16 +9,18 @@ export const useAuth = () => {
   const navigate = useNavigate();
 
   const isAuthenticated = useCallback(() => {
-    return !!storage.get('token');
+    return !!storage.get('userId');
   }, []);
 
-  const getUser = useCallback(() => {
     return {
       userId: storage.get('userId'),
       userName: storage.get('userName'),
       userRole: storage.get('userRole'),
-      token: storage.get('token'),
     };
+  }, []);
+
+  const checkSession = useCallback(() => {
+    return !!storage.get('userId');
   }, []);
 
   const logout = useCallback(() => {
@@ -27,9 +29,6 @@ export const useAuth = () => {
   }, [navigate]);
 
   const setAuthUser = useCallback((userData) => {
-    if (userData.token) {
-      storage.set('token', userData.token);
-    }
     if (userData.userId) {
       storage.set('userId', userData.userId);
     }
@@ -44,6 +43,7 @@ export const useAuth = () => {
   return {
     isAuthenticated: isAuthenticated(),
     getUser,
+    checkSession,
     logout,
     setAuthUser,
   };
