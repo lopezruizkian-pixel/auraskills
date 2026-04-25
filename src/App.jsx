@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ToastProvider } from './context/ToastContext';
 import { RoomProvider } from './context/RoomContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ConfirmProvider } from './context/ConfirmContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -20,7 +21,8 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
         <Router>
-          <RoomProvider>
+          <ConfirmProvider>
+            <RoomProvider>
             <Routes>
               {/* Rutas públicas */}
               <Route path="/" element={<Landing />} />
@@ -94,6 +96,7 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </RoomProvider>
+        </ConfirmProvider>
         </Router>
       </ToastProvider>
     </ThemeProvider>

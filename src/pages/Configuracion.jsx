@@ -10,12 +10,13 @@ import { httpClient } from "../services/httpClient";
 import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
 import { useToast } from "../hooks/useToast";
-import AuraSwal from "../utils/swal";
+import { useConfirm } from "../context/ConfirmContext";
 import "../Styles/Home.css";
 import "../Styles/BuscarHabilidades.css";
 import "../Styles/Configuracion.css";
 
 function Configuracion() {
+  const { askConfirmation } = useConfirm();
   const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
   const { theme, setTheme } = useContext(ThemeContext);
@@ -51,23 +52,29 @@ function Configuracion() {
   const handleDeleteAccount = async () => {
     if (!deletePassword) { showError("Ingresa tu contraseña para confirmar"); return; }
     
-    const result = await AuraSwal.fire({
+    askConfirmation({
       title: '¿ELIMINAR CUENTA?',
-      text: "¿Estás seguro? Esta acción es irreversible.",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'SÍ, ELIMINAR',
-      cancelButtonText: 'CANCELAR'
+      message: '¿Estás seguro? Esta acción es irreversible.',
+      confirmText: 'SÍ, ELIMINAR',
+      cancelText: 'CANCELAR',
+      type: 'danger',
+      onConfirm: async () => {
+        setDeleteLoading(true);
+        try {
+          await httpClient.delete("/auth/delete-account", { 
+            body: JSON.stringify({ password: deletePassword }), 
+            headers: { "Content-Type": "application/json" } 
+          });
+          showSuccess("Cuenta eliminada correctamente");
+          logoutUser(); 
+          navigate("/login");
+        } catch (err) { 
+          showError(err.message || "Error al eliminar cuenta"); 
+        } finally { 
+          setDeleteLoading(false); 
+        }
+      }
     });
-
-    if (!result.isConfirmed) return;
-    setDeleteLoading(true);
-    try {
-      await httpClient.delete("/auth/delete-account", { body: JSON.stringify({ password: deletePassword }), headers: { "Content-Type": "application/json" } });
-      showSuccess("Cuenta eliminada correctamente");
-      logoutUser(); navigate("/login");
-    } catch (err) { showError(err.message || "Error al eliminar cuenta"); }
-    finally { setDeleteLoading(false); }
   };
 
   const inputStyle = { background:"#1a1a2e", border:"1px solid #333", borderRadius:"8px", padding:"0.7rem 2.8rem 0.7rem 1rem", color:"#fff", width:"100%", fontSize:"0.95rem", boxSizing:"border-box" };

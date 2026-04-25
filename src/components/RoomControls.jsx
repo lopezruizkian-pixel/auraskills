@@ -8,7 +8,7 @@ import {
   Monitor,
   Phone,
 } from 'lucide-react';
-import AuraSwal from '../utils/swal';
+import { useConfirm } from '../context/ConfirmContext';
 import '../Styles/RoomComponents.css';
 
 function RoomControls() {
@@ -21,20 +21,20 @@ function RoomControls() {
     toggleScreenShare,
   } = useContext(RoomContext);
 
-  const handleEndSession = async () => {
-    const result = await AuraSwal.fire({
-      title: '¿SALIR DE LA SALA?',
-      text: "Se cerrará tu conexión actual. ¿Deseas volver al inicio?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'SÍ, SALIR',
-      cancelButtonText: 'CANCELAR'
-    });
+  const { askConfirmation } = useConfirm();
 
-    if (result.isConfirmed) {
-      console.log('Cerrando sesión');
-      window.location.href = '/home';
-    }
+  const handleEndSession = () => {
+    askConfirmation({
+      title: '¿SALIR DE LA SALA?',
+      message: 'Se cerrará tu conexión actual. ¿Deseas volver al inicio?',
+      confirmText: 'SÍ, SALIR',
+      cancelText: 'CANCELAR',
+      type: 'danger',
+      onConfirm: () => {
+        console.log('Cerrando sesión');
+        window.location.href = '/home';
+      }
+    });
   };
 
   return (

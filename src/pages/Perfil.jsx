@@ -13,7 +13,7 @@ import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
 import AuraSelect from "../components/AuraSelect";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
-import AuraSwal from "../utils/swal";
+import { useConfirm } from "../context/ConfirmContext";
 import { useToast } from "../hooks/useToast";
 import "../Styles/Home.css";
 import "../Styles/Perfil.css";
@@ -21,6 +21,7 @@ import "../Styles/Configuracion.css";
 import "../Styles/Configuracion.css";
 
 function Perfil() {
+  const { askConfirmation } = useConfirm();
   const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
   const [userData, setUserData] = useState(null);
@@ -179,31 +180,29 @@ function Perfil() {
       return;
     }
     
-    const result = await AuraSwal.fire({
+    askConfirmation({
       title: '¿ELIMINAR CUENTA?',
-      text: "Esta acción es definitiva y borrará todos tus datos. ¿Proceder con la baja?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'SÍ, ELIMINAR',
-      cancelButtonText: 'CANCELAR'
+      message: 'Esta acción es definitiva y borrará todos tus datos. ¿Proceder con la baja?',
+      confirmText: 'SÍ, ELIMINAR',
+      cancelText: 'CANCELAR',
+      type: 'danger',
+      onConfirm: async () => {
+        setDeleteLoading(true);
+        try {
+          await httpClient.delete("/auth/delete-account", { 
+            body: JSON.stringify({ password: deletePassword }), 
+            headers: { "Content-Type": "application/json" } 
+          });
+          showSuccess("Cuenta eliminada correctamente.");
+          logoutUser();
+          navigate("/login");
+        } catch (err) { 
+          showError(err.message || "Error al eliminar cuenta."); 
+        } finally { 
+          setDeleteLoading(false); 
+        }
+      }
     });
-
-    if (!result.isConfirmed) return;
-
-    setDeleteLoading(true);
-    try {
-      await httpClient.delete("/auth/delete-account", { 
-        body: JSON.stringify({ password: deletePassword }), 
-        headers: { "Content-Type": "application/json" } 
-      });
-      showSuccess("Cuenta eliminada correctamente.");
-      logoutUser();
-      navigate("/login");
-    } catch (err) { 
-      showError(err.message || "Error al eliminar cuenta."); 
-    } finally { 
-      setDeleteLoading(false); 
-    }
   };
 
   const handleToggleSkill = async (skillId) => {

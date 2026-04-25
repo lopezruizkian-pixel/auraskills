@@ -13,10 +13,11 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import AuraSwal from "../utils/swal";
+import { useConfirm } from "../context/ConfirmContext";
 import "../Styles/Sidebar.css";
 
 function Sidebar({ rol }) {
+  const { askConfirmation } = useConfirm();
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -32,23 +33,15 @@ function Sidebar({ rol }) {
 
   const { logout } = useAuth();
 
-  const handleLogout = async () => {
-    const result = await AuraSwal.fire({
+  const handleLogout = () => {
+    askConfirmation({
       title: '¿CERRAR SESIÓN?',
-      text: "¿Estás seguro que deseas salir de AuraSkill?",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'SÍ, SALIR',
-      cancelButtonText: 'CANCELAR',
-      customClass: {
-        confirmButton: 'aura-swal-confirm aura-swal-confirm-danger',
-        cancelButton: 'aura-swal-cancel'
-      }
+      message: '¿Estás seguro que deseas salir de AuraSkill?',
+      confirmText: 'SÍ, SALIR',
+      cancelText: 'CANCELAR',
+      type: 'logout',
+      onConfirm: () => logout(),
     });
-
-    if (result.isConfirmed) {
-      logout();
-    }
   };
 
   const isActive = (path) => location.pathname === path;
