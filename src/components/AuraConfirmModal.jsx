@@ -56,14 +56,6 @@ const AuraConfirmModal = ({
         <div className='aura-modal-actions' style={{ gap: '1rem' }}>
           <button 
             type='button' 
-            className='aura-modal-btn aura-btn-cancel' 
-            onClick={onClose}
-            style={{ flex: 1 }}
-          >
-            {cancelText}
-          </button>
-          <button 
-            type='button' 
             className='aura-modal-btn aura-btn-confirm' 
             style={{ 
               flex: 1,
@@ -76,6 +68,14 @@ const AuraConfirmModal = ({
             onClick={onConfirm}
           >
             {confirmText}
+          </button>
+          <button 
+            type='button' 
+            className='aura-modal-btn aura-btn-cancel' 
+            onClick={onClose}
+            style={{ flex: 1 }}
+          >
+            {cancelText}
           </button>
         </div>
       </div>
