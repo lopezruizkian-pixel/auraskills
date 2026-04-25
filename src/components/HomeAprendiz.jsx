@@ -99,7 +99,12 @@ function HomeAprendiz() {
       setFiltered(liveRooms);
 
       const userId = storage.get("userId");
-      const myStudySessions = history.filter(s => s.mentor_id !== userId);
+      const myStudySessions = history.filter(s => {
+        // Solo sesiones donde soy alumno Y duraron más de 1 minuto
+        const isNotMentor = s.mentor_id !== userId;
+        const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
+        return isNotMentor && dur > 60;
+      });
       
       // ORDENAR historial: Más reciente arriba
       myStudySessions.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
