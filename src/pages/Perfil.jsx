@@ -430,12 +430,6 @@ function Perfil() {
               {/* COLUMNA DERECHA: Configuración y Seguridad */}
               <div className="perfil-side-col">
                 
-                {/* Preferencias */}
-                <div className="neon-card config-list-container pref-card">
-                  <h3 className="section-subtitle-neon" style={{ margin: 0 }}>
-                    <Settings size={20} className="section-icon" /> Preferencias
-                  </h3>
-                </div>
 
                 {/* Seguridad */}
                 <div className="neon-card config-list-container sec-card">
