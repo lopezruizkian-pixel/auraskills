@@ -296,10 +296,12 @@ function Perfil() {
               <div className="perfil-info">
                 <div className="perfil-title-row">
                   <h1 className="perfil-nombre">{userData.nombre}</h1>
-                  <span className={`perfil-rol-badge ${rol}`}>{rol === "mentor" ? "Mentor" : "Aprendiz"}</span>
+                  <span className={`perfil-rol-badge ${rol}`}>
+                    {rol === "mentor" ? "Mentor" : "Aprendiz"}
+                  </span>
                 </div>
                 <h3 className="perfil-usuario">@{userData.usuario}</h3>
-                <p className="perfil-bio" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", marginTop: "4px" }}>{userData.correo}</p>
+                <p className="perfil-email">{userData.correo}</p>
               </div>
               <div className="perfil-actions">
                 <button className="primary-btn-neon-s edit-btn" onClick={() => setShowEditModal(true)}>

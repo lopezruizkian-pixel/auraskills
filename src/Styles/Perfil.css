@@ -25,10 +25,68 @@
   object-fit: cover;
 }
 
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.perfil-title-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 2px;
+}
+
+.perfil-nombre {
+  margin: 0 !important;
+  font-size: 2.2rem !important;
+  font-weight: 800 !important;
+  color: white !important;
+  letter-spacing: -0.5px !important;
+}
+
+.perfil-rol-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.perfil-rol-badge.mentor {
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+}
+
+.perfil-rol-badge.alumno {
+  background: rgba(255, 0, 255, 0.1);
+  color: #ff00ff;
+  border: 1px solid rgba(255, 0, 255, 0.3);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.1);
+}
+
+.perfil-usuario {
+  margin: 0 !important;
+  font-size: 1.1rem !important;
+  color: #00ffff !important;
+  font-weight: 600 !important;
+  opacity: 0.9 !important;
+}
+
+.perfil-email {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .perfil-actions {
   position: absolute;
-  top: 25px;
-  right: 25px;
+  top: 30px;
+  right: 40px;
   z-index: 10;
 }
 
