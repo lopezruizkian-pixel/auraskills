@@ -6,23 +6,36 @@ import { httpClient } from './httpClient';
  */
 
 const normalizeRoom = (room) => {
-  if (!room) {
-    return room;
-  }
+  if (!room) return room;
 
+  // NormalizaciÃ³n de Habilidad
   const normalizedSkill =
     (typeof room.habilidad === 'object' && room.habilidad?.nombre) ||
     room.habilidad_nombre ||
     room.skill_name ||
     room.skillName ||
     room.skill?.nombre ||
-    room.habilidad;
+    room.habilidad ||
+    'General';
+
+  // NormalizaciÃ³n de Nombre/TÃ­tulo de la Sala
+  const normalizedTitle = 
+    room.titulo || 
+    room.nombre || 
+    room.room_name || 
+    room.nombreSala || 
+    'Sala de mentorÃ­a';
 
   return {
     ...room,
     id: room.id || room._id,
     _id: room._id || room.id,
+    titulo: normalizedTitle,
+    nombre: normalizedTitle,
+    room_name: normalizedTitle,
+    nombreSala: normalizedTitle,
     habilidad: normalizedSkill,
+    skill_name: normalizedSkill,
     capacidad_maxima: room.capacidad_maxima ?? room.limiteEstudiantes ?? 10,
     limiteEstudiantes: room.limiteEstudiantes ?? room.capacidad_maxima ?? 10,
   };

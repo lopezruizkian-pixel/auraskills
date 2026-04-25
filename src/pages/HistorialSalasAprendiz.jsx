@@ -104,11 +104,11 @@ function HistorialSalasAprendiz() {
 
   const filteredHistory = useMemo(() => {
     let result = history.filter((item) => {
-      const name = (item.habilidad || item.room_name || item.nombreSala || "").toLowerCase();
+      const name = (item.titulo || item.nombre || item.room_name || "").toLowerCase();
       const mentor = (item.mentor_name || item.mentor || "").toLowerCase();
       const matchesSearch = name.includes(searchTerm.toLowerCase()) || mentor.includes(searchTerm.toLowerCase());
       const matchesSkill = filterSkill === "Todas" || 
-        (item.habilidad || item.skill_name || item.habilidad_nombre || item.skill?.nombre || item.room_name || item.nombreSala) === filterSkill;
+        (item.habilidad || item.skill_name) === filterSkill;
 
       return matchesSearch && matchesSkill;
     });
@@ -132,20 +132,13 @@ function HistorialSalasAprendiz() {
     if (filteredHistory.length === 0) return [{ id: "empty-row", fecha: "Sin coincidencias", habilidad: "", mentor: "", duracion: "" }];
     
     return filteredHistory.map((item) => {
-      // Normalización inteligente del nombre de la habilidad
-      const displaySkill = 
-        item.habilidad || 
-        item.skill_name || 
-        item.habilidad_nombre || 
-        item.skill?.nombre || 
-        item.nombreSala || 
-        item.room_name || 
-        "—";
+      // Usar normalización estándar
+      const displaySkill = item.habilidad || "General";
 
       return {
         id: item.id,
         fecha: formatDate(item.started_at || item.startedAt || item.fecha),
-        sala: item.room_name || item.nombreSala || "—",
+        sala: item.titulo || item.nombre || item.room_name || "—",
         habilidad: displaySkill,
         mentor: item.mentor_name || item.mentor || "—",
         duracion: formatDuration(item.duration_seconds ?? item.duracionSegundos ?? item.duracion ?? 0),

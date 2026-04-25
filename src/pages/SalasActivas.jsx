@@ -86,7 +86,8 @@ function SalasActivas() {
   const handleJoin = async (room) => {
     setJoining(room.id);
     try {
-      try { await joinRoom(room.id); } catch (err) {
+      // Enviamos el objeto room completo para asegurar sincronización de nombres
+      try { await joinRoom(room.id, room); } catch (err) {
         if (!err.message?.includes("Ya estás en esta sala")) throw err;
       }
       storage.set("salaActiva", {
