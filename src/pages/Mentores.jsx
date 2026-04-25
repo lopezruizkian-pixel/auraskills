@@ -163,7 +163,7 @@ function Mentores() {
 
           <div className="search-container-neon search-extended">
             <Search className="search-icon" size={20} />
-            <input type="text" placeholder="¿Qué quieres aprender hoy? Busca una sala o mentor..." className="search-input-neon"
+            <input type="text" placeholder="Buscar sala o mentor..." className="search-input-neon"
               value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
 
