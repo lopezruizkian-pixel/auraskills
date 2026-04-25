@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { RoomProvider } from './context/RoomContext';
 import { ConfirmProvider } from './context/ConfirmContext';
@@ -34,7 +34,6 @@ function App() {
             userRole: user.rol
           });
         } else {
-          // Si no hay perfil válido, aseguramos limpieza local
           logout();
         }
       } catch (err) {
@@ -58,16 +57,13 @@ function App() {
 
   return (
     <ToastProvider>
-      <Router>
-        <ConfirmProvider>
-          <RoomProvider>
+      <ConfirmProvider>
+        <RoomProvider>
           <Routes>
-            {/* Rutas públicas */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
 
-            {/* Rutas protegidas - Requieren autenticación */}
             <Route 
               path="/home" 
               element={
@@ -76,7 +72,6 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-
 
             <Route 
               path="/mentores" 
@@ -129,15 +124,12 @@ function App() {
             />
 
             <Route path="/unauthorized" element={<Unauthorized />} />
-
-            {/* Ruta por defecto para rutas no encontradas */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </RoomProvider>
       </ConfirmProvider>
-      </Router>
     </ToastProvider>
   );
 }
 
-export default App;
+export default App;
