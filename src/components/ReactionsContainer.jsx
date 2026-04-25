@@ -36,9 +36,10 @@ function ReactionsContainer() {
           style={{
             left: `${Math.random() * 80 + 10}%`,
             animationDelay: `${index * 0.1}s`,
+            '--float-duration': `${2.5 + Math.random() * 1.5}s`
           }}
         >
-          <span className="reaction-emoji">{reaction.emoji}</span>
+          <img src={reaction.emoji} alt="reaction" className="reaction-emoji-img" />
           <p className="reaction-user">{reaction.userName}</p>
         </div>
       ))}
