@@ -5,7 +5,7 @@ import MentorCard from "../components/MentorCard";
 import GlobalHeader from "../components/GlobalHeader";
 import SalaDetailModal from "../components/SalaDetailModal";
 import SkillTag from "../components/SkillTag";
-import { Search, Users, BookOpen, Server, Database, Terminal, Layout, Layers, ChevronRight } from "lucide-react";
+import { Search, Users, BookOpen, Server, Database, Terminal, Layout, Layers, ChevronRight, X } from "lucide-react";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
 import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
@@ -184,37 +184,42 @@ function Mentores() {
             </div>
 
             {activeCategory && (
-              <div className="skills-explorer-panel neon-card" style={{ marginTop: "1rem", padding: "1.5rem", borderStyle: "dashed" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                  <h4 style={{ margin: 0, color: "#00ffff", display: "flex", alignItems: "center", gap: "8px" }}>
-                    Especialidades en {activeCategory}
-                    <ChevronRight size={16} />
-                  </h4>
+              <div className="skills-explorer-panel neon-card-full">
+                <div className="skills-panel-header">
+                  <div className="skills-panel-title-group">
+                    <span className="skills-panel-subtitle">CATÁLOGO DE</span>
+                    <h4 className="skills-panel-title">
+                      {activeCategory}
+                    </h4>
+                  </div>
                   <button 
+                    className="skills-panel-close-btn"
                     onClick={() => { setActiveCategory(null); setSkillsInCategory([]); }}
-                    style={{ background: "transparent", border: "none", color: "#aaa", cursor: "pointer", fontSize: "0.8rem" }}
                   >
-                    Cerrar
+                    <X size={16} />
+                    <span>Cerrar explorador</span>
                   </button>
                 </div>
                 
-                {loadingSkills ? (
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <div className="aura-spinner-mini"></div>
-                    <span style={{ fontSize: "0.85rem", color: "#aaa" }}>Cargando catálogo...</span>
-                  </div>
-                ) : (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                    {skillsInCategory.map((skill) => (
-                      <SkillTag 
-                        key={skill.id || skill._id} 
-                        nombre={skill.nombre} 
-                        color="#00ffff" 
-                        onClick={setSearch}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div className="skills-panel-content">
+                  {loadingSkills ? (
+                    <div className="skills-loading-container">
+                      <div className="aura-spinner-mini"></div>
+                      <span>Sincronizando catálogo...</span>
+                    </div>
+                  ) : (
+                    <div className="skills-grid-adaptive">
+                      {skillsInCategory.map((skill) => (
+                        <SkillTag 
+                          key={skill.id || skill._id} 
+                          nombre={skill.nombre} 
+                          color="#00ffff" 
+                          onClick={() => setSearch(skill.nombre)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
