@@ -3,6 +3,15 @@ import { RoomContext } from '../context/RoomContext';
 import { createPortal } from 'react-dom';
 import '../Styles/RoomComponents.css';
 
+const EMOJI_MAP = {
+  heart: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Red%20heart/3D/red_heart_3d.png',
+  like: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Thumbs%20up/Default/3D/thumbs_up_3d_default.png',
+  laugh: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Face%20with%20tears%20of%20joy/3D/face_with_tears_of_joy_3d.png',
+  thinking: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Thinking%20face/3D/thinking_face_3d.png',
+  fire: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Fire/3D/fire_3d.png',
+  rocket: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Rocket/3D/rocket_3d.png'
+};
+
 function ReactionsContainer() {
   const { reactions } = useContext(RoomContext);
   const [activeReactions, setActiveReactions] = useState([]);
@@ -13,7 +22,8 @@ function ReactionsContainer() {
     if (reactions.length > lastProcessedIndex.current) {
       const newItems = reactions.slice(lastProcessedIndex.current).map(r => ({
         ...r,
-        instanceId: Math.random().toString(36).substr(2, 9), // ID único para esta instancia visual
+        emojiUrl: EMOJI_MAP[r.emoji] || r.emoji, // Usamos el mapa o la URL si ya viene completa
+        instanceId: Math.random().toString(36).substr(2, 9),
         leftPos: Math.random() * 80 + 10,
         duration: 3 + Math.random() * 2
       }));
@@ -45,7 +55,7 @@ function ReactionsContainer() {
             '--float-duration': `${reaction.duration}s`
           }}
         >
-          <img src={reaction.emoji} alt="reaction" className="reaction-emoji-img" />
+          <img src={reaction.emojiUrl} alt="reaction" className="reaction-emoji-img" />
           <p className="reaction-user">{reaction.userName}</p>
         </div>
       ))}

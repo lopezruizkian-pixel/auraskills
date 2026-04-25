@@ -43,7 +43,7 @@ function ReactionsMenu({ onSelect }) {
           <button
             key={reaction.id}
             className="reaction-btn"
-            onClick={() => onSelect(reaction.url)}
+            onClick={() => onSelect(reaction.id)}
             title={reaction.name}
             aria-label={reaction.name}
           >
