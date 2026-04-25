@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import './Styles/themes.css'
-import { ThemeProvider } from "./context/ThemeContext";
 import App from './App.jsx'
 
 // Limpieza de datos antiguos en localStorage tras la migración a sessionStorage encriptado
