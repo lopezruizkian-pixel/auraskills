@@ -66,12 +66,30 @@ function Perfil() {
         try {
           const { getUserRoomHistory } = await import("../services/roomService");
           const history = await getUserRoomHistory();
-          const myId = storage.get("userId");
+          // Función para normalizar texto (quitar acentos)
+          const normalize = (str) => 
+            (str || "").toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+          // Filtrar solo sesiones legítimas
+          const studySessions = history.filter(s => {
+            // 1. Solo donde fui alumno
+            if (s.mentor_id === myId) return false;
+
+            // 2. Duraron más de 1 minuto
+            const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
+            if (dur <= 60) return false;
+
+            // 3. Filtra nombres basura (placeholder/defaults)
+            const name = normalize(s.titulo || s.nombre || s.room_name);
+            const skill = normalize(s.habilidad || s.skill_name || s.habilidad_nombre || s.skillName || (s.skill && s.skill.nombre));
+            
+            const forbidden = ["habilidad", "sala de mentoria", "sala de mentoriaa"];
+            if (forbidden.includes(name) || forbidden.includes(skill)) return false;
+
+            return true;
+          });
           
-          // Filtrar solo sesiones donde fui alumno
-          const studySessions = history.filter(s => s.mentor_id !== myId);
-          
-          // Agrupar por habilidad y contar sesiones (con normalización de campos)
+          // Agrupar por habilidad y contar sesiones
           const skillCounts = studySessions.reduce((acc, s) => {
             const skillName = s.habilidad || s.skill_name || s.habilidad_nombre || s.skillName || (s.skill && s.skill.nombre);
             if (!skillName) return acc;
