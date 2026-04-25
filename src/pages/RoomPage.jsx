@@ -44,6 +44,7 @@ function RoomPage() {
     connectionStatus,
   } = useContext(RoomContext);
   
+  const { success: showSuccess } = useToast();
   const { askConfirmation } = useConfirm();
   const [isLeaving, setIsLeaving] = useState(false);
 
@@ -61,6 +62,22 @@ function RoomPage() {
     userAvatar,
     userRole
   );
+
+  // Monitorizar fin de sesión (para aprendices)
+  useEffect(() => {
+    if (!isMentor && sessionInfo && sessionInfo.isActive === false && !isLeaving) {
+      console.log('[RoomPage] Sesión finalizada por el mentor. Redirigiendo aprendiz...');
+      setIsLeaving(true);
+      
+      // Limpieza y redirección
+      leaveCurrentRoom();
+      storage.remove('salaActiva');
+      localStorage.removeItem(`room_start_${roomId}`);
+      
+      showSuccess("¡Sesión finalizada! Tu nueva habilidad y progreso ya están en tu perfil.");
+      navigate('/perfil', { replace: true });
+    }
+  }, [sessionInfo, isMentor, isLeaving, navigate, leaveCurrentRoom, showSuccess, roomId]);
 
   useEffect(() => {
     if (roomId) {
