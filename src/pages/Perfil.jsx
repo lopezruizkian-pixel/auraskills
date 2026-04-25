@@ -5,7 +5,7 @@ import PerfilStatCard from "../components/PerfilStatCard";
 import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Star, Award, BookOpen, Clock, Mail, MapPin, Calendar, Heart, Edit3, Video, X, Check, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
+import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Star, Award, BookOpen, Clock, Mail, MapPin, Calendar, Heart, Edit3, Video, X, Check, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
 import { logoutUser } from "../services/authService";
@@ -31,7 +31,6 @@ function Perfil() {
   const [saving, setSaving] = useState(false);
   const [createdSkills, setCreatedSkills] = useState([]);
   // Config states from Configuracion
-  const { theme: currentTheme, setTheme: setGlobalTheme } = useTheme();
   const navigate = useNavigate();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({ passwordActual: "", passwordNueva: "", confirmar: "" });
