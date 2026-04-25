@@ -42,6 +42,24 @@ const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
             </div>
 
             <div className="detail-item full-width">
+              <div className="technical-progress-container" style={{ width: "100%", margin: "10px 0" }}>
+                <div className="tech-label" style={{ fontSize: "0.7rem", color: (room.sessionInfo?.participantsCount || 0) >= (room.capacidad_maxima || 10) ? "#ff0055" : "#00ffff" }}>
+                  {(room.sessionInfo?.participantsCount || 0) >= (room.capacidad_maxima || 10) ? "CUPO LLENO" : `CAPACIDAD: ${room.sessionInfo?.participantsCount || 0}/${room.capacidad_maxima || 10}`}
+                </div>
+                <div className="tech-bar-bg" style={{ height: "8px" }}>
+                  <div 
+                    className="tech-bar-fill" 
+                    style={{ 
+                      width: `${Math.min(((room.sessionInfo?.participantsCount || 0) / (room.capacidad_maxima || 10)) * 100, 100)}%`,
+                      background: (room.sessionInfo?.participantsCount || 0) >= (room.capacidad_maxima || 10) ? "linear-gradient(90deg, #ff0055, #ffaa00)" : "linear-gradient(90deg, #00ffff, #ff00ff)",
+                      height: "100%"
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="detail-item full-width">
               <div className="description-container">
                 <label>Descripción de la sala</label>
                 <p className="detail-description">
@@ -50,12 +68,6 @@ const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
               </div>
             </div>
 
-            <div className="detail-item">
-              <Users size={18} className="detail-icon" />
-              <div>
-                <label>Participantes</label>
-                <p>{room.sessionInfo?.participantsCount || 0} en vivo</p>
-              </div>
             </div>
           </div>
         </div>

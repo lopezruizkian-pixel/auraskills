@@ -1,6 +1,8 @@
 import { User, Radio, Users, ChevronRight, Info } from "lucide-react";
 
-function MentorCard({ nombre, habilidad, nombreSala, onJoin, onInfo, isJoining, isActive }) {
+function MentorCard({ nombre, habilidad, nombreSala, onJoin, onInfo, isJoining, isActive, participantesCount = 0, capacidad_maxima = 10 }) {
+  const percentage = Math.min((participantesCount / capacidad_maxima) * 100, 100);
+  const isFull = participantesCount >= capacidad_maxima;
   return (
     <div className={`premium-room-card ${isActive ? "active-glow" : ""}`}>
       {/* Header con Badge de Estado */}
@@ -43,9 +45,18 @@ function MentorCard({ nombre, habilidad, nombreSala, onJoin, onInfo, isJoining, 
       {/* Footer y Acciones */}
       <div className="premium-card-footer">
         <div className="technical-progress-container">
-          <div className="tech-label">SYNC STATUS: READY</div>
+          <div className="tech-label" style={{ color: isFull ? "#ff0055" : "#00ffff" }}>
+            {isFull ? "CUPO LLENO" : `CAPACIDAD: ${participantesCount}/${capacidad_maxima}`}
+          </div>
           <div className="tech-bar-bg">
-            <div className="tech-bar-fill" style={{ width: "100%" }}></div>
+            <div 
+              className="tech-bar-fill" 
+              style={{ 
+                width: `${percentage}%`,
+                background: isFull ? "linear-gradient(90deg, #ff0055, #ffaa00)" : "linear-gradient(90deg, #00ffff, #ff00ff)",
+                boxShadow: isFull ? "0 0 15px rgba(255, 0, 85, 0.5)" : "0 0 15px rgba(0, 255, 255, 0.3)"
+              }}
+            ></div>
           </div>
         </div>
 

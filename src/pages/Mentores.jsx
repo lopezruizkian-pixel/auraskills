@@ -246,6 +246,8 @@ function Mentores() {
                   <MentorCard key={room.id} id={room.id} nombre={room.mentor_nombre || "Mentor"}
                     habilidad={room.habilidad} nombreSala={room.nombre}
                     isActive={room.sessionInfo?.isActive}
+                    participantesCount={room.participantesCount || 0}
+                    capacidad_maxima={room.capacidad_maxima || 10}
                     onJoin={() => handleJoin(room)} 
                     onInfo={() => setSelectedRoom(room)}
                     isJoining={joining === room.id} />
