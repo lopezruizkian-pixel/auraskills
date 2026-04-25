@@ -71,10 +71,18 @@ function Login() {
     }
   };
 
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <div className="login-container">
       {/* Botón de Regreso */}
-      <button className="back-btn-minimal" onClick={() => navigate(-1)}>
+      <button className="back-btn-minimal" onClick={handleBack}>
         <ArrowLeft size={24} />
         <span>Volver</span>
       </button>
