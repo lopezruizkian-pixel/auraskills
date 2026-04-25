@@ -48,7 +48,11 @@ function Registro() {
   };
 
   const handleBack = () => {
-    if (window.history.length > 2) {
+    const hasHistory = window.history.length > 1;
+    const referrer = document.referrer;
+    const isInternal = referrer.includes(window.location.origin);
+
+    if (hasHistory && isInternal && !referrer.includes("/home") && !referrer.includes("/perfil") && !referrer.includes("/salas-activas")) {
       navigate(-1);
     } else {
       navigate("/");

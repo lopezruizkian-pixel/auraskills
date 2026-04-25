@@ -72,7 +72,13 @@ function Login() {
   };
 
   const handleBack = () => {
-    if (window.history.length > 2) {
+    const hasHistory = window.history.length > 1;
+    const referrer = document.referrer;
+    const isInternal = referrer.includes(window.location.origin);
+
+    // Si venimos de una página interna que NO sea el dashboard o el perfil (donde acabamos de salir), volvemos atrás.
+    // En cualquier otro caso (entrada directa, logout, etc), vamos a la landing.
+    if (hasHistory && isInternal && !referrer.includes("/home") && !referrer.includes("/perfil") && !referrer.includes("/salas-activas")) {
       navigate(-1);
     } else {
       navigate("/");
