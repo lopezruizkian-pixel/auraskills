@@ -419,9 +419,9 @@
 }
 
 .skills-grid-adaptive {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
-  gap: 8px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
   width: 100% !important;
 }
 
