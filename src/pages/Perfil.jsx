@@ -285,9 +285,6 @@ function Perfil() {
         <main className="home-content">
           <GlobalHeader />
           
-          <div className="estado-mentor-pill" style={{ marginBottom: "2rem" }}>
-            <span>{rol === "mentor" ? "Modo Enseñanza" : "Modo Aprendizaje"}</span>
-          </div>
 
           {/* Profile Header */}
           <section className="perfil-section">
