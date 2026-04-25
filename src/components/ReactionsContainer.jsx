@@ -1,49 +1,56 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { RoomContext } from '../context/RoomContext';
+import { createPortal } from 'react-dom';
 import '../Styles/RoomComponents.css';
 
 function ReactionsContainer() {
   const { reactions } = useContext(RoomContext);
-  const [displayReactions, setDisplayReactions] = useState([]);
+  const [activeReactions, setActiveReactions] = useState([]);
+  const lastProcessedIndex = useRef(0);
 
   useEffect(() => {
-    // Mostrar nuevas reacciones con animación
-    if (reactions.length > displayReactions.length) {
-      const newReactions = reactions.slice(displayReactions.length);
-      setDisplayReactions((prev) => [...prev, ...newReactions]);
+    // Si hay nuevas reacciones que no hemos procesado
+    if (reactions.length > lastProcessedIndex.current) {
+      const newItems = reactions.slice(lastProcessedIndex.current).map(r => ({
+        ...r,
+        instanceId: Math.random().toString(36).substr(2, 9), // ID único para esta instancia visual
+        leftPos: Math.random() * 80 + 10,
+        duration: 3 + Math.random() * 2
+      }));
+
+      lastProcessedIndex.current = reactions.length;
+
+      // Añadimos las nuevas a la lista
+      setActiveReactions(prev => [...prev, ...newItems]);
+
+      // Programamos la limpieza individual de cada una después de su animación
+      newItems.forEach(item => {
+        setTimeout(() => {
+          setActiveReactions(prev => prev.filter(r => r.instanceId !== item.instanceId));
+        }, 5000); // 5 segundos es suficiente para la animación completa
+      });
     }
-  }, [reactions, displayReactions.length]);
+  }, [reactions]);
 
-  // Auto-remover reacciones después de 3 segundos
-  useEffect(() => {
-    if (displayReactions.length === 0) return;
+  if (activeReactions.length === 0) return null;
 
-    const timer = setTimeout(() => {
-      setDisplayReactions([]);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [displayReactions]);
-
-  if (displayReactions.length === 0) return null;
-
-  return (
+  return createPortal(
     <div className="reactions-container">
-      {displayReactions.map((reaction, index) => (
+      {activeReactions.map((reaction) => (
         <div
-          key={`${reaction.id}-${index}`}
+          key={reaction.instanceId}
           className="reaction-bubble"
           style={{
-            left: `${Math.random() * 80 + 10}%`,
-            animationDelay: `${index * 0.1}s`,
-            '--float-duration': `${2.5 + Math.random() * 1.5}s`
+            left: `${reaction.leftPos}%`,
+            '--float-duration': `${reaction.duration}s`
           }}
         >
           <img src={reaction.emoji} alt="reaction" className="reaction-emoji-img" />
           <p className="reaction-user">{reaction.userName}</p>
         </div>
       ))}
-    </div>
+    </div>,
+    document.body
   );
 }
 
