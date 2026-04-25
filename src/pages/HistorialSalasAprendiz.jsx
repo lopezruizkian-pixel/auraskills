@@ -60,7 +60,11 @@ function HistorialSalasAprendiz() {
         const merged = [
           ...backendHistory,
           ...localHistory.filter((s) => !backendIds.has(s.id)),
-        ];
+        ].filter((s) => {
+          // Filtra sesiones de menos de 1 minuto (60 segundos)
+          const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
+          return dur > 60;
+        });
 
         // Ordena por fecha desc
         merged.sort((a, b) => new Date(b.startedAt || b.fecha || 0) - new Date(a.startedAt || a.fecha || 0));
