@@ -33,7 +33,15 @@ class HttpClient {
     // Si el token expiró (401)
     if (response.status === 401) {
       storage.clear();
-      window.location.href = '/login';
+      
+      // SOLO redirigir si NO estamos ya en una página pública
+      const publicPaths = ['/login', '/', '/registro'];
+      const isPublic = publicPaths.includes(window.location.pathname);
+      
+      if (!isPublic) {
+        window.location.href = '/login';
+      }
+      
       throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
     }
 
