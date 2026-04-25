@@ -150,7 +150,7 @@ function Login() {
                     alignItems: "center"
                   }}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </span>
               </div>
               {errors.password && <span className="error-text">{errors.password}</span>}

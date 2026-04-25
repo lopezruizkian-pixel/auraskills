@@ -94,7 +94,7 @@ function Registro() {
               <div style={{ position: "relative" }}>
                 <input type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: "100%", boxSizing: "border-box" }} />
                 <span onClick={() => setShowPassword(!showPassword)} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "rgba(255,255,255,0.4)" }}>
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </span>
               </div>
             </div>
@@ -103,7 +103,7 @@ function Registro() {
               <div style={{ position: "relative" }}>
                 <input type={showConfirm ? "text" : "password"} placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "100%", boxSizing: "border-box" }} />
                 <span onClick={() => setShowConfirm(!showConfirm)} style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", cursor:"pointer", color: "rgba(255,255,255,0.4)" }}>
-                  {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showConfirm ? <Eye size={18} /> : <EyeOff size={18} />}
                 </span>
               </div>
             </div>
