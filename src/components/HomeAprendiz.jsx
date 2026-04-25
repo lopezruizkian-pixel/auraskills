@@ -108,10 +108,17 @@ function HomeAprendiz() {
         const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
         if (dur <= 60) return false;
 
+        // Función para normalizar texto (quitar acentos)
+        const normalize = (str) => 
+          (str || "").toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
         // 3. Filtra nombres basura (placeholder/defaults)
-        const name = (s.room_nombre || s.titulo || s.nombre || s.room_name || "").toLowerCase().trim();
-        const forbiddenNames = ["habilidad", "sala de mentoria", "sala de mentoriaa"];
-        if (forbiddenNames.includes(name)) return false;
+        const name = normalize(s.room_nombre || s.titulo || s.nombre || s.room_name);
+        const skill = normalize(s.habilidad || s.skill_name || s.habilidad_nombre || s.skill?.nombre);
+        
+        const forbidden = ["habilidad", "sala de mentoria", "sala de mentoriaa"];
+        
+        if (forbidden.includes(name) || forbidden.includes(skill)) return false;
 
         return true;
       });
