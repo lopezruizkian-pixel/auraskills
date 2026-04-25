@@ -52,7 +52,13 @@ function App() {
     initAuth();
   }, [setAuthUser]);
 
-  if (isChecking) {
+  // Definir rutas que no necesitan esperar a la validación de sesión
+  const publicRoutes = ['/', '/login', '/registro'];
+  const isPublicRoute = publicRoutes.includes(window.location.pathname);
+
+  // Solo mostramos el spinner global si estamos en una ruta protegida
+  // Para las rutas públicas, cargamos instantáneamente
+  if (isChecking && !isPublicRoute) {
     return (
       <div className="loading-global-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#020205' }}>
         <div className="aura-spinner"></div>
