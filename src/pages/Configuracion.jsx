@@ -5,7 +5,7 @@ import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
 import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette } from "lucide-react";
 import AuraSelect from "../components/AuraSelect";
-import { ThemeContext } from "../context/ThemeContext";
+import { useTheme } from "../context/ThemeContext";
 import { httpClient } from "../services/httpClient";
 import { logoutUser } from "../services/authService";
 import { storage } from "../services/storage";
@@ -19,7 +19,7 @@ function Configuracion() {
   const { askConfirmation } = useConfirm();
   const { success: showSuccess, error: showError } = useToast();
   const [rol] = useState(storage.get("userRole") || "alumno");
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({ passwordActual: "", passwordNueva: "", confirmar: "" });
@@ -107,8 +107,8 @@ function Configuracion() {
                       value={theme}
                       onChange={setTheme}
                       options={[
-                        { value: "neon", label: "Neón Cyberspace" },
-                        { value: "classic", label: "Aura Clásico" }
+                        { value: "dark", label: "Cyber-Dark" },
+                        { value: "light", label: "Premium-Snow" }
                       ]}
                       icon={Palette}
                     />
