@@ -15,29 +15,38 @@ const EMOJI_MAP = {
 function ReactionsContainer() {
   const { reactions } = useContext(RoomContext);
   const [activeReactions, setActiveReactions] = useState([]);
-  const lastProcessedIndex = useRef(0);
+  const processedIds = useRef(new Set());
 
   useEffect(() => {
-    // Si hay nuevas reacciones que no hemos procesado
-    if (reactions.length > lastProcessedIndex.current) {
-      const newItems = reactions.slice(lastProcessedIndex.current).map(r => ({
-        ...r,
-        emojiUrl: EMOJI_MAP[r.emoji] || r.emoji, // Usamos el mapa o la URL si ya viene completa
-        instanceId: Math.random().toString(36).substr(2, 9),
-        leftPos: Math.random() * 80 + 10,
-        duration: 3 + Math.random() * 2
-      }));
+    // Si la lista de reacciones se vacía en el contexto, limpiamos nuestra memoria
+    if (reactions.length === 0) {
+      processedIds.current.clear();
+      return;
+    }
 
-      lastProcessedIndex.current = reactions.length;
+    // Buscamos reacciones que no hayamos procesado todavía
+    const newItems = reactions
+      .filter(r => !processedIds.current.has(r.id))
+      .map(r => {
+        processedIds.current.add(r.id);
+        return {
+          ...r,
+          emojiUrl: EMOJI_MAP[r.emoji] || r.emoji,
+          instanceId: `inst-${r.id}-${Math.random().toString(36).substr(2, 5)}`,
+          leftPos: Math.random() * 80 + 10,
+          duration: 3 + Math.random() * 2
+        };
+      });
 
-      // Añadimos las nuevas a la lista
+    if (newItems.length > 0) {
+      // Añadimos las nuevas a la lista visual
       setActiveReactions(prev => [...prev, ...newItems]);
 
-      // Programamos la limpieza individual de cada una después de su animación
+      // Programamos la limpieza visual individual
       newItems.forEach(item => {
         setTimeout(() => {
           setActiveReactions(prev => prev.filter(r => r.instanceId !== item.instanceId));
-        }, 5000); // 5 segundos es suficiente para la animación completa
+        }, 5500);
       });
     }
   }, [reactions]);
