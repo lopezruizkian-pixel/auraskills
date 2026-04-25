@@ -6,7 +6,7 @@ const REACTIONS = [
   { 
     id: 'heart',
     name: 'Me encanta', 
-    url: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Heart/3D/heart_3d.png' 
+    url: 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/Red%20heart/3D/red_heart_3d.png' 
   },
   { 
     id: 'like',
