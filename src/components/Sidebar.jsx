@@ -9,6 +9,7 @@ import {
   Settings,
   PlusSquare,
   Video,
+  MessagesSquare,
   Menu,
   X,
 } from "lucide-react";
@@ -100,8 +101,8 @@ function Sidebar({ rol }) {
                 className={`nav-item ${isActive("/salas-activas") ? "active" : ""}`}
                 onClick={() => handleNavigate("/salas-activas")}
               >
-                <Video size={18} className="nav-icon" />
-                Salas en Vivo
+                <MessagesSquare size={18} className="nav-icon" />
+                Salas de Mentoría
               </button>
             </>
           ) : (

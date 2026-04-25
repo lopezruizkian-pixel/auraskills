@@ -49,8 +49,8 @@ function Landing() {
       <section className="features-section">
         <div className="feature-card">
           <div className="feature-icon-box"><Zap size={24} /></div>
-          <h3>Clases en Vivo</h3>
-          <p>Únete a salas interactivas con video y chat fluido. Aprende haciendo, no solo mirando.</p>
+          <h3>Salas Interactivas</h3>
+          <p>Únete a salas dinámicas con chat fluido y reacciones en tiempo real. Aprende haciendo con la guía de tu mentor.</p>
         </div>
 
         <div className="feature-card">

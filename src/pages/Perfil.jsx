@@ -5,7 +5,7 @@ import PerfilStatCard from "../components/PerfilStatCard";
 import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Star, Award, BookOpen, Clock, Mail, MapPin, Calendar, Heart, Edit3, Video, X, Check, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
+import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Star, Award, BookOpen, Clock, Mail, MapPin, Calendar, Heart, Edit3, MessagesSquare, X, Check, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
 import { logoutUser } from "../services/authService";
@@ -347,7 +347,7 @@ function Perfil() {
                           </div>
                         ) : (
                           <p style={{ color: "rgba(255,255,255,0.4)", margin: 0, fontStyle: "italic" }}>
-                            No tienes habilidades registradas aún. ¡Entra a una sala en vivo para empezar a aprender!
+                            No tienes habilidades registradas aún. ¡Entra a una sala de mentoría para empezar a aprender!
                           </p>
                         )}
                       </>

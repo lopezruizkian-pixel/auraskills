@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Users, Video, Clock, User, ChevronRight } from "lucide-react";
+import { BookOpen, Users, MessagesSquare, Clock, User, ChevronRight } from "lucide-react";
 import PerfilStatCard from "./PerfilStatCard";
 import { fetchActiveRooms, getUserRoomHistory } from "../services/roomService";
 import { getDashboardSocket } from "../services/socketConfig";
@@ -85,13 +85,13 @@ function HomeMentor() {
 
       {/* Stats */}
       <div className="perfil-stats-grid" style={{ marginBottom: "2rem" }}>
-        <PerfilStatCard titulo="Salas Creadas" valor={stats.salasCreadas} icon={Video} color="#00ffff" />
+        <PerfilStatCard titulo="Salas Creadas" valor={stats.salasCreadas} icon={MessagesSquare} color="#00ffff" />
         <PerfilStatCard titulo="Asistencias Totales" valor={stats.alumnosAyudados} icon={User} color="#ff00ff" />
         <PerfilStatCard titulo="Horas Mentoreando" valor={`${stats.horasMentoreando}h`} icon={Clock} color="#00ff00" />
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
-        <Video size={24} color="#ff00ff" />
+        <MessagesSquare size={24} color="#ff00ff" />
         <h2 className="welcome-title" style={{ margin: 0 }}>Tu sala activa</h2>
       </div>
 

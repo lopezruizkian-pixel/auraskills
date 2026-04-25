@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, BookOpen, User, Smile, Radio, Users, Clock, Award, Video } from "lucide-react";
+import { Search, BookOpen, User, Smile, Radio, Users, Clock, Award, MessagesSquare } from "lucide-react";
 import PerfilStatCard from "./PerfilStatCard";
 import { fetchActiveRooms, joinRoom, fetchRoom, getUserRoomHistory } from "../services/roomService";
 import { fetchSkills, fetchCategories } from "../services/skillService";
@@ -253,9 +253,8 @@ function HomeAprendiz() {
         <p className="welcome-subtitle">¿Qué vamos a dominar hoy en el multiverso del código?</p>
       </section>
 
-      {/* Stats */}
       <div className="perfil-stats-grid" style={{ marginBottom: "2.5rem" }}>
-        <PerfilStatCard titulo="Salas Asistidas" valor={stats.salasAsistidas} icon={Video} color="#00ffff" />
+        <PerfilStatCard titulo="Salas Asistidas" valor={stats.salasAsistidas} icon={MessagesSquare} color="#00ffff" />
         <PerfilStatCard titulo="Horas de Estudio" valor={`${stats.horasEstudio}h`} icon={Clock} color="#ff00ff" />
         <PerfilStatCard titulo="Cursos / Habilidades" valor={stats.cursos} icon={BookOpen} color="#00ff00" />
       </div>

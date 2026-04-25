@@ -5,7 +5,7 @@ import SalaActivaCard from "../components/SalaActivaCard";
 import FormCrearSala from "../components/FormCrearSala";
 import MentorCard from "../components/MentorCard";
 import GlobalHeader from "../components/GlobalHeader";
-import { Bell, User, Circle, VideoOff, PlusCircle, X, RefreshCw } from "lucide-react";
+import { Bell, User, Circle, MessageSquareOff, PlusCircle, X, RefreshCw } from "lucide-react";
 import { fetchActiveRooms, joinRoom } from "../services/roomService";
 import { useToast } from "../hooks/useToast";
 import "../Styles/Home.css";
@@ -205,7 +205,7 @@ function SalasActivas() {
                 />
               ) : (
                 <div className="empty-state-centered">
-                  <VideoOff size={100} className="empty-icon" style={{ marginBottom: "2rem", opacity: 0.2 }} />
+                  <MessageSquareOff size={80} className="empty-icon" style={{ marginBottom: "1.5rem", opacity: 0.2 }} />
                   <h3 style={{ color: "#fff", fontSize: "2rem", marginBottom: "0.8rem", fontWeight: "700" }}>No tienes ninguna sala activa</h3>
                   <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", maxWidth: "450px", margin: "0 auto" }}>Crea una sala para empezar a mentorear y compartir tus conocimientos.</p>
                 </div>
