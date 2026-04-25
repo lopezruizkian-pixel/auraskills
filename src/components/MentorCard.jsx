@@ -1,4 +1,5 @@
 import { User, Radio, Users, ChevronRight, Info } from "lucide-react";
+import AuraAvatar from "./AuraAvatar";
 
 function MentorCard({ nombre, habilidad, nombreSala, onJoin, onInfo, isJoining, isActive, participantesCount = 0, capacidad_maxima = 10 }) {
   const percentage = Math.min((participantesCount / capacidad_maxima) * 100, 100);
@@ -32,7 +33,7 @@ function MentorCard({ nombre, habilidad, nombreSala, onJoin, onInfo, isJoining, 
         <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start" }}>
           <div className="mentor-avatar-glow">
             <div className="avatar-inner">
-              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${nombre}`} alt="mentor" />
+              <AuraAvatar seed={nombre} size={56} />
             </div>
           </div>
           <div className="room-info-main">

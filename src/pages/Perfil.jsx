@@ -15,6 +15,7 @@ import AuraSelect from "../components/AuraSelect";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
 import { useConfirm } from "../context/ConfirmContext";
 import { useToast } from "../hooks/useToast";
+import AuraAvatar from "../components/AuraAvatar";
 import "../Styles/Home.css";
 import "../Styles/Perfil.css";
 import "../Styles/Configuracion.css";
@@ -277,7 +278,7 @@ function Perfil() {
     );
   }
 
-  const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.usuario}`;
+
 
   return (
     <div className="home-container">
@@ -294,7 +295,7 @@ function Perfil() {
           <section className="perfil-section">
             <div className="neon-card perfil-header-card">
               <div className="perfil-avatar-container">
-                <img src={avatarUrl} alt="Avatar" className="perfil-avatar" />
+                <AuraAvatar seed={userData.usuario} size={150} className="perfil-avatar-aura" />
                 <div className="avatar-glow"></div>
               </div>
               <div className="perfil-info">

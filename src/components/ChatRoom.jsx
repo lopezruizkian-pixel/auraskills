@@ -3,6 +3,7 @@ import { RoomContext } from '../context/RoomContext';
 import { storage } from '../services/storage';
 import { Send, Smile } from 'lucide-react';
 import ReactionsMenu from './ReactionsMenu';
+import AuraAvatar from './AuraAvatar';
 import '../Styles/RoomComponents.css';
 
 const formatMessageTime = (timestamp) => {
@@ -68,11 +69,7 @@ function ChatRoom({ sendMessage, sendReaction }) {
               >
                 {!isMe && showAvatar && (
                   <div className={`message-avatar ${isMentor ? 'mentor-aura-avatar' : ''}`}>
-                    {msg.userAvatar && msg.userAvatar.startsWith('http') ? (
-                      <img src={msg.userAvatar} alt={msg.userName} />
-                    ) : (
-                      <div className="avatar-placeholder">{msg.userName?.charAt(0) || '?'}</div>
-                    )}
+                    <AuraAvatar seed={msg.userName} size={34} />
                     {isMentor && <div className="mentor-badge-chat">M</div>}
                   </div>
                 )}

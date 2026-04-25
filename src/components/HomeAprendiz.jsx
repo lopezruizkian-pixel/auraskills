@@ -12,6 +12,7 @@ import { Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } fr
 import { storage } from "../services/storage";
 import { useToast } from "../hooks/useToast";
 import "../Styles/Mentores.css";
+import AuraAvatar from "./AuraAvatar";
 
 function HomeAprendiz() {
   const { info: showInfo, error: showError } = useToast();
@@ -320,9 +321,7 @@ function HomeAprendiz() {
               {rooms.length > 0 ? (
                 rooms.slice(0, 4).map((room) => (
                   <div key={room.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "8px", borderRadius: "10px", background: "rgba(255,255,255,0.02)", cursor: "pointer" }} onClick={() => navigate("/mentores")}>
-                    <div style={{ width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #00ffff", background: "#140022", overflow: "hidden" }}>
-                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${room.mentor_nombre}`} alt="avatar" />
-                    </div>
+                    <AuraAvatar seed={room.mentor_nombre} size={35} />
                     <div style={{ flex: 1 }}>
                       <p style={{ margin: 0, color: "#fff", fontSize: "0.85rem", fontWeight: "600" }}>{room.mentor_nombre}</p>
                       <p style={{ margin: 0, color: "#00ffff", fontSize: "0.7rem" }}>{room.habilidad}</p>
