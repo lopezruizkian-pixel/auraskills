@@ -18,20 +18,12 @@ body {
   background-attachment: fixed;
 }
 
-.navbar {
-  padding: 20px 40px;
-}
-
-.logo {
-  font-size: 20px;
-}
-
+.navbar { padding: 20px 40px; }
+.logo { font-size: 20px; }
 .aura { color: #ff00ff; }
 .skill { color: #00ffff; }
 
-.landing-container,
-.login-container,
-.registro-container {
+.landing-container, .login-container, .registro-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -44,13 +36,6 @@ body {
   justify-content: center;
   gap: 50px;
   padding: 20px;
-}
-
-.mascota-side {
-  max-width: 45%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .mascota-img {
@@ -68,15 +53,6 @@ body {
 }
 
 /* Aura Portal Spinner */
-.loading-global-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  gap: 2rem;
-}
-
 .aura-spinner {
   width: 70px;
   height: 70px;
@@ -86,40 +62,6 @@ body {
   border-top-color: #00ffff;
   border-bottom-color: #ff00ff;
   animation: auraRotate 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.2);
-}
-
-.aura-spinner::before,
-.aura-spinner::after {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  animation: auraRotate 3s linear infinite reverse;
-}
-
-.aura-spinner::before {
-  border-left-color: #00ffff;
-  border-right-color: #00ffff;
-  inset: 12px;
-}
-
-.aura-spinner::after {
-  border-top-color: #ff00ff;
-  border-bottom-color: #ff00ff;
-  inset: -4px;
-  animation-duration: 1.5s;
-  opacity: 0.5;
-}
-
-.aura-spinner-mini {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(0, 255, 255, 0.1);
-  border-top-color: #00ffff;
-  border-radius: 50%;
-  animation: auraRotate 0.8s linear infinite;
 }
 
 @keyframes auraRotate {
@@ -127,183 +69,97 @@ body {
   to { transform: rotate(360deg); }
 }
 
-.loading-text-neon {
-  font-size: 0.9rem;
-  color: #fff;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-weight: 700;
-  animation: auraPulse 1.5s ease-in-out infinite;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-  opacity: 0.8;
+/* --- MODALES MANUALES AURA (Cyber-Luxury) --- */
+body .aura-modal-overlay {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 99999;
 }
 
-@keyframes auraPulse {
-  0%, 100% { opacity: 0.4; transform: scale(0.95); }
-  50% { opacity: 1; transform: scale(1); }
+body .aura-modal-content {
+  background: linear-gradient(145deg, #140022, #0a0014);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.15);
 }
 
-/* --- ESTILOS DE ALERTAS (SWEETALERT2) - CLONE DE MODALES AURA --- */
-body .swal2-container.swal2-shown {
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  background: rgba(0, 0, 0, 0.75) !important;
-  z-index: 99999 !important;
-}
+/* --- SWEETALERT2 TOASTS (DISEÑO DESIGNER VISION) --- */
 
-body .swal2-popup.aura-swal-popup {
-  background: linear-gradient(145deg, #140022, #0a0014) !important;
-  border: 1px solid rgba(0, 255, 255, 0.4) !important;
-  border-radius: 28px !important;
-  padding: 3.5rem 2.5rem !important;
-  box-shadow: 0 0 60px rgba(0, 255, 255, 0.25) !important;
-  color: #fff !important;
-  overflow: hidden !important;
-}
-
-body .aura-swal-title {
-  font-size: 1.85rem !important;
-  color: #fff !important;
-  margin-bottom: 1.5rem !important;
-  font-weight: 800 !important;
-  text-align: center !important;
-  text-transform: uppercase !important;
-  letter-spacing: 2px !important;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
-}
-
-body .aura-swal-content {
-  color: rgba(255, 255, 255, 0.75) !important;
-  font-size: 1.15rem !important;
-  line-height: 1.7 !important;
-  text-align: center !important;
-  margin-bottom: 2.5rem !important;
-}
-
-body .aura-swal-confirm {
-  padding: 1rem 2.5rem !important;
-  border-radius: 18px !important;
-  font-weight: 800 !important;
-  letter-spacing: 1px !important;
-  text-transform: uppercase !important;
-  font-size: 0.9rem !important;
-  cursor: pointer !important;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-  border: none !important;
-  background: linear-gradient(135deg, #00ffff, #0088ff) !important;
-  color: #0a0014 !important;
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.35) !important;
-  margin: 0 10px !important;
-}
-
-body .aura-swal-confirm-danger {
-  background: linear-gradient(135deg, #ff00ff, #7000ff) !important;
-  color: #fff !important;
-  box-shadow: 0 10px 30px rgba(255, 0, 255, 0.35) !important;
-}
-
-body .aura-swal-confirm:hover {
-  transform: translateY(-4px) !important;
-  filter: brightness(1.2) !important;
-  box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5) !important;
-}
-
-body .aura-swal-cancel {
-  padding: 1rem 2.5rem !important;
-  border-radius: 18px !important;
-  font-weight: 800 !important;
-  letter-spacing: 1px !important;
-  text-transform: uppercase !important;
-  font-size: 0.9rem !important;
-  cursor: pointer !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  transition: all 0.3s ease !important;
-  margin: 0 10px !important;
-}
-
-body .aura-swal-cancel:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  color: #fff !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Ajustes para Toasts (notificaciones pequeñas premium) */
 body .swal2-container.swal2-top-end {
-  padding: 30px 20px !important; /* Baja la posición */
+  padding: 40px 30px !important;
 }
 
 body .swal2-container.swal2-top-end .aura-toast-popup {
-  background: rgba(13, 0, 34, 0.85) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 24px !important; /* Super redondeado */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-  padding: 0.6rem 1.2rem !important;
-  min-width: 280px !important;
-  max-width: 350px !important;
+  background: rgba(10, 0, 20, 0.9) !important;
+  backdrop-filter: blur(25px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9) !important;
+  padding: 1.2rem 1.8rem !important;
+  min-width: 320px !important;
+  overflow: hidden !important;
+  position: relative !important;
 }
 
-/* Colores de iconos (Cian y Magenta) */
-body .swal2-popup.swal2-toast.swal2-icon-success .swal2-success-ring,
-body .swal2-popup.swal2-toast.swal2-icon-success .swal2-success-line-tip,
-body .swal2-popup.swal2-toast.swal2-icon-success .swal2-success-line-long {
-  border-color: #00ffff !important;
-  color: #00ffff !important;
+/* Barra de luz neón lateral */
+body .swal2-popup.swal2-toast::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #00ffff;
+  box-shadow: 0 0 15px #00ffff;
+  z-index: 10;
 }
 
-body .swal2-popup.swal2-toast.swal2-icon-error .swal2-x-mark-line-left,
-body .swal2-popup.swal2-toast.swal2-icon-error .swal2-x-mark-line-right {
+body .swal2-popup.swal2-toast.swal2-icon-success::before {
+  background: #00ffff !important;
+  box-shadow: 0 0 15px #00ffff !important;
+}
+
+body .swal2-popup.swal2-toast.swal2-icon-error::before {
+  background: #ff00ff !important;
+  box-shadow: 0 0 15px #ff00ff !important;
+}
+
+/* Limpieza de iconos: Solo el símbolo brillante */
+body .swal2-toast .swal2-icon {
+  border: none !important;
+  background: transparent !important;
+  margin: 0 20px 0 0 !important;
+  transform: scale(0.6) !important;
+  overflow: visible !important;
+}
+
+/* Icono Error (Magenta) */
+body .swal2-toast.swal2-icon-error .swal2-x-mark { background: transparent !important; }
+body .swal2-toast.swal2-icon-error .swal2-x-mark-line-left,
+body .swal2-toast.swal2-icon-error .swal2-x-mark-line-right {
   background-color: #ff00ff !important;
+  box-shadow: 0 0 15px #ff00ff !important;
 }
 
-body .swal2-popup.swal2-toast.swal2-icon-error {
-  border-color: #ff00ff !important;
+/* Icono Éxito (Cian) */
+body .swal2-toast.swal2-icon-success .swal2-success-ring { border: none !important; }
+body .swal2-toast.swal2-icon-success .swal2-success-line-tip,
+body .swal2-toast.swal2-icon-success .swal2-success-line-long {
+  background-color: #00ffff !important;
+  box-shadow: 0 0 15px #00ffff !important;
 }
 
-/* Bordes y Fondos por tipo */
-body .swal2-popup.swal2-toast.swal2-icon-success {
-  background: rgba(0, 30, 30, 0.9) !important; /* Tinte cian */
-  border: 1px solid rgba(0, 255, 255, 0.3) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 255, 0.1) !important;
-}
-
-body .swal2-popup.swal2-toast.swal2-icon-error {
-  background: rgba(40, 0, 10, 0.9) !important; /* Tinte rojo/magenta */
-  border: 1px solid rgba(255, 0, 85, 0.3) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 0, 85, 0.1) !important;
-}
-
-body .swal2-popup.swal2-toast.swal2-icon-warning {
-  background: rgba(40, 25, 0, 0.9) !important; /* Tinte ámbar */
-  border: 1px solid rgba(255, 170, 0, 0.3) !important;
-}
-
-body .swal2-popup.swal2-toast.swal2-icon-info {
-  background: rgba(15, 0, 40, 0.9) !important; /* Tinte púrpura */
-  border: 1px solid rgba(112, 0, 255, 0.3) !important;
-}
-
-/* Estilo del texto en Toasts */
+/* Texto Premium */
 body .swal2-toast .swal2-title {
-  color: #fff !important;
-  font-size: 0.88rem !important; /* Más pequeño */
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
   font-weight: 500 !important;
-  margin: 0 0 0 8px !important;
+  letter-spacing: 0.5px !important;
+  margin: 0 !important;
   text-align: left !important;
 }
 
-/* Ajuste de iconos en Toasts */
-body .swal2-toast .swal2-icon {
-  margin: 0 !important;
-  transform: scale(0.7) !important; /* Más pequeño */
-}
-
-/* Barra de progreso neón sutil */
 body .swal2-toast .swal2-timer-progress-bar {
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5)) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   height: 2px !important;
 }
