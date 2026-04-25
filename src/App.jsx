@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { RoomProvider } from './context/RoomContext';
-import { ThemeProvider } from './context/ThemeContext';
 import { ConfirmProvider } from './context/ConfirmContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Landing from './pages/Landing';
@@ -18,88 +17,86 @@ import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <Router>
-          <ConfirmProvider>
-            <RoomProvider>
-            <Routes>
-              {/* Rutas públicas */}
-              <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/registro" element={<Registro />} />
+    <ToastProvider>
+      <Router>
+        <ConfirmProvider>
+          <RoomProvider>
+          <Routes>
+            {/* Rutas públicas */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
 
-              {/* Rutas protegidas - Requieren autenticación */}
-              <Route 
-                path="/home" 
-                element={
-                  <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
-                } 
-              />
+            {/* Rutas protegidas - Requieren autenticación */}
+            <Route 
+              path="/home" 
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              } 
+            />
 
 
-              <Route 
-                path="/mentores" 
-                element={
-                  <ProtectedRoute requiredRole="alumno">
-                    <Mentores />
-                  </ProtectedRoute>
-                } 
-              />
+            <Route 
+              path="/mentores" 
+              element={
+                <ProtectedRoute requiredRole="alumno">
+                  <Mentores />
+                </ProtectedRoute>
+              } 
+            />
 
-              <Route 
-                path="/historial" 
-                element={
-                  <ProtectedRoute>
-                    <HistorialSalasAprendiz />
-                  </ProtectedRoute>
-                } 
-              />
+            <Route 
+              path="/historial" 
+              element={
+                <ProtectedRoute>
+                  <HistorialSalasAprendiz />
+                </ProtectedRoute>
+              } 
+            />
 
-              <Route 
-                path="/salas-activas" 
-                element={
-                  <ProtectedRoute requiredRole="mentor">
-                    <SalasActivas />
-                  </ProtectedRoute>
-                } 
-              />
+            <Route 
+              path="/salas-activas" 
+              element={
+                <ProtectedRoute requiredRole="mentor">
+                  <SalasActivas />
+                </ProtectedRoute>
+              } 
+            />
 
-              <Route 
-                path="/sala/:id" 
-                element={
-                  <ProtectedRoute>
-                    <RoomPage />
-                  </ProtectedRoute>
-                } 
-              />
+            <Route 
+              path="/sala/:id" 
+              element={
+                <ProtectedRoute>
+                  <RoomPage />
+                </ProtectedRoute>
+              } 
+            />
 
-              <Route 
-                path="/configuracion" 
-                element={<Navigate to="/perfil" replace />}
-              />
+            <Route 
+              path="/configuracion" 
+              element={<Navigate to="/perfil" replace />}
+            />
 
-              <Route 
-                path="/perfil" 
-                element={
-                  <ProtectedRoute>
-                    <Perfil />
-                  </ProtectedRoute>
-                } 
-              />
+            <Route 
+              path="/perfil" 
+              element={
+                <ProtectedRoute>
+                  <Perfil />
+                </ProtectedRoute>
+              } 
+            />
 
-              <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
-              {/* Ruta por defecto para rutas no encontradas */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </RoomProvider>
-        </ConfirmProvider>
-        </Router>
-      </ToastProvider>
-    </ThemeProvider>
+            {/* Ruta por defecto para rutas no encontradas */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </RoomProvider>
+      </ConfirmProvider>
+      </Router>
+    </ToastProvider>
   );
 }
 

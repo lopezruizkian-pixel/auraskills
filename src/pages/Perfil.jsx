@@ -5,8 +5,7 @@ import PerfilStatCard from "../components/PerfilStatCard";
 import SkillTag from "../components/SkillTag";
 import Notificaciones from "../components/Notificaciones";
 import GlobalHeader from "../components/GlobalHeader";
-import { User, Edit3, Star, Clock, Video, Award, BookOpen, X, Check, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Mail, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
-import { useTheme } from "../context/ThemeContext";
+import { User, Settings, Shield, Trash2, RefreshCw, Eye, EyeOff, Palette, Star, Award, BookOpen, Clock, Mail, MapPin, Calendar, Heart, Edit3, Video, X, Check, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
 import { httpClient } from "../services/httpClient";
 import { fetchMySkills, fetchSkills, assignSkill, unassignSkill } from "../services/skillService";
 import { logoutUser } from "../services/authService";
@@ -437,20 +436,6 @@ function Perfil() {
                   <h3 className="section-subtitle-neon" style={{ margin: 0 }}>
                     <Settings size={20} className="section-icon" /> Preferencias
                   </h3>
-                  <div className="settings-row" style={{ marginTop: "0.5rem" }}>
-                    <span className="settings-label">Tema Visual</span>
-                    <div className="settings-action" style={{ width: "165px" }}>
-                      <AuraSelect 
-                        value={currentTheme}
-                        onChange={setGlobalTheme}
-                        options={[
-                          { value: "dark", label: "Cyber-Dark" },
-                          { value: "light", label: "Premium-Snow" }
-                        ]}
-                        icon={Palette}
-                      />
-                    </div>
-                  </div>
                 </div>
 
                 {/* Seguridad */}

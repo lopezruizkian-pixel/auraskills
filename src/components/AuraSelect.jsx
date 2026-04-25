@@ -21,14 +21,14 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
 
   return (
     <div className="aura-select-wrapper" ref={dropdownRef} style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%", position: "relative" }}>
-      {label && <span style={{ fontSize: "0.8rem", color: "var(--text-sub)", marginLeft: "4px", textTransform: "uppercase", letterSpacing: "1px" }}>{label}</span>}
+      {label && <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", marginLeft: "4px", textTransform: "uppercase", letterSpacing: "1px" }}>{label}</span>}
       
       <div 
         onClick={() => setIsOpen(!isOpen)}
         className={`aura-select-custom ${isOpen ? "active" : ""}`}
         style={{
-          background: "var(--bg-card)",
-          border: isOpen ? "1px solid var(--accent-cyan)" : "1px solid var(--border-aura)",
+          background: "#0d0d1a",
+          border: isOpen ? "1px solid #00ffff" : "1px solid rgba(0, 255, 255, 0.2)",
           borderRadius: "14px",
           padding: "12px 16px",
           display: "flex",
@@ -41,9 +41,9 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0, flex: 1 }}>
-          {Icon && <Icon size={16} color="var(--accent-cyan)" style={{ flexShrink: 0 }} />}
+          {Icon && <Icon size={16} color="#00ffff" style={{ flexShrink: 0 }} />}
           <span style={{ 
-            color: selectedOption ? "var(--text-main)" : "var(--text-sub)", 
+            color: selectedOption ? "#fff" : "rgba(255,255,255,0.4)", 
             fontSize: "0.9rem",
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -56,7 +56,7 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
         <ChevronDown 
           size={18} 
           style={{ 
-            color: isOpen ? "var(--accent-cyan)" : "var(--text-sub)", 
+            color: isOpen ? "#00ffff" : "rgba(255,255,255,0.3)", 
             transition: "transform 0.3s ease",
             transform: isOpen ? "rotate(180deg)" : "rotate(0deg)"
           }} 
@@ -70,8 +70,8 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
           top: "calc(100% + 8px)",
           left: 0,
           right: 0,
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-aura)",
+          background: "#0d0d1a",
+          border: "1px solid rgba(0, 255, 255, 0.3)",
           borderRadius: "14px",
           overflow: "hidden",
           zIndex: 1000,
@@ -95,10 +95,10 @@ const AuraSelect = ({ options, value, onChange, placeholder, icon: Icon, label }
                   style={{
                     padding: "10px 14px",
                     borderRadius: "10px",
-                    color: isSelected ? "var(--accent-cyan)" : "var(--text-sub)",
+                    color: isSelected ? "#00ffff" : "#ccc",
                     fontSize: "0.9rem",
                     cursor: "pointer",
-                    background: isSelected ? "var(--input-bg)" : "transparent",
+                    background: isSelected ? "rgba(0, 255, 255, 0.1)" : "transparent",
                     transition: "all 0.2s ease",
                     display: "flex",
                     justifyContent: "space-between",

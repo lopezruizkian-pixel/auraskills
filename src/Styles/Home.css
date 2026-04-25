@@ -57,15 +57,15 @@
 .welcome-title {
   font-size: clamp(1.6rem, 3vw, 2.15rem);
   margin-bottom: 1.4rem;
-  color: var(--text-main);
+  color: #ffffff;
 }
 
 .neon-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-aura);
+  background: linear-gradient(180deg, rgba(20, 0, 34, 0.96), rgba(14, 4, 30, 0.94));
+  border: 1px solid rgba(0, 255, 255, 0.75);
   border-radius: 24px;
   padding: clamp(20px, 3vw, 34px);
-  box-shadow: 0 0 25px var(--shadow-aura);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
 }
 
 .neon-card + .neon-card:not(.mentores-grid > .neon-card),
@@ -74,7 +74,7 @@
 }
 
 .neon-card h3 {
-  color: var(--accent-cyan);
+  color: #00ffff;
   margin-bottom: 1.25rem;
   font-size: clamp(1.1rem, 2.2vw, 1.25rem);
 }
@@ -98,10 +98,10 @@
 .neon-input-s {
   width: 100%;
   padding: 0.95rem 1rem;
-  background: var(--input-bg);
-  border: 1px solid var(--border-aura);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.24);
   border-radius: 14px;
-  color: var(--text-main);
+  color: white;
   outline: none;
 }
 
@@ -202,7 +202,7 @@
   all: unset;
   width: 100%;
   min-width: 0;
-  color: var(--text-main);
+  color: white;
   font-size: 1rem;
 }
 
