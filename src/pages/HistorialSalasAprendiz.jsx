@@ -61,9 +61,16 @@ function HistorialSalasAprendiz() {
           ...backendHistory,
           ...localHistory.filter((s) => !backendIds.has(s.id)),
         ].filter((s) => {
-          // Filtra sesiones de menos de 1 minuto (60 segundos)
+          // 1. Filtra sesiones de menos de 1 minuto (60 segundos)
           const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
-          return dur > 60;
+          if (dur <= 60) return false;
+
+          // 2. Filtra nombres basura (placeholder/defaults)
+          const name = (s.titulo || s.nombre || s.room_name || "").toLowerCase().trim();
+          const forbiddenNames = ["habilidad", "sala de mentoria", "sala de mentoriaa"];
+          if (forbiddenNames.includes(name)) return false;
+
+          return true;
         });
 
         // Ordena por fecha desc

@@ -100,10 +100,20 @@ function HomeAprendiz() {
 
       const userId = storage.get("userId");
       const myStudySessions = history.filter(s => {
-        // Solo sesiones donde soy alumno Y duraron más de 1 minuto
+        // 1. Solo sesiones donde soy alumno
         const isNotMentor = s.mentor_id !== userId;
+        if (!isNotMentor) return false;
+
+        // 2. Duraron más de 1 minuto
         const dur = s.duration_seconds ?? s.duracionSegundos ?? s.duracion ?? 0;
-        return isNotMentor && dur > 60;
+        if (dur <= 60) return false;
+
+        // 3. Filtra nombres basura (placeholder/defaults)
+        const name = (s.room_nombre || s.titulo || s.nombre || s.room_name || "").toLowerCase().trim();
+        const forbiddenNames = ["habilidad", "sala de mentoria", "sala de mentoriaa"];
+        if (forbiddenNames.includes(name)) return false;
+
+        return true;
       });
       
       // ORDENAR historial: Más reciente arriba
