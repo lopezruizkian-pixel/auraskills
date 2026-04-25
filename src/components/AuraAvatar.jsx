@@ -7,9 +7,8 @@ import React from 'react';
  * @param {string} className - Clases adicionales de CSS
  */
 const AuraAvatar = ({ seed, size = 100, className = "" }) => {
-  // Usamos el estilo 'lorelei' que es más detallado y premium que 'avataaars'
-  // También podrías probar con 'micah' o 'notionists'
-  const style = 'lorelei'; 
+  // Usamos 'bottts-neutral' para un look tech, inclusivo y sin género definido
+  const style = 'bottts-neutral'; 
   const baseUrl = `https://api.dicebear.com/7.x/${style}/svg`;
   
   // Normalizamos la semilla para evitar problemas con caracteres especiales
