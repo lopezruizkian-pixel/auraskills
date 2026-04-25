@@ -1,9 +1,23 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { X, User, BookOpen, Users, LogIn, Info } from "lucide-react";
+import { X, User, BookOpen, Users, LogIn, Info, Code, Palette, Megaphone, Languages, Music, Gamepad2 } from "lucide-react";
+
+const iconMap = {
+  'Tecnología': Code,
+  'Diseño': Palette,
+  'Negocios': Megaphone,
+  'Educación': Languages,
+  'Arte': Music,
+  'Entretenimiento': Gamepad2,
+  'Tecnologia': Code,
+  'Diseno': Palette,
+  'Educacion': Languages,
+};
 
 const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
   if (!isOpen || !room) return null;
+
+  const Icon = iconMap[room.categoria] || Info;
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
@@ -18,7 +32,7 @@ const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
 
         <div className="aura-modal-header-detail">
           <div className="aura-modal-icon-detail">
-            <Info size={32} color="#00ffff" />
+            <Icon size={32} color="#00ffff" />
           </div>
           <h3 className="aura-modal-title">{room.nombre || room.nombreSala}</h3>
         </div>
