@@ -39,7 +39,11 @@ function Sidebar({ rol }) {
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'SÍ, SALIR',
-      cancelButtonText: 'CANCELAR'
+      cancelButtonText: 'CANCELAR',
+      customClass: {
+        confirmButton: 'aura-swal-confirm aura-swal-confirm-danger',
+        cancelButton: 'aura-swal-cancel'
+      }
     });
 
     if (result.isConfirmed) {

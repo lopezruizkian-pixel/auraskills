@@ -85,7 +85,11 @@ function RoomPage() {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: isMentor ? 'SÍ, FINALIZAR' : 'SÍ, SALIR',
-      cancelButtonText: 'CANCELAR'
+      cancelButtonText: 'CANCELAR',
+      customClass: {
+        confirmButton: `aura-swal-confirm ${isMentor ? 'aura-swal-confirm-danger' : ''}`,
+        cancelButton: 'aura-swal-cancel'
+      }
     });
 
     if (!result.isConfirmed) return;

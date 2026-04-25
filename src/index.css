@@ -142,3 +142,89 @@ body {
   0%, 100% { opacity: 0.4; transform: scale(0.95); }
   50% { opacity: 1; transform: scale(1); }
 }$content
+
+/* SweetAlert2 - CLONE DE MODALES AURA (Cyber-Luxury) */
+.aura-swal-popup {
+  background: linear-gradient(145deg, #140022, #0a0014) !important;
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+  border-radius: 24px !important;
+  padding: 2.5rem !important;
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.15) !important;
+  color: #fff !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.aura-swal-title {
+  font-size: 1.8rem !important;
+  color: #fff !important;
+  margin-bottom: 1rem !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.aura-swal-content {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 1.1rem !important;
+  line-height: 1.6 !important;
+  text-align: center !important;
+}
+
+.aura-swal-confirm {
+  padding: 0.9rem 2.2rem !important;
+  border-radius: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  border: none !important;
+  /* Por defecto: Cian Aura */
+  background: linear-gradient(135deg, #00ffff, #0088ff) !important;
+  color: #0a0014 !important;
+  box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3) !important;
+}
+
+/* Variante Magenta para acciones de peligro */
+.aura-swal-confirm-danger {
+  background: linear-gradient(135deg, #ff00ff, #7000ff) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 25px rgba(255, 0, 255, 0.3) !important;
+}
+
+.aura-swal-confirm:hover {
+  transform: translateY(-3px) !important;
+  filter: brightness(1.1) !important;
+}
+
+.aura-swal-cancel {
+  padding: 0.9rem 2.2rem !important;
+  border-radius: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.aura-swal-cancel:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Ajustes para Toasts (notificaciones pequeñas) */
+.aura-toast-popup {
+  background: #140022 !important;
+  border: 1px solid rgba(0, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
