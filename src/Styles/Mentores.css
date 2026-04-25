@@ -405,10 +405,33 @@
 }
 
 .skills-explorer-panel {
-  width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  width: 100% !important;
   max-width: 1200px;
   margin: 1.5rem auto 0 auto;
   transition: all 0.3s ease;
+}
+
+.skills-panel-content {
+  width: 100% !important;
+}
+
+.skills-grid-adaptive {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.skills-loading-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
 }
 
 .neon-card-full {
@@ -429,6 +452,7 @@
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
 }
 
 .skills-panel-title-group {
@@ -474,21 +498,6 @@
   color: #ff0055;
 }
 
-.skills-grid-adaptive {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-  width: 100%;
-}
-
-.skills-loading-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 2rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.9rem;
-}
 
 /* --- GRID DE MENTORES (Centrado) --- */
 .mentores-grid {
