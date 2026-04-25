@@ -46,6 +46,14 @@ export const logoutUser = async () => {
   } catch (err) {
     console.error('Error al notificar logout al servidor:', err);
   } finally {
+    // Limpieza profunda de almacenamiento local y de sesión
     storage.clear();
+    
+    // Limpiar dinámicamente cualquier rastro de sesiones de salas en localStorage
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('room_start_')) {
+        localStorage.removeItem(key);
+      }
+    });
   }
 };

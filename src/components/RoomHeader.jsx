@@ -62,11 +62,11 @@ function RoomHeader({ roomId, isMentor = false, onLeaveSession, onBack, isLeavin
       // Recuperar el inicio original de la sesión desde el localStorage si existe.
       const id = roomId || sessionInfo.roomId || sessionInfo.id;
       const storageKey = `room_start_${id}`;
-      const savedStart = localStorage.getItem(storageKey);
+      const savedStart = sessionStorage.getItem(storageKey);
       
       // Si no hay nada guardado, lo guardamos ahora
       if (!savedStart && id) {
-        localStorage.setItem(storageKey, sessionInfo.startedAt);
+        sessionStorage.setItem(storageKey, sessionInfo.startedAt);
       }
 
       const startedAtMs = new Date(savedStart || sessionInfo.startedAt).getTime();
