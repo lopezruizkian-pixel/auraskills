@@ -34,17 +34,23 @@ function App() {
             userRole: user.rol
           });
         } else {
-          logout();
+          // Si no hay sesión válida al arrancar, NO redirigimos al login.
+          // Solo limpiamos si había restos de una sesión anterior.
+          const { storage } = await import('./services/storage');
+          storage.clear();
         }
       } catch (err) {
-        console.error("Error validando sesión inicial:", err);
-        logout();
+        // En caso de error (401), limpiamos en silencio y permitimos ver la landing
+        try {
+          const { storage } = await import('./services/storage');
+          storage.clear();
+        } catch { /* ignored */ }
       } finally {
         setIsChecking(false);
       }
     };
     initAuth();
-  }, [setAuthUser, logout]);
+  }, [setAuthUser]);
 
   if (isChecking) {
     return (
