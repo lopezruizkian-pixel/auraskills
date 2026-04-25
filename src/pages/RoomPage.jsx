@@ -10,6 +10,7 @@ import ParticipantsList from '../components/ParticipantsList';
 import ReactionsContainer from '../components/ReactionsContainer';
 import { storage } from "../services/storage";
 import { useConfirm } from "../context/ConfirmContext";
+import { useToast } from "../hooks/useToast";
 import '../Styles/RoomPage.css';
 
 const formatSessionStart = (sessionInfo) => {
