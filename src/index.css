@@ -240,11 +240,28 @@ body .swal2-container.swal2-top-end .aura-toast-popup {
   backdrop-filter: blur(15px) !important;
   -webkit-backdrop-filter: blur(15px) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important; /* Más compactas */
+  border-radius: 24px !important; /* Super redondeado */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-  padding: 0.6rem 0.9rem !important; /* Menos relleno */
+  padding: 0.6rem 1.2rem !important;
   min-width: 280px !important;
   max-width: 350px !important;
+}
+
+/* Colores de iconos (Cian y Magenta) */
+body .swal2-popup.swal2-toast.swal2-icon-success .swal2-success-ring,
+body .swal2-popup.swal2-toast.swal2-icon-success .swal2-success-line-tip,
+body .swal2-popup.swal2-toast.swal2-icon-success .swal2-success-line-long {
+  border-color: #00ffff !important;
+  color: #00ffff !important;
+}
+
+body .swal2-popup.swal2-toast.swal2-icon-error .swal2-x-mark-line-left,
+body .swal2-popup.swal2-toast.swal2-icon-error .swal2-x-mark-line-right {
+  background-color: #ff00ff !important;
+}
+
+body .swal2-popup.swal2-toast.swal2-icon-error {
+  border-color: #ff00ff !important;
 }
 
 /* Bordes y Fondos por tipo */
