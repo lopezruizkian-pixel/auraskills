@@ -5,7 +5,7 @@ import MentorCard from "../components/MentorCard";
 import GlobalHeader from "../components/GlobalHeader";
 import SalaDetailModal from "../components/SalaDetailModal";
 import SkillTag from "../components/SkillTag";
-import { Search, Users, BookOpen, Code, Palette, Megaphone, Languages, Music, Gamepad2, ChevronRight } from "lucide-react";
+import { Search, Users, BookOpen, Server, Database, Terminal, Layout, Layers, ChevronRight } from "lucide-react";
 import { fetchActiveRooms, joinRoom, fetchRoom } from "../services/roomService";
 import { fetchSkills, fetchCategories } from "../services/skillService";
 import { getDashboardSocket } from "../services/socketConfig";
@@ -13,15 +13,11 @@ import { storage } from "../services/storage";
 import "../Styles/Mentores.css";
 
 const iconMap = {
-  'Tecnología': Code,
-  'Diseño': Palette,
-  'Negocios': Megaphone,
-  'Educación': Languages,
-  'Arte': Music,
-  'Entretenimiento': Gamepad2,
-  'Tecnologia': Code,
-  'Diseno': Palette,
-  'Educacion': Languages,
+  'Backend': Server,
+  'Database': Database,
+  'DevOps': Terminal,
+  'Frontend': Layout,
+  'General': Layers
 };
 
 function Mentores() {

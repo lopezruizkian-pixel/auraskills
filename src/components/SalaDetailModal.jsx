@@ -1,17 +1,13 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { X, User, BookOpen, Users, LogIn, Info, Code, Palette, Megaphone, Languages, Music, Gamepad2 } from "lucide-react";
+import { X, User, BookOpen, Users, LogIn, Info, Server, Database, Terminal, Layout, Layers } from "lucide-react";
 
 const iconMap = {
-  'Tecnología': Code,
-  'Diseño': Palette,
-  'Negocios': Megaphone,
-  'Educación': Languages,
-  'Arte': Music,
-  'Entretenimiento': Gamepad2,
-  'Tecnologia': Code,
-  'Diseno': Palette,
-  'Educacion': Languages,
+  'Backend': Server,
+  'Database': Database,
+  'DevOps': Terminal,
+  'Frontend': Layout,
+  'General': Layers
 };
 
 const SalaDetailModal = ({ isOpen, onClose, room, onJoin, isJoining }) => {
