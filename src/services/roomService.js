@@ -78,7 +78,9 @@ export const joinRoom = async (roomId, userData = {}) => {
       room: normalizeRoom(response.room),
     };
   } catch (error) {
-    console.error('Error al unirse a la sala:', error);
+    if (!error.message?.includes("Ya estás en esta sala")) {
+      console.error('Error al unirse a la sala:', error);
+    }
     throw error;
   }
 };

@@ -144,23 +144,33 @@ function RoomPage() {
     });
   };
 
+  // Detección automática de ausencia del mentor
+  const mentorIsActuallyPresent = useMemo(() => 
+    participants.some(p => p.rolInSala === 'mentor'),
+  [participants]);
+
+  const effectiveMentorAway = useMemo(() => 
+    isMentorAway || (!mentorIsActuallyPresent && sessionInfo?.isActive !== false),
+  [isMentorAway, mentorIsActuallyPresent, sessionInfo]);
+
   // Monitorizar presencia del mentor para avisos
   useEffect(() => {
-    if (isMentorAway) {
-      showInfo("El mentor se ha ausentado un momento. Puedes seguir en la sala.");
-    } else if (participants.some(p => p.rolInSala === 'mentor')) {
-      // Solo mostrar "ha regresado" si antes estaba ausente (para no mostrarlo al entrar)
+    if (effectiveMentorAway) {
+      // Solo avisar si el mentor acaba de desaparecer o si el alumno entra y no está
+      const wasAway = localStorage.getItem(`mentor_was_away_${roomId}`);
+      if (wasAway !== 'true') {
+        showInfo("El mentor se ha ausentado un momento. Puedes seguir en la sala.");
+        localStorage.setItem(`mentor_was_away_${roomId}`, 'true');
+      }
+    } else if (mentorIsActuallyPresent) {
+      // Solo mostrar "ha regresado" si antes estaba ausente
       const wasAway = localStorage.getItem(`mentor_was_away_${roomId}`);
       if (wasAway === 'true') {
         showSuccess("¡El mentor ha regresado!");
         localStorage.removeItem(`mentor_was_away_${roomId}`);
       }
     }
-    
-    if (isMentorAway) {
-      localStorage.setItem(`mentor_was_away_${roomId}`, 'true');
-    }
-  }, [isMentorAway, showInfo, showSuccess, roomId, participants]);
+  }, [effectiveMentorAway, mentorIsActuallyPresent, showInfo, showSuccess, roomId]);
 
   if (roomLoading) {
     return (
@@ -197,7 +207,7 @@ function RoomPage() {
 
       <div className="room-container">
         <aside className="room-sidebar">
-          {isMentorAway && !isMentor && (
+          {effectiveMentorAway && !isMentor && (
             <div className="mentor-away-banner-sidebar">
               <Clock3 size={16} />
               <span>Mentor Ausente</span>
@@ -216,7 +226,7 @@ function RoomPage() {
 
         <section className="room-main-panel">
           <div className="room-chat-area">
-            {isMentorAway && !isMentor && (
+            {effectiveMentorAway && !isMentor && (
               <div className="mentor-away-banner-chat">
                 <Clock3 size={18} />
                 <span>El mentor se ha ausentado un momento. La sala sigue activa.</span>
