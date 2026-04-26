@@ -47,6 +47,7 @@ function RoomPage() {
     participants,
     error,
     connectionStatus,
+    isMentorAway,
   } = useContext(RoomContext);
   
   const { success: showSuccess } = useToast();

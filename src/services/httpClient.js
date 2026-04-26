@@ -103,11 +103,12 @@ class HttpClient {
 
       return await response.json();
     } catch (error) {
-      // Silenciar el error 401 de profile al arrancar para no "sacar de onda" al usuario
-      const isSilentEndpoint = endpoint.includes('/auth/profile') && 
-                               (error.message.includes('401') || error.message.includes('Sesión expirada'));
+      // Silenciar errores específicos que no deben ensuciar la consola
+      const isSilentError = 
+        (endpoint.includes('/auth/profile') && (error.message.includes('401') || error.message.includes('Sesión expirada'))) ||
+        error.message.includes('Ya estás en esta sala');
       
-      if (!isSilentEndpoint) {
+      if (!isSilentError) {
         console.error(`[HTTP] Error en ${config.method} ${endpoint}:`, error);
       }
       throw error;

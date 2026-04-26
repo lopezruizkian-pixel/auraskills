@@ -197,26 +197,25 @@ function HomeAprendiz() {
     try {
       console.log(`[DEBUG] Obteniendo detalles de la sala...`);
       const roomDetails = await fetchRoom(room.id);
-      console.log(`[DEBUG] Detalles obtenidos:`, roomDetails);
-
-      if (!roomDetails.sessionInfo?.isActive) {
-        console.log(`[DEBUG] Bloqueado: sessionInfo.isActive es falso o indefinido.`);
-        showInfo("El mentor aún no ha ingresado a la sala.");
+      
+      // Si la sesión nunca ha empezado, el mentor no está listo
+      if (!roomDetails.sessionInfo?.startedAt) {
+        showInfo("El mentor aún no ha iniciado esta sesión.");
         setJoining(null);
         return;
       }
 
-      console.log(`[DEBUG] sessionInfo.isActive es TRUE. Intentando unirse (joinRoom)...`);
+      // Si ha empezado pero el mentor no está dentro físicamente
+      if (!roomDetails.sessionInfo?.isActive) {
+        showInfo("El mentor se ha ausentado un momento, pero puedes pasar a la sala.");
+      }
+
       try {
         await joinRoom(room.id);
-        console.log(`[DEBUG] joinRoom exitoso para sala ID:`, room.id);
       } catch (err) {
-        console.log(`[DEBUG] Error atrapado en joinRoom:`, err.message);
-        if (!err.message?.includes("Ya estas en esta sala")) {
-          console.error(`[DEBUG] Error critico en joinRoom:`, err);
+        // Silenciamos si ya estamos en la sala
+        if (!err.message?.includes("Ya estás en esta sala")) {
           throw err;
-        } else {
-          console.log(`[DEBUG] El usuario ya estaba en la sala, continuando a navegacion.`);
         }
       }
 
