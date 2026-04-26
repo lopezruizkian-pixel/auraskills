@@ -68,22 +68,32 @@ function RoomPage() {
     userRole
   );
 
-  // Monitorizar fin de sesión (Redirección explícita)
+  // Monitorizar fin de sesión (Lógica inteligente de detección)
   useEffect(() => {
-    // Solo expulsar si recibimos la señal de que la sala fue CERRADA definitivamente
-    if (!isMentor && sessionInfo?.isClosed === true && !isLeaving) {
-      console.log('[RoomPage] La sala ha sido cerrada. Finalizando para el aprendiz...');
-      setIsLeaving(true);
+    if (!isMentor && sessionInfo && sessionInfo.isActive === false && !isLeaving) {
+      const mentorPresent = participants.some(p => p.rolInSala === 'mentor');
       
-      // Limpieza y redirección inmediata tras el cierre oficial
-      leaveCurrentRoom();
-      storage.remove('salaActiva');
-      localStorage.removeItem(`room_start_${roomId}`);
+      // Si el mentor está presente y la sala se inactivó, es que acaba de pulsar "Finalizar"
+      // Si el mentor NO está, es que se ausentó un momento.
+      const delay = mentorPresent ? 1000 : 30000; 
       
-      showSuccess("La sesión ha finalizado. ¡Gracias por participar!");
-      navigate('/home', { replace: true });
+      console.log(`[RoomPage] Detectado isActive:false. Mentor presente: ${mentorPresent}. Esperando ${delay/1000}s...`);
+
+      const timer = setTimeout(() => {
+        // Doble check antes de expulsar: ¿sigue inactivo?
+        if (sessionInfo.isActive === false) {
+          setIsLeaving(true);
+          leaveCurrentRoom();
+          storage.remove('salaActiva');
+          localStorage.removeItem(`room_start_${roomId}`);
+          showSuccess("La sesión ha finalizado. ¡Buen trabajo!");
+          navigate('/home', { replace: true });
+        }
+      }, delay);
+
+      return () => clearTimeout(timer);
     }
-  }, [sessionInfo, isMentor, isLeaving, navigate, leaveCurrentRoom, showSuccess, roomId]);
+  }, [sessionInfo, isMentor, isLeaving, navigate, leaveCurrentRoom, showSuccess, roomId, participants]);
 
   useEffect(() => {
     if (roomId) {
