@@ -1201,3 +1201,42 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* ---- Mentor Presence Notifications ---- */
+.mentor-away-banner-sidebar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.1rem;
+  background: linear-gradient(90deg, rgba(255, 174, 0, 0.15), rgba(255, 174, 0, 0.05));
+  border: 1px solid rgba(255, 174, 0, 0.3);
+  border-radius: 12px;
+  color: #ffae00;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  animation: slideInDown 0.4s ease forwards;
+}
+
+.mentor-away-banner-chat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.7rem;
+  background: rgba(255, 174, 0, 0.08);
+  border-bottom: 1px solid rgba(255, 174, 0, 0.2);
+  color: #ffae00;
+  font-size: 0.9rem;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
