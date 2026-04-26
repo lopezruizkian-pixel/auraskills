@@ -50,7 +50,7 @@ function RoomPage() {
     isMentorAway,
   } = useContext(RoomContext);
   
-  const { success: showSuccess } = useToast();
+  const { success: showSuccess, info: showInfo } = useToast();
   const { askConfirmation } = useConfirm();
   const [isLeaving, setIsLeaving] = useState(false);
 

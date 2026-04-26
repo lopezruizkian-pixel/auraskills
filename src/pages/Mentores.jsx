@@ -156,7 +156,9 @@ function Mentores() {
 
       navigate(`/sala/${encodeId(room.id)}`);
     } catch (err) {
-      showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
+      if (!err.message?.includes("Ya estás en esta sala")) {
+        showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
+      }
     } finally {
       setJoining(null);
     }

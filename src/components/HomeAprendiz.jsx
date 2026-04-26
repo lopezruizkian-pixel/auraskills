@@ -192,10 +192,8 @@ function HomeAprendiz() {
   };
 
   const handleJoin = async (room) => {
-    console.log(`[DEBUG] handleJoin iniciado para sala ID:`, room.id);
     setJoining(room.id);
     try {
-      console.log(`[DEBUG] Obteniendo detalles de la sala...`);
       const roomDetails = await fetchRoom(room.id);
       
       // Si la sesión nunca ha empezado, el mentor no está listo
@@ -219,7 +217,6 @@ function HomeAprendiz() {
         }
       }
 
-      console.log(`[DEBUG] Guardando historial y navegando a /sala/${room.id}`);
       const encodedId = encodeId(room.id);
       
       const infoSala = {
@@ -236,10 +233,10 @@ function HomeAprendiz() {
 
       navigate(`/sala/${encodedId}`);
     } catch (err) {
-      console.error("[DEBUG] Error general en handleJoin:", err);
-      showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
+      if (!err.message?.includes("Ya estás en esta sala")) {
+        showError("No se pudo entrar a la sala: " + (err.message || "Error desconocido"));
+      }
     } finally {
-      console.log(`[DEBUG] handleJoin finalizado. Restableciendo estado joining.`);
       setJoining(null);
     }
   };
