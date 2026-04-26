@@ -68,32 +68,21 @@ function RoomPage() {
     userRole
   );
 
-  // Monitorizar fin de sesión (Lógica inteligente de detección)
+  // Monitorizar fin de sesión (Redirección oficial por señal de cierre)
   useEffect(() => {
-    if (!isMentor && sessionInfo && sessionInfo.isActive === false && !isLeaving) {
-      const mentorPresent = participants.some(p => p.rolInSala === 'mentor');
+    if (!isMentor && sessionInfo?.isClosed === true && !isLeaving) {
+      console.log('[RoomPage] Sesión finalizada oficialmente por el mentor.');
+      setIsLeaving(true);
       
-      // Si el mentor está presente y la sala se inactivó, es que acaba de pulsar "Finalizar"
-      // Si el mentor NO está, es que se ausentó un momento.
-      const delay = mentorPresent ? 1000 : 30000; 
+      // Limpieza y redirección inmediata
+      leaveCurrentRoom();
+      storage.remove('salaActiva');
+      localStorage.removeItem(`room_start_${roomId}`);
       
-      console.log(`[RoomPage] Detectado isActive:false. Mentor presente: ${mentorPresent}. Esperando ${delay/1000}s...`);
-
-      const timer = setTimeout(() => {
-        // Doble check antes de expulsar: ¿sigue inactivo?
-        if (sessionInfo.isActive === false) {
-          setIsLeaving(true);
-          leaveCurrentRoom();
-          storage.remove('salaActiva');
-          localStorage.removeItem(`room_start_${roomId}`);
-          showSuccess("La sesión ha finalizado. ¡Buen trabajo!");
-          navigate('/home', { replace: true });
-        }
-      }, delay);
-
-      return () => clearTimeout(timer);
+      showSuccess("¡Sesión finalizada! Gracias por participar.");
+      navigate('/home', { replace: true });
     }
-  }, [sessionInfo, isMentor, isLeaving, navigate, leaveCurrentRoom, showSuccess, roomId, participants]);
+  }, [sessionInfo, isMentor, isLeaving, navigate, leaveCurrentRoom, showSuccess, roomId]);
 
   useEffect(() => {
     if (roomId) {
@@ -114,7 +103,7 @@ function RoomPage() {
     askConfirmation({
       title: isMentor ? '¿FINALIZAR MENTORÍA?' : '¿SALIR DE LA SALA?',
       message: isMentor 
-        ? "Esta acción cerrará la sala para todos los participantes." 
+        ? "Esta acción cerrará la sala para todos los participantes y guardará el progreso." 
         : "¿Estás seguro que deseas abandonar la sesión?",
       confirmText: isMentor ? 'SÍ, FINALIZAR' : 'SÍ, SALIR',
       cancelText: 'CANCELAR',
@@ -123,8 +112,8 @@ function RoomPage() {
         setIsLeaving(true);
         try {
           if (isMentor) {
-            const { closeRoom } = await import('../services/roomService');
-            await closeRoom(roomId);
+            const { finishRoom } = await import('../services/roomService');
+            await finishRoom(roomId);
           }
           leaveCurrentRoom();
           storage.remove('salaActiva');

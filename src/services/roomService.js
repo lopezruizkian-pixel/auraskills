@@ -118,7 +118,19 @@ export const updateRoom = async (roomId, roomData) => {
 };
 
 /**
- * Cerrar/finalizar una sala
+ * Finalizar una sesión de forma oficial (Nuevo flujo)
+ */
+export const finishRoom = async (roomId) => {
+  try {
+    return await httpClient.post(`/rooms/${roomId}/finish`);
+  } catch (error) {
+    console.error('Error al finalizar sesión (finish):', error);
+    throw error;
+  }
+};
+
+/**
+ * Cerrar/finalizar una sala (Legacy/Borrado)
  */
 export const closeRoom = async (roomId) => {
   try {
