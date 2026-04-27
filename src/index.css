@@ -112,6 +112,7 @@ body .aura-modal-content {
 /* --- SWEETALERT2 TOASTS (DISEÑO DESIGNER VISION) --- */
 
 body .swal2-container.swal2-top-end {
+  z-index: 200000 !important;
   padding: 40px 30px !important;
 }
 
