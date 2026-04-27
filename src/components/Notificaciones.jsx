@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Bell, X, BookOpen, Video } from "lucide-react";
 import { fetchActiveRooms } from "../services/roomService";
+import { getDashboardSocket } from "../services/socketConfig";
 
 function Notificaciones() {
   const navigate = useNavigate();
@@ -75,8 +76,24 @@ function Notificaciones() {
 
   useEffect(() => {
     loadNotifs();
-    const interval = setInterval(loadNotifs, 30000);
-    return () => clearInterval(interval);
+    
+    // Conectar al socket del dashboard para actualizaciones en tiempo real
+    const socket = getDashboardSocket();
+    
+    const handleUpdate = () => {
+      console.log('[Notificaciones] Salas actualizadas detectadas por socket, recargando...');
+      loadNotifs();
+    };
+
+    socket.on('roomsUpdated', handleUpdate);
+    
+    // Mantenemos el intervalo como fallback de seguridad pero más largo
+    const interval = setInterval(loadNotifs, 60000); 
+    
+    return () => {
+      socket.off('roomsUpdated', handleUpdate);
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
